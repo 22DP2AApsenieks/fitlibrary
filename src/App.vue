@@ -1,15 +1,24 @@
 <script setup>
 import { RouterLink, RouterView } from 'vue-router'
 import Header from './components/Header.vue';
+import Footer from './components/Footer.vue';
 </script>
 
 <template>
-  <Header />
+  
+    <Header />
 
-  <RouterView />
+    <RouterView />
+  <div id="app-container">
+    <Footer />
+  </div>
 </template>
 
 <style scoped>
+#app-continer {
+  position: relative;
+  /* min-height: 100vh; */
+}
 header {
   line-height: 1.5;
   max-height: 100vh;

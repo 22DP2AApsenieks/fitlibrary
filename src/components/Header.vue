@@ -22,16 +22,21 @@ header {
   border-radius: 5px;
   transition: background, 1.5s;
   width: 7rem;
-  height: 1.5rem;
+  height: 9rem;
   color: crimson;
   text-align: center;
   flex-direction: column;
   width: 100%;
+  font-size: x-large;
 }
 .nav-links {
     display: flex;
     justify-content: center;
     gap: 3rem;
     width: 100%;
+}
+h1 {
+    margin-top: 1rem;
+    margin-bottom: 0.1rem;
 }
 </style>
