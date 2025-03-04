@@ -34,7 +34,7 @@ export default {
         "The program that finally will end our suffering for not knowing...",
         "The program that will help you to see your progress and actually know how fast you progress... and your PR's...",
         "   ",
-        "This is FITLIBRARY"
+        'This is <span class="fitlibrary-text">FITLIBRARY</span>'
       ],
       currentText: '',
       i: 0,
@@ -70,7 +70,10 @@ export default {
 
 <style scoped>
 #demo {
-  color: rgb(255, 255, 255);   
+  color: rgb(255, 255, 255);  
+  font-size: large; 
+  transform: translateX(20px);
+  padding-top: 1cap;
 }
 .var {
   color: rgb(255, 255, 255);          
@@ -82,22 +85,6 @@ export default {
 main {
   background-color: #333;
   padding-bottom: 50px; /* Add padding to prevent content from overlapping footer */
-}
-
-li {
-  color: #be0000;
-}
-
-@media (max-width: 768px) {
-  .nav-links {
-    display: none; /* Hide navigation links on mobile */
-  }
-  .hamburger {
-    display: flex; /* Show hamburger on mobile */
-  }
-  .dropdown.active {
-    display: flex; /* Show dropdown when active */
-  }
 }
 
 #b {
@@ -124,7 +111,6 @@ body {
 /* New Styles for Signup/Login buttons */
 .auth-buttons {
   display: flex;
-   /* Stack buttons vertically */
   align-items: flex-start; /* Align to the left */
   gap: 5px; /* Reduce the gap between buttons */
   margin-top: 10px;
@@ -149,5 +135,14 @@ body {
 h3 {
   font-size: 1.5rem;
   padding-bottom: 2px;
+}
+
+/* ✅ Fix for FITLIBRARY text inside v-html */
+
+::v-deep(.fitlibrary-text) { 
+  color: red !important;  /* Make it red */
+  font-size: 2rem !important; /* Make it bigger */
+  font-weight: bold;
+  text-transform: uppercase; /* Optional: Ensure it's all caps */
 }
 </style>

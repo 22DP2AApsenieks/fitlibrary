@@ -22,7 +22,7 @@ header {
   border-radius: 5px;
   transition: background, 1.5s;
   width: 7rem;
-  height: 9rem;
+  height: 8.5rem;
   color: crimson;
   text-align: center;
   flex-direction: column;
@@ -35,6 +35,26 @@ header {
     gap: 3rem;
     width: 100%;
 }
+
+.nav-links a {
+    text-decoration: none;
+    background-color: #ffffff; /* Default button color */
+    color: rgb(0, 0, 0); /* Text color */
+    padding: 1px 20px; /* Button padding */
+    border-radius: 5px; /* Rounded corners */
+    transition: background-color 0.8s ease, color 0.8s ease; /* Smooth transition */
+    font-size: 1.2rem; /* Adjust text size */
+    font-weight: bold;
+    border: 2px solid transparent; /* Initially no border */
+}
+
+.nav-links a:hover {
+    background-color: red; /* Turns red on hover */
+    color: white; /* Keep text white */
+    border-color: red; /* Border also turns red */
+}
+
+
 h1 {
     margin-top: 1rem;
     margin-bottom: 0.1rem;
