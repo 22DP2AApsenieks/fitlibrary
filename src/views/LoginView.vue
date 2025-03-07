@@ -1,18 +1,14 @@
 <template>
   <div class="login-container">
-    
-
     <form class="email-section">
       <h1>Logins</h1>
       <input type="email" placeholder="E-pasta adrese"/>
-      <input type="pasword" placeholder="pasword" />
+      <input type="password" placeholder="password" />
+      <button type="submit" class="login-button">Login</button>
       <div class="signup-section">
-      <p>No acc? <a href="#" class="signup-link">Haha. time to change it</a></p>
+        <p>No acc? <a href="#" class="signup-link">Haha. time to change it</a></p>
       </div>
     </form>
-
-
-    
   </div>
 </template>
 
@@ -56,5 +52,23 @@ export default {
   border-radius: 4px;
   box-sizing: border-box;
   font-size: larger;
+}
+
+.login-button {
+  width: 100%;
+
+  margin: 8px 0;
+  display: inline-block;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-sizing: border-box;
+  font-size: larger;
+  background-color: red; /* Red background */
+  color: white; /* White text */
+  cursor: pointer; /* Pointer cursor on hover */
+}
+
+.login-button:hover {
+  background-color: darkred; /* Darker red on hover */
 }
 </style>
