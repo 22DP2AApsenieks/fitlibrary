@@ -18,8 +18,8 @@
       <h1 id="b" class="pabiditpalabi">We don't bite</h1>
       
       <div class="auth-buttons">
-        <a href="signup.html"><div class="vadibas_josla"><h3>Signup</h3></div></a>
-        <a href="login.html"><div class="vadibas_josla"><h3>Login</h3></div></a>
+        <RouterLink to="/signup">Sign up</RouterLink>
+        <RouterLink to="/login">Log in</RouterLink>
       </div>
     </aside>
   </div>
@@ -108,25 +108,27 @@ body {
   padding-bottom: 20px;
 }
 
-/* New Styles for Signup/Login buttons */
-.auth-buttons {
+.auth-buttons a {
   display: flex;
   align-items: flex-start; /* Align to the left */
   gap: 5px; /* Reduce the gap between buttons */
   margin-top: 10px;
-  margin-left: 20px; /* Adjust left positioning if needed */
+  margin-left: 20px;
+  background-color: #be0000; /* Button color */
+  color: white; /* Text color */
+  padding: 10px 20px; /* Padding for better size */
+  border-radius: 5px; /* Rounded corners */
+  text-decoration: none; /* Remove underline */
+  transition: 0.3s ease-in-out;
+  font-size: 1rem;
+  display: inline-block; /* Ensure proper spacing */
 }
 
-.vadibas_josla {
-  background-color: #be0000;
-  padding: 0px 50px; /* Make buttons smaller */
-  text-align: left;
-  border-radius: 5px;
-  color: white;
-  transition: 0.3s ease-in-out;
-  font-size: 1rem; /* Reduce text size */
-  width: fit-content; /* Make button size adjust to text */
+.auth-buttons a:hover {
+  background-color: #900000; /* Darker color on hover */
 }
+/* New Styles for Signup/Login buttons */
+
 
 .vadibas_josla:hover {
   background-color: #900000;
