@@ -1,22 +1,37 @@
+<script>
+import { reactive } from 'vue';
+// defineProps({
+// aaa: {
+// type: String,
+// default: "home",
+// },
+// })
+const form = reactive({
+Email: '',
+Passwword: ''
+})
+
+const login = async () => {
+console.log(form.Email);
+};
+</script>
+
 <template>
   <div class="login-container">
-    <form class="email-section">
+    <form @submit.prevent="login" class="email-section">
       <h1>Logins</h1>
       <input type="email" placeholder="E-pasta adrese"/>
       <input type="password" placeholder="password" />
       <button type="submit" class="login-button">Login</button>
       <div class="signup-section">
-        <p>No acc? <a href="#" class="signup-link">Haha. time to change it</a></p>
+        <p>No acc? <a href="" class="signup-link">Haha. time to change it</a></p>
+        <!-- <p>No acc? <a href="#" class="signup-link">Haha. time to change it</a></p> -->
       </div>
     </form>
   </div>
 </template>
 
-<script>
-export default {
-  name: 'LoginView',
-};
-</script>
+
 
 <style scoped>
 .login-container {
