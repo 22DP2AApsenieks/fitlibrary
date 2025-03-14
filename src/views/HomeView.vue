@@ -11,12 +11,18 @@
         <div id="demo2" class="var pabiditpalabi"></div>
       </div>
 
-      <img src="..\assets\images\pro+plan.jfif" alt="Average musu lietotnes lietotajs" class="pabiditpalabi">
+      <img
+        src="../assets/images/pro+plan.jfif"
+        alt="Average musu lietotnes lietotajs"
+        class="pabiditpalabi"
+      >
     </main>
 
     <aside id="atstarpefoter">
-      <h1 id="b" class="pabiditpalabi">We don't bite</h1>
+      <!-- Centered heading -->
+      <h1 id="b">We don't bite</h1>
       
+      <!-- Centered auth buttons -->
       <div class="auth-buttons">
         <RouterLink to="/signup">Sign up</RouterLink>
         <RouterLink to="/login">Log in</RouterLink>
@@ -57,7 +63,7 @@ export default {
           this.i = 0;
           this.j++;
           this.currentText += '<br>'; // Add a line break after each sentence
-          setTimeout(this.typeWriter, 1000); // Wait for 1 second before writing next line
+          setTimeout(this.typeWriter, 1000); // Wait 1s before writing next line
         }
       }
     },
@@ -69,82 +75,82 @@ export default {
 </script>
 
 <style scoped>
+/* Typing text animation area */
 #demo {
-  color: rgb(255, 255, 255);  
-  font-size: large; 
+  color: #fff;
+  font-size: large;
   transform: translateX(20px);
   padding-top: 1cap;
 }
+
+/* White text for the typed lines below #demo */
 .var {
-  color: rgb(255, 255, 255);          
-  font-size: 24px;    
-  font-family: 'Times New Roman', Times, serif, sans-serif;  
+  color: #fff;
+  font-size: 24px;
+  font-family: 'Times New Roman', Times, serif, sans-serif;
   font-weight: bold;
 }
 
+/* Dark background for the main area */
 main {
   background-color: #333;
-  padding-bottom: 50px; /* Add padding to prevent content from overlapping footer */
+  padding-bottom: 50px; /* prevent overlap with footer area */
 }
 
-#b {
-  font-size: 2rem;
-  margin-bottom: 5px; /* Reduce space between the heading and buttons */
-}
-
+/* Body reset */
 body {
   margin: 0px;
 }
 
+/* Extra spacing on .var */
 .var {
   padding-bottom: 10px;
-} 
+}
 
+/* This class shifts elements right; keep for images, etc. */
 .pabiditpalabi {
   transform: translateX(20px);
 }
 
-#atstarpefoter {
-  padding-bottom: 20px;
+/* Large heading style */
+#b {
+  font-size: 3rem;
+  margin-bottom: 15px;
 }
 
+/* Center heading & buttons */
+#atstarpefoter {
+  padding-bottom: 20px;
+  text-align: center;
+}
+
+/* Use flex to line up the two buttons horizontally, centered */
+.auth-buttons {
+  display: inline-flex;
+  gap: 10px;
+}
+
+/* Basic button styling */
 .auth-buttons a {
-  display: flex;
-  align-items: flex-start; /* Align to the left */
-  gap: 5px; /* Reduce the gap between buttons */
-  margin-top: 10px;
-  margin-left: 20px;
-  background-color: #be0000; /* Button color */
-  color: white; /* Text color */
-  padding: 10px 20px; /* Padding for better size */
-  border-radius: 5px; /* Rounded corners */
-  text-decoration: none; /* Remove underline */
+  background-color: #be0000;
+  color: white;
+  padding: 15px 30px;
+  border-radius: 5px;
+  text-decoration: none;
   transition: 0.3s ease-in-out;
   font-size: 1rem;
-  display: inline-block; /* Ensure proper spacing */
+  display: inline-block;
 }
 
 .auth-buttons a:hover {
-  background-color: #900000; /* Darker color on hover */
-}
-/* New Styles for Signup/Login buttons */
-
-
-.vadibas_josla:hover {
   background-color: #900000;
 }
 
-h3 {
-  font-size: 1.5rem;
-  padding-bottom: 2px;
-}
-
-/* ✅ Fix for FITLIBRARY text inside v-html */
-
-::v-deep(.fitlibrary-text) { 
-  color: red !important;  /* Make it red */
+/* Fix for FITLIBRARY text inside v-html */
+::v-deep(.fitlibrary-text) {
+  color: red !important;   /* Make it red */
   font-size: 2rem !important; /* Make it bigger */
   font-weight: bold;
-  text-transform: uppercase; /* Optional: Ensure it's all caps */
+  text-transform: uppercase;  /* Optional: all caps */
 }
 </style>
