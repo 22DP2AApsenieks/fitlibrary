@@ -1,29 +1,16 @@
 # Fitlibrary
+## Šī ir programma, kas saglabā lietotāja ievadītos datus noteiktā vingrinājumā un ļau lietotājam sekot līdzi savam progressam šajos vingrinājumos. programma būs web page
 
-This template should help get you started developing with Vue 3 in Vite.
+# Ko esmu paveicis - iesāku strādāt ar vue. Daudz ko sāku pārtaisīt. Daudz kas paveikt un ļoti daudz iemācījos par vue. Tālāk jādomā kā savienot ar backend(serveri, checkout u.t.)
 
-## Recommended IDE Setup
+Programmā lietotājam būs iespēja ieiet savā kontā vai izveidot kontu. 
 
-[VSCode](https://code.visualstudio.com/) + [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar) (and disable Vetur).
+Būs iespēja izvēlēties kādu konkrētu vingrinājumu(piem. pievilkšanās) ievadīt vingrinājuma izpildes skaitu un programma šos datus saglabās kopā ar datumu un laiku. *arī būs iespēja ievadīt maksimālo svaru ar kādu vingrinājus veikts (piem. pietupiens - 120kg). Vai skriešana, kur varēs izvēlēties konkrētu distanci un ievadīt laiku, kādā tā tiek veikta.
 
-## Customize configuration
+Lietotājam būs iespēja redzēt savu progressu(diagramma), konkrētā vingrinājumā, kuru viņš ir veicis(ievadījis datus). 
 
-See [Vite Configuration Reference](https://vite.dev/config/).
 
-## Project Setup
 
-```sh
-npm install
-```
+--Ādams Apšenieks
 
-### Compile and Hot-Reload for Development
 
-```sh
-npm run dev
-```
-
-### Compile and Minify for Production
-
-```sh
-npm run build
-```
