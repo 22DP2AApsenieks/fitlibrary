@@ -6,29 +6,13 @@
           <div class="plan">
             <img src="../assets/images/noobplan.jfif" alt="Basic Plan" />
             <h3>Basic Plan</h3>
-            <p>Basic coaching with essential guidance for beginners.</p>
-          </div>
-        </router-link>
-        
-        <router-link to="/pro">
-          <div class="plan">
-            <img src="../assets/images/proplan.jfif" alt="Pro Plan" />
-            <h3>Pro Plan</h3>
-            <p>Intensive coaching with personalized training schedules.</p>
-          </div>
-        </router-link>
-        
-        <router-link to="/proplus">
-          <div class="plan">
-            <img src="../assets/images/pro+plan.jfif" alt="Pro+ Plan" />
-            <h3>Pro+ Plan</h3>
-            <p>Comprehensive coaching with advanced techniques and diet plans.</p>
+            <p>Included workout plans for split(upper/lower boddy) and (push/pull/legs) for either max strength gains or best physique development. Also include calisthenics workout plan for either strength or endurance and running plan</p>
           </div>
         </router-link>
       </div>
 
       <router-link to="/checkout" class="take-my-money">
-        <button>Take My Money</button>
+        <button>9.99$</button>
       </router-link>
     </div>
   </template>

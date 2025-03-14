@@ -6,7 +6,7 @@
           <div class="plan">
             <img src="../assets/images/noobplan.jfif" alt="Basic Plan" />
             <h3>Basic Plan</h3>
-            <p>Basic coaching with essential guidance for beginners.</p>
+            <p>Coaching plans</p>
           </div>
         </router-link>
         
@@ -14,7 +14,7 @@
           <div class="plan">
             <img src="../assets/images/proplan.jfif" alt="Pro Plan" />
             <h3>Pro Plan</h3>
-            <p>Intensive coaching with personalized training schedules.</p>
+            <p>Coaching pland + diet recomendations + coaching</p>
           </div>
         </router-link>
         
@@ -22,7 +22,7 @@
           <div class="plan">
             <img src="../assets/images/pro+plan.jfif" alt="Pro+ Plan" />
             <h3>Pro+ Plan</h3>
-            <p>Comprehensive coaching with advanced techniques and diet plans.</p>
+            <p>All maxed out</p>
           </div>
         </router-link>
       </div>

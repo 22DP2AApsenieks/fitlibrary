@@ -24,7 +24,7 @@ console.log(form.Email);
       <input type="password" placeholder="password" />
       <button type="submit" class="login-button">Login</button>
       <div class="signup-section">
-        <p>No acc? <a href="" class="signup-link">Haha. time to change it</a></p>
+        <p>Forgot pasword? <a href="" class="signup-link">Haha. Biezpiens jāēd</a></p>
         <!-- <p>No acc? <a href="#" class="signup-link">Haha. time to change it</a></p> -->
       </div>
     </form>

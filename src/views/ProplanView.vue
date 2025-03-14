@@ -2,33 +2,17 @@
     <div>
       <h2>Coaching Plans</h2>
       <div class="coaching-plans">
-        <router-link to="/basic" >
-          <div class="plan">
-            <img src="../assets/images/noobplan.jfif" alt="Basic Plan" />
-            <h3>Basic Plan</h3>
-            <p>Basic coaching with essential guidance for beginners.</p>
-          </div>
-        </router-link>
-        
         <router-link to="/pro">
           <div class="plan">
             <img src="../assets/images/proplan.jfif" alt="Pro Plan" />
             <h3>Pro Plan</h3>
-            <p>Intensive coaching with personalized training schedules.</p>
-          </div>
-        </router-link>
-        
-        <router-link to="/proplus">
-          <div class="plan">
-            <img src="../assets/images/pro+plan.jfif" alt="Pro+ Plan" />
-            <h3>Pro+ Plan</h3>
-            <p>Comprehensive coaching with advanced techniques and diet plans.</p>
+            <p>Includes ALL workout plans. Diet recomendations from coach. Personal couch.</p>
           </div>
         </router-link>
       </div>
 
       <router-link to="/checkout" class="take-my-money">
-        <button>Take My Money</button>
+        <button>59.99$/Month</button>
       </router-link>
     </div>
   </template>
