@@ -4,7 +4,7 @@
     <input v-model="username" type="text" placeholder="Username" class="input-field" />
     <input v-model="email" type="email" placeholder="E-pasta adrese" class="input-field" />
     <input v-model="password" type="password" placeholder="Password" class="input-field" />
-    <button class="login-button">Sign up</button>
+    <button class="signup-button">Sign up</button>
     <p>Alredy have acc <a href="#">Ur sigma</a></p>
   </div>
 </template>
@@ -39,7 +39,7 @@ export default {
   font-size: 16px;
 }
 
-.login-button {
+.signup-button {
   width: 100%;
   padding: 10px;
   background-color: red;
@@ -49,5 +49,8 @@ export default {
   cursor: pointer;
   font-size: 16px;
   margin-top: 10px;
+}
+.signup-button:hover {
+  background-color: darkred; /* Darker red on hover */
 }
 </style>
