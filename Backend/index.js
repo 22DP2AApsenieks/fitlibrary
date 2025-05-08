@@ -1,11 +1,16 @@
 // server.js
+
 console.log("Server is starting...");
 
-const express = require('express');
-const mysql = require('mysql2');
-const cors = require('cors');
+// Use import instead of require
+import express from 'express';
+import mysql from 'mysql2';
+import cors from 'cors';
 
 const app = express();
+app.use(cors());
+app.use(express.json());
+
 
 // Middleware
 app.use(cors({
@@ -18,7 +23,7 @@ app.use(express.json());
 const db = mysql.createConnection({
   host: '127.0.0.1',
   user: 'root',       // Replace with your MySQL username
-  password: '',       // Replace with your MySQL password
+  password: '@AdamsSaf',       // Replace with your MySQL password
   database: 'fitlib'
 });
 
@@ -30,16 +35,6 @@ db.connect(err => {
   }
   console.log('Connected to MySQL database');
 });
-
-try {
-    db.connect(err => {
-      if (err) throw err;
-      console.log('Connected to MySQL database');
-    });
-  } catch (e) {
-    console.error('Connection error:', e.message);
-  }
-  
 
 // Routes
 app.get('/users', (req, res) => {
@@ -66,3 +61,5 @@ const PORT = 3000;
 app.listen(PORT, () => {
   console.log(`Server running on http://localhost:${PORT}`);
 });
+
+
