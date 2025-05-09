@@ -2,9 +2,13 @@
   <div class="login-container">
     <form @submit.prevent="login" class="email-section">
       <h1>Logins</h1>
-      <input type="email" v-model="form.Email" placeholder="E-pasta adrese" required />
+      <input type="text" v-model="form.Username" placeholder="Username" required /> <!-- Changed to "text" for username -->
       <input type="password" v-model="form.Password" placeholder="Parole" required />
       <button type="submit" class="login-button">Login</button>
+      
+      <!-- Error Message Section -->
+      <p v-if="errorMessage" class="error-message">{{ errorMessage }}</p>
+
       <div class="signup-section">
         <p>Forgot password? <a href="" class="signup-link">Haha. Biezpiens jāēd</a></p>
       </div>
@@ -25,17 +29,38 @@
 
 <script setup>
 import { reactive, ref, onMounted } from 'vue';
+// Import Vue Router
+import { useRouter } from 'vue-router';
+
+const router = useRouter();
 
 const form = reactive({
-  Email: '',
+  Username: '',  // Changed from Email to Username
   Password: ''
 });
 
 const users = ref([]);
+const errorMessage = ref(''); // Reactive error message variable
 
 const login = async () => {
-  console.log('Login ar:', form.Email, form.Password);
-  // Šeit vari pievienot fetch uz backend login POST endpointu
+  // Reset the error message on each login attempt
+  errorMessage.value = '';
+
+  // Find the user by username
+  const user = users.value.find(u => u.Username === form.Username); // Now searching by Username
+  
+  // If user exists and the password matches
+  if (user && user.Pasword === form.Password) {
+    console.log('Login successful');
+    
+    // You can add a redirection here using Vue Router
+    // After successful login, you can route to another page
+    // router.push('/dashboard'); // Example: Redirect to a "dashboard" page
+    
+  } else {
+    console.error('Incorrect username or password');
+    errorMessage.value = 'Incorrect username or password'; // Set the error message
+  }
 };
 
 const fetchUsers = async () => {
@@ -98,6 +123,14 @@ onMounted(() => {
 .signup-link {
   color: #1db954;
   text-decoration: none;
+}
+
+/* Style for error message */
+.error-message {
+  color: red;
+  margin-top: 10px;
+  font-size: 14px;
+  text-align: center;
 }
 
 .user-list {
