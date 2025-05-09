@@ -6,6 +6,10 @@ import LoginView from '@/views/LoginView.vue'
 import BasicView from '@/views/BasicView.vue'
 import ProplanView from '@/views/ProplanView.vue'
 import ProplusView from '@/views/ProplusView.vue'
+import axios from 'axios';
+
+axios.defaults.baseURL = 'http://localhost:5000';
+
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),

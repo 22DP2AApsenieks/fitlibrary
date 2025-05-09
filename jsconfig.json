@@ -1,8 +1,10 @@
 {
   "compilerOptions": {
     "paths": {
-      "@/*": ["./src/*"]
+      "@/*": ["./src"]
     }
   },
   "exclude": ["node_modules", "dist"]
 }
+//ok = kā expres strada pajautat chatgpt. ok - intruduction to express. bet kp tieši express? aa ok. lai veidotu serveri. aa kip tiesi lai veb atseviski hostotu? ok/ 
+// safe ja atceros . acx ir klients ar kuru veidu api requestus. axios to express japavero. Ok, Paldies! Isti nav. nja es jau gulet eju. GN

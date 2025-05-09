@@ -1,4 +1,4 @@
-// server.js
+// Tie pie data no servera
 
 console.log("Server is starting...");
 
@@ -37,27 +37,36 @@ db.connect(err => {
 });
 
 // Routes
-app.get('/users', (req, res) => {
-  db.query('SELECT * FROM users', (err, results) => {
+app.get('/users', (req, res) => { 
+  db.query('SELECT * FROM users', (err, results) => { //visam sim butu jasalecto tu nezini ar kuru pa
     if (err) return res.status(500).json({ error: err.message });
     res.json(results);
   });
 });
 
-app.post('/users', (req, res) => {
-  const { name, email } = req.body;
-  db.query(
-    'INSERT INTO users (name, email) VALUES (?, ?)',
-    [name, email],
-    (err, result) => {
-      if (err) return res.status(500).json({ error: err.message });
-      res.json({ id: result.insertId, name, email });
-    }
-  );
+app.get('/dips', (req, res) => {
+  db.query('SELECT * FROM dips', (err, results1) => {
+    if (err) return res.status(500).json({ error: err.message });
+    res.json(results1);
+  });
+});
+
+app.get('/squat', (req, res) => {
+  db.query('SELECT * FROM squats', (err, results2) => {
+    if (err) return res.status(500).json({ error: err.message });
+  res.json(results2);
+  });
+});
+
+app.get('/pullups', (req, res) => {
+  db.query('SELECT * FROM pullups', (err, results3) => {
+    if (err) return res.status(500).json({ error: err.message });
+    res.json(results3);
+  });
 });
 
 // Start server
-const PORT = 3000;
+const PORT = 5000; 
 app.listen(PORT, () => {
   console.log(`Server running on http://localhost:${PORT}`);
 });
