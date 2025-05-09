@@ -43,25 +43,19 @@ const users = ref([]);
 const errorMessage = ref(''); // Reactive error message variable
 
 const login = async () => {
-  // Reset the error message on each login attempt
   errorMessage.value = '';
 
-  // Find the user by username
-  const user = users.value.find(u => u.Username === form.Username); // Now searching by Username
-  
-  // If user exists and the password matches
+  const user = users.value.find(u => u.Username === form.Username);
+
   if (user && user.Pasword === form.Password) {
     console.log('Login successful');
-    
-    // You can add a redirection here using Vue Router
-    // After successful login, you can route to another page
-    // router.push('/dashboard'); // Example: Redirect to a "dashboard" page
-    
+    router.push('/programm'); // Redirect to /programm after successful login
   } else {
     console.error('Incorrect username or password');
-    errorMessage.value = 'Incorrect username or password'; // Set the error message
+    errorMessage.value = 'Incorrect username or password';
   }
 };
+
 
 const fetchUsers = async () => {
   try {

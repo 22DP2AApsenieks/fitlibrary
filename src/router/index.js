@@ -1,15 +1,15 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import HomeView from '../views/HomeView.vue'
+import HomeView from '@/views/HomeView.vue'
 import SignupView from '@/views/SignupView.vue'
 import PlaniView from '@/views/PlaniView.vue'
 import LoginView from '@/views/LoginView.vue'
 import BasicView from '@/views/BasicView.vue'
 import ProplanView from '@/views/ProplanView.vue'
 import ProplusView from '@/views/ProplusView.vue'
-import axios from 'axios';
+import ProgrammView from '@/views/ProgrammView.vue'
+import axios from 'axios'
 
-axios.defaults.baseURL = 'http://localhost:5000';
-
+axios.defaults.baseURL = 'http://localhost:5000'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -21,29 +21,23 @@ const router = createRouter({
     },
     {
       path: '/signup',
-      name: 'index sadoasidad',
+      name: 'signup',
       component: SignupView,
     },
     {
-
       path: '/about',
       name: 'about',
-      // route level code-splitting
-      // this generates a separate chunk (About.[hash].js) for this route
-      // which is lazy-loaded when the route is visited.
-      component: () => import('../views/AboutView.vue'),
+      component: () => import('@/views/AboutView.vue'),
     },
     {
       path: '/plans',
-      name: 'Plans',
+      name: 'plans',
       component: PlaniView,
-
     },
     {
       path: '/login',
       name: 'login',
       component: LoginView,
-
     },
     {
       path: '/basic',
@@ -59,7 +53,12 @@ const router = createRouter({
       path: '/proplus',
       name: 'proplus',
       component: ProplusView,
-    }
+    },
+    {
+      path: '/programm',
+      name: 'programm',
+      component: ProgrammView,
+    },
   ],
 })
 
