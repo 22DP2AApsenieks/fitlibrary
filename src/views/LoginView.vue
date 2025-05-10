@@ -49,8 +49,9 @@ const login = async () => {
   const user = users.value.find(u => u.username === form.Username);
 
   if (user && user.password === form.Password) {
-    console.log('Login successful');
-    router.push('/programm'); // Redirect to /programm after successful login
+  console.log('Login successful');
+  localStorage.setItem('loggedInUser', user.username);  // Save username
+  router.push('/programm'); // Redirect to /programm
   } else {
     console.error('Incorrect username or password');
     errorMessage.value = 'Incorrect username or password';

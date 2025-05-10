@@ -65,6 +65,34 @@ app.get('/pullups', (req, res) => {
   });
 });
 
+app.post('/register', (req, res) => {
+  const { username, password, email, role = 'user' } = req.body;
+
+  // Check if username exists
+  db.query('SELECT * FROM users WHERE username = ?', [username], (err, results) => {
+    if (err) {
+      console.error('Database error:', err);
+      return res.status(500).json({ error: 'Datubāzes kļūda' });
+    }
+
+    if (results.length > 0) {
+      return res.status(400).json({ error: 'Lietotājvārds jau ir aizņemts' });
+    }
+
+    // Insert new user (handling NULL values for email and role)
+    db.query(
+      'INSERT INTO users (username, password, email, role) VALUES (?, ?, ?, ?)',
+      [username, password, email || null, role || null],
+      (err, result) => {
+        if (err) {
+          console.error('Insert error:', err);
+          return res.status(500).json({ error: 'Neizdevās izveidot lietotāju' });
+        }
+        res.json({ message: 'Lietotājs veiksmīgi reģistrēts' });
+      }
+    );
+  });
+});
 // Start server
 const PORT = 5000; 
 app.listen(PORT, () => {
