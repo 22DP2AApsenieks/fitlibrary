@@ -1,105 +1,131 @@
 <template>
   <div class="signup-container">
-    <form @submit.prevent="signup" class="signup-form">
-      <h1>Reģistrācija</h1>
-      <input type="text" v-model="form.username" placeholder="Lietotājvārds" required />
-      <input type="password" v-model="form.password" placeholder="Parole" required />
-      <input type="email" v-model="form.email" placeholder="E-pasts" required />
-      <button type="submit" class="signup-button">Reģistrēties</button>
+    <form @submit.prevent="signup" class="email-section">
+      <h1>Signup</h1>
+      <input type="text" v-model="form.Username" placeholder="Username" required />
+      <input type="password" v-model="form.Password" placeholder="Password" required />
+      <input type="email" v-model="form.Email" placeholder="Email" required />
+      <button type="submit" class="signup-button">Signup</button>
 
+      <!-- Error Message Section -->
       <p v-if="errorMessage" class="error-message">{{ errorMessage }}</p>
-      <p v-if="successMessage" class="success-message">{{ successMessage }}</p>
 
-      <div class="login-link-section">
-        <p>Jau ir konts? <router-link to="/login" class="login-link">Pieslēgties</router-link></p>
+      <div class="login-section">
+        <p>Already have an account? <a href="/login" class="login-link">Login here</a></p>
       </div>
     </form>
+
+    <div class="user-list">
+      <h2>Current Users</h2>
+      <ul>
+        <li v-for="(user, index) in users" :key="index">
+          <strong>Username:</strong> {{ user.username }}<br />
+          <strong>Password:</strong> {{ user.password }}<br />
+          <strong>Email:</strong> {{ user.email }}<br />
+          <strong>Role:</strong> {{ user.role }}<br />
+        </li>
+      </ul>
+    </div>
   </div>
 </template>
 
 <script setup>
-import { reactive, ref } from 'vue';
+import { reactive, ref, onMounted } from 'vue';
 import { useRouter } from 'vue-router';
 
 const router = useRouter();
+
 const form = reactive({
-  username: '',
-  password: '',
-  email: '',
-  role: 'user' // Default role
+  Username: '',
+  Password: '',
+  Email: ''
 });
 
+const users = ref([]);
 const errorMessage = ref('');
-const successMessage = ref('');
 
 const signup = async () => {
   errorMessage.value = '';
-  successMessage.value = '';
 
+  // Check if the username already exists
+  const userExists = users.value.some(u => u.username === form.Username);
+
+  if (userExists) {
+    errorMessage.value = 'Username is already taken.';
+    return;
+  }
+
+  // If username is not taken, proceed with signup logic
+  const newUser = {
+    username: form.Username,
+    password: form.Password,
+    email: form.Email,
+    role: 'user' // Default role for the new user
+  };
+
+  // For testing, save the new user locally
+  users.value.push(newUser);
+
+  console.log('Signup successful');
+  localStorage.setItem('loggedInUser', form.Username); // Save the username
+  router.push('/programm'); // Redirect to /programm
+};
+
+const fetchUsers = async () => {
   try {
-    const response = await fetch('http://localhost:5000/register', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(form)
-    });
-
+    const response = await fetch('http://localhost:5000/users');
     if (!response.ok) {
-      const errorData = await response.json();
-      throw new Error(errorData.error || 'Reģistrācija neizdevās');
+      throw new Error(`HTTP error! status: ${response.status}`);
     }
-
-    successMessage.value = 'Reģistrācija veiksmīga!';
-    setTimeout(() => router.push('/login'), 2000);
+    users.value = await response.json();
   } catch (error) {
-    errorMessage.value = error.message;
+    console.error('Error loading users:', error);
   }
 };
+
+onMounted(() => {
+  fetchUsers();
+});
 </script>
 
 <style scoped>
 .signup-container {
-  max-width: 400px;
+  position: relative;
+  max-width: 500px;
   margin: 0 auto;
   padding: 20px;
 }
 
-.signup-form {
-  display: flex;
-  flex-direction: column;
-  gap: 15px;
+.email-section {
+  max-width: 400px;
+  margin: 0 auto;
+  padding: 20px;
+  text-align: center;
 }
 
-.signup-form input {
+.email-section > input {
+  width: 100%;
   padding: 10px;
+  margin: 10px 0;
   border: 1px solid #ccc;
   border-radius: 5px;
   font-size: 16px;
 }
 
 .signup-button {
+  width: 100%;
   padding: 10px;
-  background-color: red;
+  background-color: green;
   color: white;
   border: none;
   border-radius: 5px;
   cursor: pointer;
   font-size: 16px;
+  margin-top: 10px;
 }
 
 .signup-button:hover {
-  background-color: darkred;
-}
-
-.error-message {
-  color: red;
-  text-align: center;
-}
-
-.success-message {
-  color: green;
-  text-align: center;
+  background-color: darkgreen;
 }
 
 .login-link {
@@ -107,8 +133,28 @@ const signup = async () => {
   text-decoration: none;
 }
 
-.login-link-section {
+.error-message {
+  color: red;
+  margin-top: 10px;
+  font-size: 14px;
   text-align: center;
-  margin-top: 15px;
+}
+
+.user-list {
+  margin-top: 30px;
+  text-align: left;
+  background: #f9f9f9;
+  padding: 20px;
+  border-radius: 10px;
+}
+
+.user-list ul {
+  list-style: none;
+  padding: 0;
+}
+
+.user-list li {
+  padding: 10px;
+  border-bottom: 1px solid #ddd;
 }
 </style>
