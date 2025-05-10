@@ -7,6 +7,10 @@
 
     <div v-else>
       <h2>U do great! WOW:</h2>
+      <router-link to="/workout">
+        <button class="workout-button">Add pullup Workout</button>
+      </router-link>
+
 
       <div class="exercise-section">
         <h3>Pull-ups</h3>

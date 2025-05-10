@@ -7,8 +7,9 @@ import BasicView from '@/views/BasicView.vue'
 import ProplanView from '@/views/ProplanView.vue'
 import ProplusView from '@/views/ProplusView.vue'
 import ProgrammView from '@/views/ProgrammView.vue'
-import axios from 'axios'
+import WorkoutView from '@/views/WorkoutView.vue'
 
+import axios from 'axios'
 axios.defaults.baseURL = 'http://localhost:5000'
 
 const router = createRouter({
@@ -59,6 +60,11 @@ const router = createRouter({
       name: 'programm',
       component: ProgrammView,
     },
+    {
+      path: '/workout',
+      name: 'WorkoutView',
+      component: WorkoutView,
+    } 
   ],
 })
 
