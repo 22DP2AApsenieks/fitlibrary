@@ -29,13 +29,13 @@
  
 
 footer {
-  position: absolute;
-  bottom: 0px;
+  margin-top: auto;
   width: 100%;
-  height: 6.5rem;            /* Footer height */
-  /* padding: 10px; Adjust as needed */
+  height: 6.5rem;
   background-color: #333;
-    color: #fff;
-    text-align: center;
+  color: #fff;
+  text-align: center;
+  padding: 20px;
 }
+
 </style>
