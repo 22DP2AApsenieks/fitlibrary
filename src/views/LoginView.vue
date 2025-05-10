@@ -18,9 +18,10 @@
       <h2>Lietotāji</h2>
       <ul>
         <li v-for="(user, index) in users" :key="index">
-          <strong>Lietotājvārds:</strong> {{ user.Username }}<br />
-          <strong>Parole:</strong> {{ user.Pasword }}<br />
-          <strong>E-pasts:</strong> {{ user['e-past'] }}
+          <strong>Lietotājvārds:</strong> {{ user.username }}<br />
+          <strong>Parole:</strong> {{ user.password }}<br />
+          <strong>E-pasts:</strong> {{ user['email'] }}<br />
+          <strong>role:</strong> {{ user['role'] }}<br />
         </li>
       </ul>
     </div>
@@ -45,9 +46,9 @@ const errorMessage = ref(''); // Reactive error message variable
 const login = async () => {
   errorMessage.value = '';
 
-  const user = users.value.find(u => u.Username === form.Username);
+  const user = users.value.find(u => u.username === form.Username);
 
-  if (user && user.Pasword === form.Password) {
+  if (user && user.password === form.Password) {
     console.log('Login successful');
     router.push('/programm'); // Redirect to /programm after successful login
   } else {

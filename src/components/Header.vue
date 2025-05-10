@@ -8,8 +8,6 @@
         <h1>Fitlibrary</h1>
         <div class="nav-links">
             <RouterLink to="/">Home</RouterLink>
-            <RouterLink to="/signup">Sign up</RouterLink>
-            <RouterLink to="/login">Log in</RouterLink>
             <RouterLink to="/plans">Plans</RouterLink>
             <RouterLink to="/about">About</RouterLink>
         </div>  
