@@ -25,7 +25,7 @@
           src="../assets/images/pro+plan.jfif"
           alt="Average app user"
         />
-        <span class="tooltip">Ms average app user</span>
+        <span class="tooltip">Most average app user</span>
       </div>
 
       <div class="action">
@@ -167,24 +167,21 @@ h1 {
 }
 
 .cta-button {
-  background: linear-gradient(135deg, #ff4e50, #f00000);
+  background: linear-gradient(to right, #ffcc00, #ff9900);
   border: none;
-  padding: 16px 42px;
-  font-size: 1.2rem;
-  font-weight: 800;
+  padding: 14px 36px;
+  font-size: 18px;
   border-radius: 30px;
   cursor: pointer;
   transition: transform 0.3s ease, background 0.3s ease;
-  color: white;
-  box-shadow: 0 8px 24px rgba(255, 78, 80, 0.7);
-  user-select: none;
-  letter-spacing: 0.04em;
+  color: black;
+  font-weight: bold;
+  box-shadow: 0 6px 18px rgba(255, 204, 0, 0.4);
 }
 
 .cta-button:hover {
-  background: linear-gradient(135deg, #cc0000, #900000);
-  transform: scale(1.07);
-  box-shadow: 0 12px 30px rgba(255, 40, 40, 1);
+  background: linear-gradient(to right, #e6b800, #cc8400);
+  transform: scale(1.05);
 }
 
 .note {
