@@ -9,8 +9,8 @@
       <!-- Error Message Section -->
       <p v-if="errorMessage" class="error-message">{{ errorMessage }}</p>
 
-      <div class="signup-section">
-        <p>Forgot password? <a href="" class="signup-link">Haha. Biezpiens jāēd</a></p>
+      <div class="Signup-section">
+        <p>Forgot password? <router-link to="/signup" class="Signup-link">Haha. Biezpiens jāēd</router-link></p>
       </div>
     </form>
 

@@ -1,13 +1,17 @@
 <template>
   <div class="signup-container">
     <form @submit.prevent="signup" class="email-section">
-      <h1>Reģistrācija</h1>
-      <input type="text" v-model="form.Username" placeholder="Lietotājvārds" required />
-      <input type="email" v-model="form.Email" placeholder="E-pasts" required />
-      <input type="password" v-model="form.Password" placeholder="Parole" required />
-      <button type="submit" class="signup-button">Reģistrēties</button>
+      <h1>Sign Up</h1>
+      <input type="text" v-model="form.Username" placeholder="Username" required />
+      <input type="email" v-model="form.Email" placeholder="Email" required />
+      <input type="password" v-model="form.Password" placeholder="Password" required />
+      <button type="submit" class="signup-button">Sign Up</button>
 
       <p v-if="errorMessage" class="error-message">{{ errorMessage }}</p>
+
+      <div class="Signup-section">
+        <p>No acc? <router-link to="/login" class="Signup-link"> = no b...</router-link></p>
+      </div>
     </form>
 
     <div class="user-list">

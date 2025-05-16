@@ -1,156 +1,229 @@
 <template>
-  <div>
-    <main class="Beckgroound_image">
-      <div id="demo" v-html="currentText"></div> <!-- Typing text animation -->
-      
-      <div id="dropdownMenu" :class="{ active: isActive }">
-        <!-- Dropdown content -->
+  <section class="hero-section">
+    <div class="content">
+      <h1>Welcome to FITLIBRARY</h1>
+      <p class="intro">
+        Discover the ultimate app to track your progress, smash your goals, and visualize your true potential.
+        No more guessing — just real, actionable insights tailored to your fitness journey.
+      </p>
+
+      <p class="details">
+        FITLIBRARY gives you everything you need:
+      </p>
+
+      <ul class="features">
+        <li>Personalized workout tracking</li>
+        <li>Progress visualization with graphs and stats</li>
+        <li>Motivational reminders and PR tracking</li>
+        <li>Clean, intuitive interface made for all levels</li>
+        <li>Continuous updates with new features</li>
+      </ul>
+
+      <div class="image-wrapper">
+        <img
+          class="plan-image"
+          src="../assets/images/pro+plan.jfif"
+          alt="Average app user"
+        />
+        <span class="tooltip">Ms average app user</span>
       </div>
 
-      <div id="teksts">
-        <div id="demo2" class="var pabiditpalabi"></div>
+      <div class="action">
+        <router-link to="/signup">
+          <button class="cta-button">Get Started Now</button>
+        </router-link>
+        <p class="note">Join thousands who’ve transformed their fitness journey.</p>
       </div>
-
-      <img
-        src="../assets/images/pro+plan.jfif"
-        alt="Average musu lietotnes lietotajs"
-        class="pabiditpalabi"
-      >
-    </main>
-
-    <aside id="atstarpefoter">
-      <!-- Centered heading -->
-      <h1 id="b">We don't bite</h1>
-      
-      <!-- Centered auth buttons -->
-      <div class="auth-buttons">
-        <RouterLink to="/signup">Sign up</RouterLink>
-        <RouterLink to="/login">Log in</RouterLink>
-      </div>
-    </aside>
-  </div>
+    </div>
+  </section>
 </template>
 
-<script>
-export default {
-  data() {
-    return {
-      txt: [
-        "We have made program...",
-        "The program that finally will end our suffering for not knowing...",
-        "The program that will help you to see your progress and actually know how fast you progress... and your PR's...",
-        "   ",
-        'This is <span class="fitlibrary-text">FITLIBRARY</span>'
-      ],
-      currentText: '',
-      i: 0,
-      j: 0,
-      speed: 40,
-      isActive: false
-    };
-  },
-  mounted() {
-    this.typeWriter();
-  },
-  methods: {
-    typeWriter() {
-      if (this.j < this.txt.length) {
-        if (this.i < this.txt[this.j].length) {
-          this.currentText += this.txt[this.j].charAt(this.i); // Update the text
-          this.i++;
-          setTimeout(this.typeWriter, this.speed); // Call recursively
-        } else {
-          this.i = 0;
-          this.j++;
-          this.currentText += '<br>'; // Add a line break after each sentence
-          setTimeout(this.typeWriter, 1000); // Wait 1s before writing next line
-        }
-      }
-    },
-    toggleDropdown() {
-      this.isActive = !this.isActive; // Toggle the 'active' class
-    }
-  }
-};
-</script>
-
 <style scoped>
-/* Typing text animation area */
-#demo {
+.hero-section {
+  min-height: 100vh;
+  background: linear-gradient(to bottom right, #330000, #660000, #990000);
   color: #fff;
-  font-size: large;
-  transform: translateX(20px);
-  padding-top: 1cap;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 60px 20px;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  overflow: hidden;
 }
 
-/* White text for the typed lines below #demo */
-.var {
-  color: #fff;
-  font-size: 24px;
-  font-family: 'Times New Roman', Times, serif, sans-serif;
-  font-weight: bold;
-}
-
-/* Dark background for the main area */
-main {
-  background-color: #333;
-  padding-bottom: 50px; /* prevent overlap with footer area */
-}
-
-/* Body reset */
-body {
-  margin: 0px;
-}
-
-/* Extra spacing on .var */
-.var {
-  padding-bottom: 10px;
-}
-
-/* This class shifts elements right; keep for images, etc. */
-.pabiditpalabi {
-  transform: translateX(20px);
-}
-
-/* Large heading style */
-#b {
-  font-size: 3rem;
-  margin-bottom: 15px;
-}
-
-/* Center heading & buttons */
-#atstarpefoter {
-  padding-bottom: 20px;
+.content {
+  max-width: 900px;
   text-align: center;
+  animation: fadeInUp 1.2s ease forwards;
+  user-select: none;
 }
 
-/* Use flex to line up the two buttons horizontally, centered */
-.auth-buttons {
-  display: inline-flex;
-  gap: 10px;
+h1 {
+  font-size: 3.4rem;
+  margin-bottom: 20px;
+  font-weight: 900;
+  letter-spacing: 0.06em;
+  text-shadow: 0 0 15px #ff3b3fcc;
 }
 
-/* Basic button styling */
-.auth-buttons a {
-  background-color: #be0000;
-  color: white;
-  padding: 15px 30px;
-  border-radius: 5px;
-  text-decoration: none;
-  transition: 0.3s ease-in-out;
-  font-size: 1rem;
+.intro {
+  font-size: 1.25rem;
+  margin-bottom: 20px;
+  line-height: 1.6;
+  color: #ffd6d6;
+  font-weight: 500;
+}
+
+.details {
+  font-size: 1.1rem;
+  margin-bottom: 25px;
+  color: #ffb0b0;
+  font-weight: 600;
+}
+
+.features {
+  list-style: none;
+  padding: 0;
+  margin-bottom: 40px;
+  max-width: 600px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.features li {
+  margin: 12px 0;
+  font-size: 1.1rem;
+  position: relative;
+  padding-left: 28px;
+  text-align: left;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  color: #ffe0e0;
+}
+
+.features li::before {
+  content: "✔";
+  position: absolute;
+  left: 0;
+  color: #ffdb3b;
+  font-weight: 900;
+  font-size: 1.2rem;
+  top: 2px;
+  text-shadow: 0 0 3px #ffd93baa;
+}
+
+/* Image wrapper to position tooltip */
+.image-wrapper {
+  position: relative;
   display: inline-block;
+  cursor: pointer;
+  margin-bottom: 40px;
 }
 
-.auth-buttons a:hover {
-  background-color: #900000;
+.plan-image {
+  width: 100%;
+  max-width: 550px;
+  border-radius: 20px;
+  box-shadow: 0 12px 32px rgba(255, 0, 0, 0.6);
+  transition: transform 0.4s ease, box-shadow 0.4s ease;
+  user-select: none;
 }
 
-/* Fix for FITLIBRARY text inside v-html */
-::v-deep(.fitlibrary-text) {
-  color: red !important;   /* Make it red */
-  font-size: 2rem !important; /* Make it bigger */
-  font-weight: bold;
-  text-transform: uppercase;  /* Optional: all caps */
+.plan-image:hover {
+  transform: scale(1.05) rotate(1.5deg);
+  box-shadow: 0 20px 40px rgba(255, 50, 50, 0.9);
+}
+
+/* Tooltip that appears on image hover */
+.tooltip {
+  position: absolute;
+  bottom: 10px;
+  left: 50%;
+  transform: translateX(-50%) translateY(10px);
+  background: rgba(255, 78, 80, 0.95);
+  color: #fff;
+  padding: 6px 18px;
+  font-weight: 700;
+  border-radius: 24px;
+  font-size: 1rem;
+  white-space: nowrap;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s ease, transform 0.3s ease;
+  user-select: none;
+  text-shadow: 0 0 5px #ff4e50;
+  box-shadow: 0 4px 10px rgba(255, 78, 80, 0.6);
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.image-wrapper:hover .tooltip {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
+}
+
+/* Call to action */
+.action {
+  margin-top: 30px;
+}
+
+.cta-button {
+  background: linear-gradient(135deg, #ff4e50, #f00000);
+  border: none;
+  padding: 16px 42px;
+  font-size: 1.2rem;
+  font-weight: 800;
+  border-radius: 30px;
+  cursor: pointer;
+  transition: transform 0.3s ease, background 0.3s ease;
+  color: white;
+  box-shadow: 0 8px 24px rgba(255, 78, 80, 0.7);
+  user-select: none;
+  letter-spacing: 0.04em;
+}
+
+.cta-button:hover {
+  background: linear-gradient(135deg, #cc0000, #900000);
+  transform: scale(1.07);
+  box-shadow: 0 12px 30px rgba(255, 40, 40, 1);
+}
+
+.note {
+  margin-top: 12px;
+  font-size: 1rem;
+  color: #ffc3c3;
+  font-weight: 500;
+  user-select: none;
+}
+
+/* Animations */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(40px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Responsive */
+@media (max-width: 720px) {
+  h1 {
+    font-size: 2.6rem;
+  }
+
+  .intro, .details, .features li {
+    font-size: 1rem;
+  }
+
+  .plan-image {
+    max-width: 100%;
+  }
+
+  .features {
+    max-width: 100%;
+    padding: 0 10px;
+  }
 }
 </style>

@@ -12,5 +12,3 @@ Lietotājam būs iespēja redzēt savu progressu(diagramma), konkrētā vingrin�
 
 
 --Ādams Apšenieks
-
-
