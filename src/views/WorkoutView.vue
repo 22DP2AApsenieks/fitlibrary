@@ -1,29 +1,22 @@
 <template>
-  <div class="workout-view">
-    <h1>Pievieno treniņu {{ username }}</h1>
+  <div>
+    <h2>Pievieno pull-ups treniņu</h2>
 
-    <div v-if="error" class="error">{{ error }}</div>
-    <div v-if="message" class="message">{{ message }}</div>
+    <form @submit.prevent="submit">
+      <!-- Username vairs nav redzams vai rediģējams -->
+      <p>Treniņš tiek pievienots lietotājam: <strong>{{ username }}</strong></p>
 
-    <form @submit.prevent="submitWorkout">
-      <div class="form-group">
-        <label for="reps">Reps:</label>
-        <input type="number" id="reps" v-model="reps" min="1" required />
-      </div>
+      <label>Reps:</label>
+      <input type="number" v-model.number="reps" min="1" required />
 
-      <div class="form-group">
-        <label for="date">Datums:</label>
-        <input type="date" id="date" v-model="date" required />
-      </div>
+      <label>Date:</label>
+      <input type="date" v-model="date" required />
 
       <button type="submit">Saglabāt</button>
     </form>
 
-    <!-- Display data before sending -->
-    <div v-if="showData">
-      <h3>Data before sending to server:</h3>
-      <pre>{{ workoutData }}</pre>
-    </div>
+    <p v-if="message" style="color: green">{{ message }}</p>
+    <p v-if="error" style="color: red">{{ error }}</p>
 
     <router-link to="/programm">
       <button class="back-button">⬅ Atpakaļ uz programm</button>
@@ -33,118 +26,48 @@
 
 <script>
 export default {
-  name: 'WorkoutView',
   data() {
     return {
-      username: localStorage.getItem('loggedInUser') || '',
-      reps: 0,
-      date: new Date().toISOString().split('T')[0],  // The input date will be in the format YYYY-MM-DD
+      username: '',        // ielādēsim no localStorage
+      reps: 1,
+      date: new Date().toISOString().slice(0, 10), // Šodienas datums
       message: '',
-      error: '',
-      showData: false,
-      workoutData: {}
+      error: ''
     };
   },
+  mounted() {
+    // Iegūstam username no localStorage, kā tavā ProgrammView
+    this.username = (localStorage.getItem('loggedInUser') || 'nezināmais').toLowerCase();
+  },
   methods: {
-    async submitWorkout() {
+    async submit() {
       this.message = '';
       this.error = '';
-
-      if (!this.username) {
-        this.error = 'Nav atrasts lietotājs!';
-        return;
-      }
-
-      // Create a new Date object from the selected date and set the time to midnight UTC
-      //const dateWithTime = new Date(this.date + 'T00:00:00.000Z');
-
-      // Prepare data to be sent with the correct date format
-      const workoutPayload = {
-        username: this.username,
-        reps: this.reps,
-        date: dateWithTime.toISOString()  // Send the date in the full ISO 8601 format
-      };
-
-      // Show the data before sending
-      this.workoutData = workoutPayload;
-      this.showData = true;
 
       try {
         const res = await fetch('http://localhost:5000/addpullups', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(workoutPayload)
+          body: JSON.stringify({
+            username: this.username,
+            reps: this.reps,
+            date: this.date,
+          })
         });
 
-        const result = await res.json();
+        const data = await res.json();
 
-        if (!res.ok) {
-          this.error = result.error || 'Servera kļūda';
+        if (res.ok) {
+          this.message = data.message;
+          this.reps = 1;
+          this.date = new Date().toISOString().slice(0, 10);
         } else {
-          this.message = result.message;
-          this.reps = 0;
-          this.date = new Date().toISOString().split('T')[0]; // Reset to today's date after successful save
-          this.showData = false; // Hide data after successful save
+          this.error = data.error || 'Nezināma kļūda';
         }
-      } catch (err) {
+      } catch (e) {
         this.error = 'Neizdevās pievienot treniņu';
-        console.error(err);
       }
     }
   }
 };
 </script>
-
-<style scoped>
-.workout-view {
-  padding: 20px;
-  max-width: 500px;
-  margin: 0 auto;
-}
-
-.form-group {
-  margin-bottom: 15px;
-}
-
-label {
-  display: block;
-  font-weight: bold;
-  margin-bottom: 5px;
-}
-
-input,
-select {
-  width: 100%;
-  padding: 8px;
-  box-sizing: border-box;
-}
-
-button {
-  padding: 10px 20px;
-  background-color: #2e86de;
-  color: white;
-  border: none;
-  border-radius: 6px;
-  cursor: pointer;
-}
-
-button:hover {
-  background-color: #1e6bc8;
-}
-
-.message {
-  color: green;
-  margin-bottom: 10px;
-}
-
-.error {
-  color: red;
-  margin-bottom: 10px;
-}
-
-.back-button {
-  margin-top: 20px;
-  background-color: #ccc;
-  color: black;
-}
-</style>

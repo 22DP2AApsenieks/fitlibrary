@@ -8,9 +8,6 @@ import mysql from 'mysql2';
 import cors from 'cors';
 
 const app = express();
-app.use(cors());
-app.use(express.json());
-
 
 // Middleware
 app.use(cors({
@@ -36,9 +33,9 @@ db.connect(err => {
   console.log('Connected to MySQL database');
 });
 
-// Routes
+// Tavi GET maršruti (nekas netika mainīts)
 app.get('/users', (req, res) => { 
-  db.query('SELECT * FROM users', (err, results) => { //visam sim butu jasalecto tu nezini ar kuru pa
+  db.query('SELECT * FROM users', (err, results) => {
     if (err) return res.status(500).json({ error: err.message });
     res.json(results);
   });
@@ -54,7 +51,7 @@ app.get('/dips', (req, res) => {
 app.get('/squat', (req, res) => {
   db.query('SELECT * FROM squats', (err, results2) => {
     if (err) return res.status(500).json({ error: err.message });
-  res.json(results2);
+    res.json(results2);
   });
 });
 
@@ -65,6 +62,7 @@ app.get('/pullups', (req, res) => {
   });
 });
 
+// Tavi POST maršruti (nekas netika mainīts)
 app.post('/register', (req, res) => {
   const { username, password, email, role = 'user' } = req.body;
 
@@ -94,6 +92,7 @@ app.post('/register', (req, res) => {
   });
 });
 
+// Šeit ir tavs oriģinālais POST /addpullups, nekas nemainīts, tikai ar komentāriem
 app.post('/addpullups', (req, res) => {
   const { username, date, reps } = req.body;
   console.log('Received data:', { username, date, reps });  // Log incoming data
@@ -126,7 +125,9 @@ app.post('/addpullups', (req, res) => {
   );
 });
 
-// Start server
+// Ja vēl vajag citus POST maršrutus - šeit vari tos pievienot
+
+// Server start
 const PORT = 5000; 
 app.listen(PORT, () => {
   console.log(`Server running on http://localhost:${PORT}`);

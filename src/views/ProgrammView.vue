@@ -1,45 +1,46 @@
 <template>
-  <div class="programm-view">
-    <h1>Programm View</h1>
-    <p>Ur in, {{ username }}!</p>
+  <div class="full-background">
+    <div class="programm-view">
+      <h1>Programm View</h1>
+      <p>Ur in, {{ username }}!</p>
 
-    <div v-if="loading">Loading data...</div>
+      <div v-if="loading">Loading data...</div>
 
-    <div v-else>
-      <h2>U do great! WOW:</h2>
-      <router-link to="/workout">
-        <button class="workout-button">Add pullup Workout</button>
-      </router-link>
+      <div v-else>
+        <h2>U do great! WOW:</h2>
+        <router-link to="/workout">
+          <button class="workout-button">Add pullup Workout</button>
+        </router-link>
 
+        <div class="exercise-section">
+          <h3>Pull-ups</h3>
+          <ul>
+            <li v-for="(entry, index) in pullups" :key="index">
+              {{ entry.reps }} reps ({{ formatDate(entry.date) }})
+            </li>
+          </ul>
+          <canvas id="pullupsChart"></canvas>
+        </div>
 
-      <div class="exercise-section">
-        <h3>Pull-ups</h3>
-        <ul>
-          <li v-for="(entry, index) in pullups" :key="index">
-            {{ entry.reps }} reps ({{ formatDate(entry.date) }})
-          </li>
-        </ul>
-        <canvas id="pullupsChart"></canvas>
-      </div>
+        <div class="exercise-section">
+          <h3>Dips</h3>
+          <ul>
+            <li v-for="(entry, index) in dips" :key="index">
+              {{ entry.reps }} reps ({{ formatDate(entry.date) }})
+            </li>
+          </ul>
+          <canvas id="dipsChart"></canvas>
+        </div>
 
-      <div class="exercise-section">
-        <h3>Dips</h3>
-        <ul>
-          <li v-for="(entry, index) in dips" :key="index">
-            {{ entry.reps }} reps ({{ formatDate(entry.date) }})
-          </li>
-        </ul>
-        <canvas id="dipsChart"></canvas>
-      </div>
-
-      <div class="exercise-section">
-        <h3>Squats</h3>
-        <ul>
-          <li v-for="(entry, index) in squats" :key="index">
-            {{ entry.reps }} reps ({{ formatDate(entry.date) }})
-          </li>
-        </ul>
-        <canvas id="squatsChart"></canvas>
+        <div class="exercise-section">
+          <h3>Squats</h3>
+          <ul>
+            <li v-for="(entry, index) in squats" :key="index">
+              {{ entry.reps }} reps ({{ formatDate(entry.date) }})
+            </li>
+          </ul>
+          <canvas id="squatsChart"></canvas>
+        </div>
       </div>
     </div>
   </div>
@@ -114,17 +115,11 @@ export default {
           scales: {
             y: {
               beginAtZero: true,
-              ticks: {
-                stepSize: 1
-              },
-              grid: {
-                color: '#ddd'
-              }
+              ticks: { stepSize: 1 },
+              grid: { color: '#ddd' }
             },
             x: {
-              grid: {
-                color: '#eee'
-              }
+              grid: { color: '#eee' }
             }
           }
         }
@@ -147,7 +142,6 @@ export default {
         squatRes.json()
       ]);
 
-      // Filter by username and sort by date (oldest to newest)
       this.pullups = pullData
         .filter(e => e.username.toLowerCase() === this.username)
         .sort((a, b) => new Date(a.date) - new Date(b.date));
@@ -175,10 +169,20 @@ export default {
 </script>
 
 <style scoped>
+.full-background {
+  background: linear-gradient(to bottom right, #330000, #660000, #990000);
+  min-height: 100vh;
+  padding: 0;
+  margin: 0;
+}
+
 .programm-view {
   padding: 20px;
   max-width: 800px;
   margin: 0 auto;
+  background: linear-gradient(to bottom right, #ffffff, #a59494, #aaa0a0);
+  border-radius: 16px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
 }
 
 .exercise-section {
