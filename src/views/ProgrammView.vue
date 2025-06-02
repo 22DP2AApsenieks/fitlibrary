@@ -22,6 +22,10 @@
           <canvas id="pullupsChart"></canvas>
         </div>
 
+        <router-link to="/dipworkout">
+          <button class="dipworkout-button">Add Dips Workout</button>
+        </router-link>
+
         <div class="exercise-section">
           <h3>Dips</h3>
           <ul>
@@ -31,6 +35,10 @@
           </ul>
           <canvas id="dipsChart"></canvas>
         </div>
+
+        <router-link to="/squatview">
+          <button class="squatview-button">Add Squat Workout</button>
+        </router-link>
 
         <div class="exercise-section">
           <h3>Squats</h3>

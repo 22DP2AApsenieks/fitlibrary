@@ -92,7 +92,6 @@ app.post('/register', (req, res) => {
   });
 });
 
-// Šeit ir tavs oriģinālais POST /addpullups, nekas nemainīts, tikai ar komentāriem
 app.post('/addpullups', (req, res) => {
   const { username, date, reps } = req.body;
   console.log('Received data:', { username, date, reps });  // Log incoming data
@@ -125,7 +124,72 @@ app.post('/addpullups', (req, res) => {
   );
 });
 
-// Ja vēl vajag citus POST maršrutus - šeit vari tos pievienot
+// ado dipus
+app.post('/adddips', (req, res) => {
+  const { username, date, reps } = req.body;
+  console.log('Received data:', { username, date, reps });  // Log incoming data
+
+  // Check for missing fields
+  if (!username || !date || !reps) {
+    console.error('Missing required fields:', { username, date, reps });
+    return res.status(400).json({ error: 'Missing required fields' });
+  }
+
+  // Ensure date is in correct format (ISO 8601 format)
+  const dateObj = new Date(date);
+  if (isNaN(dateObj.getTime())) {
+    console.error('Invalid date format:', date);
+    return res.status(400).json({ error: 'Invalid date format' });
+  }
+
+  // Insert the data into the database
+  db.query(
+    `INSERT INTO dips (username, date, reps) VALUES (?, ?, ?)`,
+    [username, date, reps],
+    (err, result) => {
+      if (err) {
+        console.error('Error saving workout:', err.message);
+        return res.status(500).json({ error: 'Neizdevās saglabāt treniņu' });
+      }
+      console.log('Treniņš pievienots:', result);
+      res.json({ message: 'Treniņš pievienots' });
+    }
+  );
+});
+
+// ado squats
+app.post('/addsquats', (req, res) => {
+  const { username, date, reps } = req.body;
+  console.log('Received data:', { username, date, reps });  // Log incoming data
+
+  // Check for missing fields
+  if (!username || !date || !reps) {
+    console.error('Missing required fields:', { username, date, reps });
+    return res.status(400).json({ error: 'Missing required fields' });
+  }
+
+  // Ensure date is in correct format (ISO 8601 format)
+  const dateObj = new Date(date);
+  if (isNaN(dateObj.getTime())) {
+    console.error('Invalid date format:', date);
+    return res.status(400).json({ error: 'Invalid date format' });
+  }
+
+  // Insert the data into the database
+  db.query(
+    `INSERT INTO squats (username, date, reps) VALUES (?, ?, ?)`,
+    [username, date, reps],
+    (err, result) => {
+      if (err) {
+        console.error('Error saving workout:', err.message);
+        return res.status(500).json({ error: 'Neizdevās saglabāt treniņu' });
+      }
+      console.log('Treniņš pievienots:', result);
+      res.json({ message: 'Treniņš pievienots' });
+    }
+  );
+});
+
 
 // Server start
 const PORT = 5000; 

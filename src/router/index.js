@@ -8,6 +8,8 @@ import ProplanView from '@/views/ProplanView.vue'
 import ProplusView from '@/views/ProplusView.vue'
 import ProgrammView from '@/views/ProgrammView.vue'
 import WorkoutView from '@/views/WorkoutView.vue'
+import DipWorkoutView from '@/views/DipWorkoutView.vue'
+import SquatView from '@/views/SquatView.vue'
 
 import axios from 'axios'
 axios.defaults.baseURL = 'http://localhost:5000'
@@ -64,7 +66,17 @@ const router = createRouter({
       path: '/workout',
       name: 'WorkoutView',
       component: WorkoutView,
-    } 
+    },
+    {
+      path: '/dipworkout',
+      name: 'DipWorkoutView',
+      component: DipWorkoutView,
+    },
+    {
+    path: '/squatview',
+    name: 'SquatView',
+    component: SquatView
+    }
   ],
 })
 
