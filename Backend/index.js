@@ -190,9 +190,81 @@ app.post('/addsquats', (req, res) => {
   );
 });
 
+app.post('/reviews', (req, res) => {
+  const { username, review } = req.body;
 
-// Server start
-const PORT = 5000; 
-app.listen(PORT, () => {
-  console.log(`Server running on http://localhost:${PORT}`);
+  if (!username || !review) {
+    return res.status(400).json({ error: 'Missing username or review text' });
+  }
+
+  // First, get the user's email from the users table
+  db.query(
+    'SELECT email FROM users WHERE username = ?',
+    [username],
+    (err, results) => {
+      if (err) {
+        console.error('Error fetching user email:', err.message);
+        return res.status(500).json({ error: 'Database error' });
+      }
+      if (results.length === 0) {
+        return res.status(404).json({ error: 'User not found' });
+      }
+
+      const email = results[0].email;
+      const today = new Date().toISOString().split('T')[0]; // YYYY-MM-DD
+
+      // Now insert the review using the email
+      db.query(
+        'INSERT INTO reviews (email, review, date) VALUES (?, ?, ?)',
+        [email, review, today],
+        (err, result) => {
+          if (err) {
+            console.error('Error inserting review:', err.message);
+            return res.status(500).json({ error: 'Neizdevās pievienot atsauksmi' });
+          }
+          console.log(`Review by ${email} added`);
+          res.json({ message: 'Atsauksme veiksmīgi pievienota' });
+        }
+      );
+    }
+  );
 });
+
+
+app.delete('/delete-account/:username', (req, res) => {
+  const username = req.params.username;
+
+  if (!username) {
+    return res.status(400).json({ error: 'Username is required' });
+  }
+
+  // Delete from all workout tables and then the users table
+  const tables = ['pullups', 'dips', 'squats', 'users'];
+  let completed = 0;
+  let hasError = false;
+
+  tables.forEach(table => {
+    db.query(`DELETE FROM ${table} WHERE username = ?`, [username], (err, result) => {
+      if (err) {
+        console.error(`Error deleting from ${table}:`, err.message);
+        if (!hasError) {
+          hasError = true;
+          return res.status(500).json({ error: `Failed to delete from ${table}` });
+        }
+        return;
+      }
+
+      completed++;
+      if (completed === tables.length && !hasError) {
+        console.log(`All data for ${username} deleted`);
+        res.json({ message: 'User and all related data deleted successfully' });
+      }
+    });
+  });
+});
+
+const PORT = 5000;
+app.listen(PORT, () => {
+  console.log(`Server running on port ${PORT}`);
+});
+

@@ -49,6 +49,19 @@
           </ul>
           <canvas id="squatsChart"></canvas>
         </div>
+        <div class="review-section">
+          <h3>Leave a Review</h3>
+          <textarea v-model="reviewText" placeholder="Do u like this programm?" rows="4"></textarea>
+          <button @click="submitReview" class="submit-review-button">Submit Review</button>
+          <p v-if="reviewMessage">{{ reviewMessage }}</p>
+          <!-- Debug: Show review payload -->
+          <pre style="background:#eee;padding:8px;border-radius:6px;margin-top:10px;">
+{{ reviewPayload }}
+          </pre>
+        </div>
+        <div style="margin-top: 40px;">
+          <button @click="confirmDelete" class="delete-button">Delete My Account</button>
+        </div>
       </div>
     </div>
   </div>
@@ -67,7 +80,18 @@ export default {
       dips: [],
       squats: [],
       loading: true,
+      charts: {},
+      reviewText: '',
+      reviewMessage: ''
     };
+  },
+  computed: {
+    reviewPayload() {
+      return JSON.stringify({
+        username: this.username,
+        review: this.reviewText
+      }, null, 2);
+    }
   },
   methods: {
     formatDate(dateStr) {
@@ -86,9 +110,14 @@ export default {
       const ctx = document.getElementById(canvasId);
       if (!ctx || data.length === 0) return;
 
+      // Destroy previous chart if exists to prevent overlay
+      if (this.charts[canvasId]) {
+        this.charts[canvasId].destroy();
+      }
+
       const color = this.getTrendColor(data);
 
-      new Chart(ctx, {
+      this.charts[canvasId] = new Chart(ctx, {
         type: 'line',
         data: {
           labels: data.map(e => this.formatDate(e.date)),
@@ -132,46 +161,95 @@ export default {
           }
         }
       });
+    },
+    async fetchData() {
+      try {
+        const [pullRes, dipRes, squatRes] = await Promise.all([
+          fetch('http://localhost:5000/pullups'),
+          fetch('http://localhost:5000/dips'),
+          fetch('http://localhost:5000/squat')
+        ]);
+
+        const [pullData, dipData, squatData] = await Promise.all([
+          pullRes.json(),
+          dipRes.json(),
+          squatRes.json()
+        ]);
+
+        this.pullups = pullData
+          .filter(e => e.username.toLowerCase() === this.username)
+          .sort((a, b) => new Date(a.date) - new Date(b.date));
+
+        this.dips = dipData
+          .filter(e => e.username.toLowerCase() === this.username)
+          .sort((a, b) => new Date(a.date) - new Date(b.date));
+
+        this.squats = squatData
+          .filter(e => e.username.toLowerCase() === this.username)
+          .sort((a, b) => new Date(a.date) - new Date(b.date));
+
+      } catch (error) {
+        console.error('Kļūda iegūstot treniņu datus:', error);
+      } finally {
+        this.loading = false;
+        this.$nextTick(() => {
+          this.drawChart('pullupsChart', this.pullups);
+          this.drawChart('dipsChart', this.dips);
+          this.drawChart('squatsChart', this.squats);
+        });
+      }
+    },
+    async submitReview() {
+      this.reviewMessage = '';
+      if (!this.reviewText.trim()) {
+        this.reviewMessage = 'Review cannot be empty!';
+        return;
+      }
+      // Log the payload before sending
+      const payload = {
+        username: this.username,
+        review: this.reviewText
+      };
+      console.log('Submitting review payload:', payload);
+
+      try {
+        const res = await fetch('http://localhost:5000/reviews', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        });
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.error || 'Failed to submit review');
+        this.reviewMessage = 'Review submitted!';
+        this.reviewText = '';
+      } catch (err) {
+        this.reviewMessage = err.message;
+      }
+    },
+    confirmDelete() {
+      const answer = prompt("Are you sure you want to delete your account? Type 'yes' to confirm:");
+      if (answer?.toLowerCase() === 'yes') {
+        fetch(`http://localhost:5000/delete-account/${this.username}`, {
+          method: 'DELETE'
+        })
+        .then(res => {
+          if (!res.ok) throw new Error('Server error');
+          alert('Your account and data have been deleted.');
+          localStorage.removeItem('loggedInUser');
+          this.$router.push('/'); // Or '/login' if you want to redirect there
+        })
+        .catch(err => {
+          console.error('Error deleting account:', err);
+          alert('Failed to delete your account.');
+        });
+      } else {
+        alert('Account deletion cancelled.');
+      }
     }
   },
-  async mounted() {
+  mounted() {
     this.username = (localStorage.getItem('loggedInUser') || 'nezināmais').toLowerCase();
-
-    try {
-      const [pullRes, dipRes, squatRes] = await Promise.all([
-        fetch('http://localhost:5000/pullups'),
-        fetch('http://localhost:5000/dips'),
-        fetch('http://localhost:5000/squat')
-      ]);
-
-      const [pullData, dipData, squatData] = await Promise.all([
-        pullRes.json(),
-        dipRes.json(),
-        squatRes.json()
-      ]);
-
-      this.pullups = pullData
-        .filter(e => e.username.toLowerCase() === this.username)
-        .sort((a, b) => new Date(a.date) - new Date(b.date));
-
-      this.dips = dipData
-        .filter(e => e.username.toLowerCase() === this.username)
-        .sort((a, b) => new Date(a.date) - new Date(b.date));
-
-      this.squats = squatData
-        .filter(e => e.username.toLowerCase() === this.username)
-        .sort((a, b) => new Date(a.date) - new Date(b.date));
-
-    } catch (error) {
-      console.error('Kļūda iegūstot treniņu datus:', error);
-    } finally {
-      this.loading = false;
-      this.$nextTick(() => {
-        this.drawChart('pullupsChart', this.pullups);
-        this.drawChart('dipsChart', this.dips);
-        this.drawChart('squatsChart', this.squats);
-      });
-    }
+    this.fetchData();
   }
 };
 </script>

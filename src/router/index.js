@@ -10,6 +10,7 @@ import ProgrammView from '@/views/ProgrammView.vue'
 import WorkoutView from '@/views/WorkoutView.vue'
 import DipWorkoutView from '@/views/DipWorkoutView.vue'
 import SquatView from '@/views/SquatView.vue'
+import AdminView from '../views/AdminView.vue';
 
 import axios from 'axios'
 axios.defaults.baseURL = 'http://localhost:5000'
@@ -76,8 +77,27 @@ const router = createRouter({
     path: '/squatview',
     name: 'SquatView',
     component: SquatView
+    },
+    {
+    path: '/admin',
+    name: 'AdminView',
+    component: AdminView,
+    meta: { requiresAdmin: true }
     }
   ],
 })
+
+router.beforeEach((to, from, next) => {
+  if (to.meta.requiresAdmin) {
+    const userRole = localStorage.getItem('userRole');
+    if (userRole === 'admin') {
+      next();
+    } else {
+      next('/'); // or show error
+    }
+  } else {
+    next();
+  }
+});
 
 export default router
