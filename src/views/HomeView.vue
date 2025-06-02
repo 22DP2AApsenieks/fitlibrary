@@ -36,7 +36,48 @@
       </div>
     </div>
   </section>
+
+  <!-- attelo -->
+  <div class="review-ticker-container" v-if="reviews.length">
+    <div class="review-ticker">
+      <span v-for="(review, idx) in reviews" :key="idx" class="review-item">
+        "{{ review.review }}" — <b>{{ review.author }}</b>
+      </span>
+    </div>
+  </div>
 </template>
+
+<script>
+export default {
+  data() {
+    return {
+      reviews: []
+    };
+  },
+  mounted() {
+    // Redirect to admin panel if username is 'admin'
+    const username = localStorage.getItem('loggedInUser');
+    if (username === 'admin') {
+      this.$router.push('/admin');
+      return;
+    }
+
+    fetch('http://localhost:5000/allreviews')
+      .then(res => res.json())
+      .then(data => {
+        this.reviews = data.map(r => ({
+          review: r.review,
+          author: r.email || r.username || 'Anonymous'
+        }));
+      })
+      .catch(() => {
+        this.reviews = [
+          { review: "Great app!", author: "Anonymous" }
+        ];
+      });
+  }
+};
+</script>
 
 <style scoped>
 .hero-section {
@@ -204,6 +245,39 @@ h1 {
   }
 }
 
+/* Review Ticker Styles */
+.review-ticker-container {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(51,0,0,0.95);
+  z-index: 1000;
+  padding: 0;
+  height: 48px;
+  display: flex;
+  align-items: center;
+  overflow: hidden;
+}
+
+.review-ticker {
+  display: flex;
+  white-space: nowrap;
+  animation: ticker-scroll 40s linear infinite;
+}
+
+.review-item {
+  margin: 0 40px;
+  color: #ffd700;
+  font-size: 1.1rem;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+@keyframes ticker-scroll {
+  0% { transform: translateX(100%);}
+  100% { transform: translateX(-100%);}
+}
+
 /* Responsive */
 @media (max-width: 720px) {
   h1 {
@@ -221,6 +295,13 @@ h1 {
   .features {
     max-width: 100%;
     padding: 0 10px;
+  }
+  .review-item {
+    margin: 0 16px;
+    font-size: 0.95rem;
+  }
+  .review-ticker-container {
+    height: 36px;
   }
 }
 </style>

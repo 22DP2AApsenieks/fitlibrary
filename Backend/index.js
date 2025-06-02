@@ -230,6 +230,12 @@ app.post('/reviews', (req, res) => {
   );
 });
 
+app.get('/allreviews', (req, res) => {
+  db.query('SELECT review, email FROM reviews', (err, results) => {
+    if (err) return res.status(500).json({ error: err.message });
+    res.json(results);
+  });
+});
 
 app.delete('/delete-account/:username', (req, res) => {
   const username = req.params.username;

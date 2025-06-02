@@ -49,9 +49,15 @@ const login = async () => {
   const user = users.value.find(u => u.username === form.Username);
 
   if (user && user.password === form.Password) {
-  console.log('Login successful');
-  localStorage.setItem('loggedInUser', user.username);  // Save username
-  router.push('/programm'); // Redirect to /programm
+    console.log('Login successful');
+    localStorage.setItem('loggedInUser', user.username);  // Save username
+
+    // Redirect based on role or username
+    if (user.username === 'admin' || user.role === 'admin') {
+      router.push('/admin');
+    } else {
+      router.push('/programm');
+    }
   } else {
     console.error('Incorrect username or password');
     errorMessage.value = 'Incorrect username or password';

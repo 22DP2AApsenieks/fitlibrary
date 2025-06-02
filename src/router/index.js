@@ -80,7 +80,7 @@ const router = createRouter({
     },
     {
     path: '/admin',
-    name: 'AdminView',
+    name: 'Admin',
     component: AdminView,
     meta: { requiresAdmin: true }
     }
