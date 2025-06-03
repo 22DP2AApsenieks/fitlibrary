@@ -17,17 +17,7 @@
         </div>
       </form>
 
-      <div class="user-list">
-        <h2>Esošie Lietotāji (test)</h2>
-        <ul>
-          <li v-for="(user, index) in users" :key="index">
-            <strong>Lietotājvārds:</strong> {{ user.username }}<br />
-            <strong>Parole:</strong> {{ user.password }}<br />
-            <strong>E-pasts:</strong> {{ user.email }}<br />
-            <strong>Loma:</strong> {{ user.role }}
-          </li>
-        </ul>
-      </div>
+      
     </div>
   </section>
 </template>

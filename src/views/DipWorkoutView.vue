@@ -24,7 +24,7 @@
 export default {
   data() {
     return {
-      username: 'adam', // statiski, vienkāršībai
+      username: localStorage.getItem('loggedInUser') || '',
       reps: 1,
       date: new Date().toISOString().slice(0, 10),
       message: '',

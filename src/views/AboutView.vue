@@ -18,7 +18,7 @@ import { RouterLink, RouterView } from 'vue-router';
           loading="lazy"
           allowfullscreen
           referrerpolicy="no-referrer-when-downgrade"
-          src="https://www.google.com/maps/embed/v1/directions?key=YOUR_GOOGLE_MAPS_API_KEY&origin=Your_Location&destination=Rīgas+Valsts+Tehnikums">
+          src="https://www.google.com/maps?q=Rīga,+Latvia&output=embed">
         </iframe>
       </div>
     </main>

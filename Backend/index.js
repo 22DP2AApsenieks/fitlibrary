@@ -237,6 +237,7 @@ app.get('/allreviews', (req, res) => {
   });
 });
 
+
 app.delete('/delete-account/:username', (req, res) => {
   const username = req.params.username;
 
@@ -264,6 +265,32 @@ app.delete('/delete-account/:username', (req, res) => {
       if (completed === tables.length && !hasError) {
         console.log(`All data for ${username} deleted`);
         res.json({ message: 'User and all related data deleted successfully' });
+      }
+    });
+  });
+});
+
+app.put('/edit-username', (req, res) => {
+  const { oldUsername, newUsername } = req.body;
+  if (!oldUsername || !newUsername) {
+    return res.status(400).json({ error: 'Both old and new username are required' });
+  }
+  const tables = ['users', 'pullups', 'dips', 'squats'];
+  let completed = 0;
+  let hasError = false;
+
+  tables.forEach(table => {
+    db.query('UPDATE ' + table + ' SET username = ? WHERE username = ?', [newUsername, oldUsername], (err, result) => {
+      if (err) {
+        if (!hasError) {
+          hasError = true;
+          return res.status(500).json({ error: `Failed to update username in ${table}` });
+        }
+        return;
+      }
+      completed++;
+      if (completed === tables.length && !hasError) {
+        res.json({ message: 'Username updated in all tables' });
       }
     });
   });
