@@ -55,13 +55,7 @@ export default {
     };
   },
   mounted() {
-    // Redirect to admin panel if username is 'admin'
-    const username = localStorage.getItem('loggedInUser');
-    if (username === 'admin') {
-      this.$router.push('/admin');
-      return;
-    }
-
+    // Only fetch reviews, no redirect logic here!
     fetch('http://localhost:5000/allreviews')
       .then(res => res.json())
       .then(data => {

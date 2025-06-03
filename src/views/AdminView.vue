@@ -1,7 +1,7 @@
 <template>
   <div>
     <h1>Admin Panel</h1>
-    <p>Welcome, {{ username }}!</p>
+    <p>welcome {{ username }}!</p>
     <!-- Add admin features here -->
   </div>
 </template>
@@ -10,7 +10,7 @@
 export default {
   data() {
     return {
-      username: localStorage.getItem('loggedInUser') || 'admin'
+      username: localStorage.getItem('loggedInUser') || ''
     };
   }
 };

@@ -74,30 +74,19 @@ const router = createRouter({
       component: DipWorkoutView,
     },
     {
-    path: '/squatview',
-    name: 'SquatView',
-    component: SquatView
+      path: '/squatview',
+      name: 'SquatView',
+      component: SquatView
     },
     {
-    path: '/admin',
-    name: 'Admin',
-    component: AdminView,
-    meta: { requiresAdmin: true }
+      path: '/admin',
+      name: 'Admin',
+      component: AdminView
     }
   ],
 })
 
-router.beforeEach((to, from, next) => {
-  if (to.meta.requiresAdmin) {
-    const userRole = localStorage.getItem('userRole');
-    if (userRole === 'admin') {
-      next();
-    } else {
-      next('/'); // or show error
-    }
-  } else {
-    next();
-  }
-});
+
+
 
 export default router

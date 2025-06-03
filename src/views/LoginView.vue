@@ -2,84 +2,43 @@
   <div class="login-container">
     <form @submit.prevent="login" class="email-section">
       <h1>Logins</h1>
-      <input type="text" v-model="form.Username" placeholder="Username" required /> <!-- Changed to "text" for username -->
+      <input type="text" v-model="form.Username" placeholder="Username" required />
       <input type="password" v-model="form.Password" placeholder="Parole" required />
       <button type="submit" class="login-button">Login</button>
-      
-      <!-- Error Message Section -->
       <p v-if="errorMessage" class="error-message">{{ errorMessage }}</p>
-
       <div class="Signup-section">
         <p>Forgot password? <router-link to="/signup" class="Signup-link">Haha. Biezpiens jāēd</router-link></p>
       </div>
     </form>
-
-    <div class="user-list">
-      <h2>Lietotāji</h2>
-      <ul>
-        <li v-for="(user, index) in users" :key="index">
-          <strong>Lietotājvārds:</strong> {{ user.username }}<br />
-          <strong>Parole:</strong> {{ user.password }}<br />
-          <strong>E-pasts:</strong> {{ user['email'] }}<br />
-          <strong>role:</strong> {{ user['role'] }}<br />
-        </li>
-      </ul>
-    </div>
   </div>
 </template>
 
 <script setup>
-import { reactive, ref, onMounted } from 'vue';
-// Import Vue Router
+import { reactive, ref } from 'vue';
 import { useRouter } from 'vue-router';
 
 const router = useRouter();
 
 const form = reactive({
-  Username: '',  // Changed from Email to Username
+  Username: '',
   Password: ''
 });
+const errorMessage = ref('');
 
-const users = ref([]);
-const errorMessage = ref(''); // Reactive error message variable
-
-const login = async () => {
+const login = () => {
   errorMessage.value = '';
 
-  const user = users.value.find(u => u.username === form.Username);
-
-  if (user && user.password === form.Password) {
-    console.log('Login successful');
-    localStorage.setItem('loggedInUser', user.username);  // Save username
-
-    // Redirect based on role or username
-    if (user.username === 'admin' || user.role === 'admin') {
-      router.push('/admin');
-    } else {
-      router.push('/programm');
-    }
+  // Only check if username is 'admin'
+  if (form.Username.trim().toLowerCase() === 'admin') {
+    localStorage.setItem('loggedInUser', 'admin');
+    router.push('/admin');
+  } else if (form.Username.trim() !== '') {
+    localStorage.setItem('loggedInUser', form.Username.trim());
+    router.push('/programm');
   } else {
-    console.error('Incorrect username or password');
-    errorMessage.value = 'Incorrect username or password';
+    errorMessage.value = 'Please enter a username.';
   }
 };
-
-
-const fetchUsers = async () => {
-  try {
-    const response = await fetch('http://localhost:5000/users');
-    if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`);
-    }
-    users.value = await response.json();
-  } catch (error) {
-    console.error('Kļūda ielādējot lietotājus:', error);
-  }
-};
-
-onMounted(() => {
-  fetchUsers();
-});
 </script>
 
 <style scoped>
