@@ -11,6 +11,8 @@ import WorkoutView from '@/views/WorkoutView.vue'
 import DipWorkoutView from '@/views/DipWorkoutView.vue'
 import SquatView from '@/views/SquatView.vue'
 import AdminView from '../views/AdminView.vue';
+import BodyweightExercisesView from '../views/BodyweightExercisesView.vue'  
+
 
 import axios from 'axios'
 axios.defaults.baseURL = 'http://localhost:5000'
@@ -82,6 +84,11 @@ const router = createRouter({
       path: '/admin',
       name: 'Admin',
       component: AdminView
+    },
+    {
+      path: '/bexercises',
+      name: 'BodyweightExercises',
+      component: BodyweightExercisesView
     }
   ],
 })

@@ -11,6 +11,7 @@
         <router-link to="/workout">
           <button class="workout-button">Add pullup Workout</button>
         </router-link>
+          
 
         <div class="exercise-section">
           <h3>Pull-ups</h3>
@@ -21,6 +22,11 @@
           </ul>
           <canvas id="pullupsChart"></canvas>
         </div>
+
+        <router-link to="/bexercises">
+          <button class="bexercises-button">Bodyweight Exercises</button>
+        </router-link>
+        
 
         <router-link to="/dipworkout">
           <button class="dipworkout-button">Add Dips Workout</button>
