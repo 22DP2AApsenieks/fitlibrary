@@ -8,53 +8,12 @@
 
       <div v-else>
         <h2>U do great! WOW:</h2>
-        <router-link to="/workout">
-          <button class="workout-button">Add pullup Workout</button>
-        </router-link>
           
-
-        <div class="exercise-section">
-          <h3>Pull-ups</h3>
-          <ul>
-            <li v-for="(entry, index) in pullups" :key="index">
-              {{ entry.reps }} reps ({{ formatDate(entry.date) }})
-            </li>
-          </ul>
-          <canvas id="pullupsChart"></canvas>
-        </div>
-
         <router-link to="/bexercises">
           <button class="bexercises-button">Bodyweight Exercises</button>
         </router-link>
-        
 
-        <router-link to="/dipworkout">
-          <button class="dipworkout-button">Add Dips Workout</button>
-        </router-link>
-
-        <div class="exercise-section">
-          <h3>Dips</h3>
-          <ul>
-            <li v-for="(entry, index) in dips" :key="index">
-              {{ entry.reps }} reps ({{ formatDate(entry.date) }})
-            </li>
-          </ul>
-          <canvas id="dipsChart"></canvas>
-        </div>
-
-        <router-link to="/squatview">
-          <button class="squatview-button">Add Squat Workout</button>
-        </router-link>
-
-        <div class="exercise-section">
-          <h3>Squats</h3>
-          <ul>
-            <li v-for="(entry, index) in squats" :key="index">
-              {{ entry.reps }} reps ({{ formatDate(entry.date) }})
-            </li>
-          </ul>
-          <canvas id="squatsChart"></canvas>
-        </div>
+      
         <div class="review-section">
           <h3>Leave a Review</h3>
           <textarea v-model="reviewText" placeholder="Do u like this programm?" rows="4"></textarea>
