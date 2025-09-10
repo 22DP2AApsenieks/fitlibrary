@@ -12,8 +12,8 @@ import { RouterLink, RouterView } from 'vue-router';
       <!-- Google Maps Embed -->
       <div class="map-container">
         <iframe
-          width="600"
-          height="450"
+          width="300"
+          height="250"
           style="border:0"
           loading="lazy"
           allowfullscreen
@@ -50,6 +50,9 @@ nav ul li a {
 main {
   text-align: center;
   padding: 20px;
+  background: linear-gradient(to bottom right, #0b0053, #660000, #990000);
+  color: #fff;
+
 }
 main img {
   max-width: 100%;
