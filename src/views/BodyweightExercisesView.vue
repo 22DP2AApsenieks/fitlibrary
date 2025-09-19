@@ -51,6 +51,10 @@
           </ul>
           <canvas id="squatsChart"></canvas>
         </div>
+
+         <router-link to="/programm">
+          <button class="back-button">Go back</button>
+        </router-link>
       </div>
     </div>
   </div>
@@ -250,6 +254,11 @@ export default {
   padding: 0;
   margin: 0;
 }
+.back-button {
+  margin-top: 20px; /* increases space above the button */
+  /* you can also add margin-bottom, margin-left, margin-right if needed */
+}
+
 
 .programm-view {
   padding: 20px;

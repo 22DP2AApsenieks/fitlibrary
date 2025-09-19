@@ -20,7 +20,7 @@ app.use(express.json());
 const db = mysql.createConnection({
   host: '127.0.0.1',
   user: 'root',       // Replace with your MySQL username
-  password: '@AdamsSaf',       // Replace with your MySQL password
+  password: '@Adams#17',       // Replace with your MySQL password
   database: 'fitlib'
 });
 
