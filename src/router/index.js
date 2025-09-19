@@ -11,7 +11,8 @@ import WorkoutView from '@/views/WorkoutView.vue'
 import DipWorkoutView from '@/views/DipWorkoutView.vue'
 import SquatView from '@/views/SquatView.vue'
 import AdminView from '../views/AdminView.vue';
-import BodyweightExercisesView from '../views/BodyweightExercisesView.vue'  
+import BodyweightExercisesView from '../views/BodyweightExercisesView.vue' 
+import GymExercisesView from '../views/GymExercisesView.vue'
 
 
 import axios from 'axios'
@@ -89,7 +90,12 @@ const router = createRouter({
       path: '/bexercises',
       name: 'BodyweightExercises',
       component: BodyweightExercisesView
-    }
+    },
+    {
+      path: '/g',
+      name: 'GymExercises',
+      component: GymExercisesView
+    },
   ],
 })
 

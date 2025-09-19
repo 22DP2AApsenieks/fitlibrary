@@ -13,6 +13,12 @@
           <button class="bexercises-button">Bodyweight Exercises</button>
         </router-link>
 
+        <router-link to="/g">
+          <button class="bexercises-button">Gym Exercises</button>
+        </router-link>
+
+
+
       
         <div class="review-section">
           <h3>Leave a Review</h3>
