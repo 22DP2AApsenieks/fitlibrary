@@ -62,7 +62,32 @@ app.get('/pullups', (req, res) => {
   });
 });
 
-// Tavi POST maršruti (nekas netika mainīts)
+// LOGIN route
+app.post('/login', (req, res) => {
+  const { username, password } = req.body;
+
+  if (!username || !password) {
+    return res.status(400).json({ error: 'Username and password are required' });
+  }
+
+  db.query(
+    'SELECT * FROM users WHERE username = ? AND password = ?',
+    [username, password],
+    (err, results) => {
+      if (err) {
+        console.error('Database error during login:', err.message);
+        return res.status(500).json({ error: 'Database error' });
+      }
+
+      if (results.length > 0) {
+        res.json({ success: true, user: results[0] });
+      } else {
+        res.status(401).json({ success: false, error: 'Invalid username or password' });
+      }
+    }
+  );
+});
+
 app.post('/register', (req, res) => {
   const { username, password, email, role = 'user' } = req.body;
 
@@ -333,87 +358,37 @@ app.get('/latpulldown', (req, res) => {
   });
 });
 
-// POST routes
-app.post('/addbenchpress', (req, res) => {
-  const { username, date, oneRepMax } = req.body;
-  if (!username || !date || oneRepMax === undefined || oneRepMax === null) {
-    return res.status(400).json({ error: 'Missing required fields' });
-  }
+// Helper to insert 1RM
+function addExerciseRoute(route, table) {
+  app.post(route, (req, res) => {
+    const { username, date, oneRepMax } = req.body;
 
-  db.query(
-    'INSERT INTO benchpress (username, date, oneRepMax) VALUES (?, ?, ?)',
-    [username, date, oneRepMax],
-    (err) => {
-      if (err) {
-        console.error('Error saving benchpress:', err.message);
-        return res.status(500).json({ error: 'Error saving benchpress' });
+    if (!username || !date || oneRepMax === undefined || oneRepMax === null) {
+      return res.status(400).json({ error: 'Missing required fields' });
+    }
+
+    db.query(
+      `INSERT INTO ${table} (username, date, oneRepMax) VALUES (?, ?, ?)`,
+      [username, date, oneRepMax],
+      (err) => {
+        if (err) {
+          console.error(`Error saving ${table}:`, err.message);
+          return res.status(500).json({ error: `Error saving ${table}` });
+        }
+        res.json({ message: `${table} 1RM saved!` });
       }
-      res.json({ message: 'Bench press 1RM saved!' });
-    }
-  );
+    );
+  });
+}
 
-});
+// POST routes
+addExerciseRoute('/addbenchpress', 'benchpress');
+addExerciseRoute('/adddeadlift', 'deadlift');
+addExerciseRoute('/addgymsquat', 'gymsquat');
+addExerciseRoute('/addoverheadpress', 'overheadpress');
+addExerciseRoute('/addlatpulldown', 'latpulldown');
 
 
-app.post('/adddeadlift', (req, res) => {
-  const { username, date, reps, weight } = req.body;
-  if (!username || !date || !reps || !weight) {
-    return res.status(400).json({ error: 'Missing required fields' });
-  }
-  db.query(
-    'INSERT INTO deadlift (username, date, reps, weight) VALUES (?, ?, ?, ?)',
-    [username, date, reps, weight],
-    (err, result) => {
-      if (err) return res.status(500).json({ error: 'Error saving deadlift' });
-      res.json({ message: 'Deadlift workout added' });
-    }
-  );
-});
-
-app.post('/addgymsquat', (req, res) => {
-  const { username, date, reps, weight } = req.body;
-  if (!username || !date || !reps || !weight) {
-    return res.status(400).json({ error: 'Missing required fields' });
-  }
-  db.query(
-    'INSERT INTO gymsquat (username, date, reps, weight) VALUES (?, ?, ?, ?)',
-    [username, date, reps, weight],
-    (err, result) => {
-      if (err) return res.status(500).json({ error: 'Error saving gym squat' });
-      res.json({ message: 'Gym squat workout added' });
-    }
-  );
-});
-
-app.post('/addoverheadpress', (req, res) => {
-  const { username, date, reps, weight } = req.body;
-  if (!username || !date || !reps || !weight) {
-    return res.status(400).json({ error: 'Missing required fields' });
-  }
-  db.query(
-    'INSERT INTO overheadpress (username, date, reps, weight) VALUES (?, ?, ?, ?)',
-    [username, date, reps, weight],
-    (err, result) => {
-      if (err) return res.status(500).json({ error: 'Error saving overhead press' });
-      res.json({ message: 'Overhead press workout added' });
-    }
-  );
-});
-
-app.post('/addlatpulldown', (req, res) => {
-  const { username, date, reps, weight } = req.body;
-  if (!username || !date || !reps || !weight) {
-    return res.status(400).json({ error: 'Missing required fields' });
-  }
-  db.query(
-    'INSERT INTO latpulldown (username, date, reps, weight) VALUES (?, ?, ?, ?)',
-    [username, date, reps, weight],
-    (err, result) => {
-      if (err) return res.status(500).json({ error: 'Error saving lat pulldown' });
-      res.json({ message: 'Lat pulldown workout added' });
-    }
-  );
-});
 
 const PORT = 5000;
 app.listen(PORT, () => {

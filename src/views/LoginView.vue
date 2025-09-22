@@ -25,20 +25,37 @@ const form = reactive({
 });
 const errorMessage = ref('');
 
-const login = () => {
+const login = async () => {
   errorMessage.value = '';
 
-  // Only check if username is 'admin'
-  if (form.Username.trim().toLowerCase() === 'admin') {
-    localStorage.setItem('loggedInUser', 'admin');
-    router.push('/admin');
-  } else if (form.Username.trim() !== '') {
-    localStorage.setItem('loggedInUser', form.Username.trim());
-    router.push('/programm');
-  } else {
-    errorMessage.value = 'Please enter a username.';
+  try {
+    const response = await fetch('http://localhost:5000/login', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        username: form.Username.trim(),
+        password: form.Password
+      })
+    });
+
+    const data = await response.json();
+
+    if (response.ok && data.success) {
+      localStorage.setItem('loggedInUser', form.Username.trim());
+
+      if (form.Username.trim().toLowerCase() === 'admin') {
+        router.push('/admin');
+      } else {
+        router.push('/programm');
+      }
+    } else {
+      errorMessage.value = data.error || 'Invalid login';
+    }
+  } catch (err) {
+    errorMessage.value = 'Server connection failed';
   }
 };
+
 </script>
 
 <style scoped>

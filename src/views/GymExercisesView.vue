@@ -14,7 +14,7 @@
         >
           <h3>{{ exercise.name }}</h3>
 
-          <!-- Calculator part -->
+          <!-- Input fields -->
           <div class="input-group">
             <label>Weight lifted (kg):</label>
             <input type="number" v-model.number="exercise.weight" min="0" />
@@ -30,14 +30,14 @@
             <input type="number" v-model.number="exercise.oneRepMax" min="0" />
           </div>
 
+          <!-- Buttons -->
           <button @click="calculateOneRepMax(index)">Calculate 1RM</button>
 
-          <!-- Show calculated result -->
           <p v-if="exercise.calculatedOneRepMax !== null">
-            Estimated 1RM: <strong>{{ exercise.calculatedOneRepMax }} kg</strong>
+            Estimated 1RM:
+            <strong>{{ exercise.calculatedOneRepMax }} kg</strong>
           </p>
 
-          <!-- Save only 1RM -->
           <button
             v-if="exercise.calculatedOneRepMax"
             @click="saveOneRepMax(index)"
@@ -64,11 +64,46 @@ export default {
       username: "",
       loading: true,
       exercises: [
-        { name: "Bench Press", api: "addbenchpress", weight: 0, reps: 0, oneRepMax: 0, calculatedOneRepMax: null },
-        { name: "Deadlift", api: "adddeadlift", weight: 0, reps: 0, oneRepMax: 0, calculatedOneRepMax: null },
-        { name: "Squat", api: "addsquatgym", weight: 0, reps: 0, oneRepMax: 0, calculatedOneRepMax: null },
-        { name: "Overhead Press", api: "addoverheadpress", weight: 0, reps: 0, oneRepMax: 0, calculatedOneRepMax: null },
-        { name: "Lat Pulldown", api: "addlatpulldown", weight: 0, reps: 0, oneRepMax: 0, calculatedOneRepMax: null },
+        {
+          name: "Bench Press",
+          api: "addbenchpress",
+          weight: 0,
+          reps: 0,
+          oneRepMax: 0,
+          calculatedOneRepMax: null,
+        },
+        {
+          name: "Deadlift",
+          api: "adddeadlift",
+          weight: 0,
+          reps: 0,
+          oneRepMax: 0,
+          calculatedOneRepMax: null,
+        },
+        {
+          name: "Squat",
+          api: "addgymsquat", // ✅ fixed: matches backend route
+          weight: 0,
+          reps: 0,
+          oneRepMax: 0,
+          calculatedOneRepMax: null,
+        },
+        {
+          name: "Overhead Press",
+          api: "addoverheadpress",
+          weight: 0,
+          reps: 0,
+          oneRepMax: 0,
+          calculatedOneRepMax: null,
+        },
+        {
+          name: "Lat Pulldown",
+          api: "addlatpulldown",
+          weight: 0,
+          reps: 0,
+          oneRepMax: 0,
+          calculatedOneRepMax: null,
+        },
       ],
     };
   },
@@ -79,6 +114,7 @@ export default {
       if (exercise.oneRepMax > 0) {
         exercise.calculatedOneRepMax = exercise.oneRepMax;
       } else if (exercise.weight > 0 && exercise.reps > 0) {
+        // Epley formula
         exercise.calculatedOneRepMax = Math.round(
           exercise.weight * (1 + exercise.reps / 30)
         );
@@ -103,6 +139,11 @@ export default {
         oneRepMax,
       };
 
+      console.log(
+        `📤 Sending to ${exercise.api}:`,
+        JSON.stringify(payload, null, 2)
+      );
+
       try {
         const res = await axios.post(
           `http://localhost:5000/${exercise.api}`,
@@ -112,7 +153,7 @@ export default {
       } catch (err) {
         console.error("Save error:", err);
         alert(
-          err.response?.data?.error || "Error saving 1RM. Check backend logs."
+          err.response?.data?.error || "❌ Error saving 1RM. Check backend logs."
         );
       }
     },
@@ -124,3 +165,53 @@ export default {
   },
 };
 </script>
+
+<style scoped>
+.full-background {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  background: #f5f5f5;
+}
+
+.gym-view {
+  background: #fff;
+  padding: 20px;
+  border-radius: 12px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  width: 600px;
+}
+
+.exercise-section {
+  border-bottom: 1px solid #ddd;
+  padding: 15px 0;
+}
+
+.input-group {
+  margin: 8px 0;
+}
+
+button {
+  margin-top: 8px;
+  padding: 6px 12px;
+  border: none;
+  border-radius: 6px;
+  background: #007bff;
+  color: #fff;
+  cursor: pointer;
+}
+
+button:hover {
+  background: #0056b3;
+}
+
+.back-button {
+  margin-top: 20px;
+  background: #6c757d;
+}
+
+.back-button:hover {
+  background: #495057;
+}
+</style>
