@@ -24,6 +24,7 @@ const db = mysql.createConnection({
   database: 'fitlib'
 });
 
+
 // Connect to MySQL
 db.connect(err => {
   if (err) {
@@ -389,9 +390,81 @@ addExerciseRoute('/addoverheadpress', 'overheadpress');
 addExerciseRoute('/addlatpulldown', 'latpulldown');
 
 
+// === RUNNING ROUTES ===
+
+// Middleware
+app.use(express.json());
+app.use(cors());
+
+// === GET routes for fetching results ===
+app.get('/run_1km', (req, res) => {
+  db.query('SELECT * FROM run_1km', (err, results) => {
+    if (err) return res.status(500).json({ error: err.message });
+    res.json(results);
+  });
+});
+
+app.get('/run_5km', (req, res) => {
+  db.query('SELECT * FROM run_5km', (err, results) => {
+    if (err) return res.status(500).json({ error: err.message });
+    res.json(results);
+  });
+});
+
+app.get('/run_10km', (req, res) => {
+  db.query('SELECT * FROM run_10km', (err, results) => {
+    if (err) return res.status(500).json({ error: err.message });
+    res.json(results);
+  });
+});
+
+app.get('/run_halfmarathon', (req, res) => {
+  db.query('SELECT * FROM run_halfmarathon', (err, results) => {
+    if (err) return res.status(500).json({ error: err.message });
+    res.json(results);
+  });
+});
+
+app.get('/run_marathon', (req, res) => {
+  db.query('SELECT * FROM run_marathon', (err, results) => {
+    if (err) return res.status(500).json({ error: err.message });
+    res.json(results);
+  });
+});
+
+// === POST routes for adding results ===
+function addRunRoute(route, table) {
+  app.post(route, (req, res) => {
+    const { username, date, runtime } = req.body;
+
+    if (!username || !date || !runtime) {
+      return res.status(400).json({ error: 'Missing required fields' });
+    }
+
+    db.query(
+      `INSERT INTO ${table} (username, date, runtime) VALUES (?, ?, ?)`,
+      [username, date, runtime],
+      (err) => {
+        if (err) {
+          console.error(`❌ Error saving ${table}:`, err.message);
+          return res.status(500).json({ error: `Error saving ${table}` });
+        }
+        res.json({ message: `✅ ${table} time saved!` });
+      }
+    );
+  });
+}
+
+// === Define POST endpoints ===
+addRunRoute('/addrun_1km', 'run_1km');
+addRunRoute('/addrun_5km', 'run_5km');
+addRunRoute('/addrun_10km', 'run_10km');
+addRunRoute('/addrun_halfmarathon', 'run_halfmarathon');
+addRunRoute('/addrun_marathon', 'run_marathon');
+
+
 
 const PORT = 5000;
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
 });
-

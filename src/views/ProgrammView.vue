@@ -17,6 +17,10 @@
           <button class="bexercises-button">Gym Exercises</button>
         </router-link>
 
+        <router-link to="/running">
+          <button class="bexercises-button">Running</button>
+        </router-link>
+
 
 
       
