@@ -59,7 +59,7 @@ export default {
       availableTables: [
         { name: "Pull-ups", value: "pullups", type: "reps" },
         { name: "Dips", value: "dips", type: "reps" },
-        { name: "Squats", value: "squats", type: "reps" },
+        { name: "Squat", value: "squat", type: "reps" },
         { name: "Bench Press", value: "benchpress", type: "1rm" },
         { name: "Deadlift", value: "deadlift", type: "1rm" },
         { name: "Gym Squat", value: "gymsquat", type: "1rm" },
