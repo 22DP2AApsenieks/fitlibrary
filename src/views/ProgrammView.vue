@@ -21,6 +21,10 @@
           <button class="bexercises-button">Running</button>
         </router-link>
 
+        <router-link to="/tables">
+          <button class="bexercises-button">Tables</button>
+        </router-link>
+
 
 
       

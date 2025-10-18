@@ -14,6 +14,7 @@ import AdminView from '../views/AdminView.vue';
 import BodyweightExercisesView from '../views/BodyweightExercisesView.vue' 
 import GymExercisesView from '../views/GymExercisesView.vue'
 import RunningView from '../views/RunningView.vue'
+import TablesView from '../views/TablesView.vue'
 
 
 import axios from 'axios'
@@ -101,6 +102,11 @@ const router = createRouter({
       path: '/running',
       name: 'Running',
       component: RunningView
+    },
+    {
+      path: '/tables',
+      name: 'Tables',
+      component: TablesView
     }
   ],
 })
