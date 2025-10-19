@@ -7,7 +7,11 @@
       <label for="table-select">Choose exercise:</label>
       <select v-model="selectedTable" id="table-select" @change="fetchData">
         <option disabled value="">-- Select one --</option>
-        <option v-for="table in availableTables" :key="table.value" :value="table.value">
+        <option
+          v-for="table in availableTables"
+          :key="table.value"
+          :value="table.value"
+        >
           {{ table.name }}
         </option>
       </select>
@@ -17,6 +21,24 @@
 
     <div v-if="!loading && tableData.length > 0" class="results">
       <h2>{{ currentTableName }}</h2>
+
+      <!-- Summary section -->
+      <div class="summary">
+        <p>
+          Tracking since:
+          <strong>{{ trackingDuration }}</strong>
+        </p>
+        <p>
+          Average monthly progress:
+          <strong
+            :style="{ color: progressColor }"
+          >
+            {{ monthlyProgressDisplay }}
+          </strong>
+        </p>
+      </div>
+
+      <!-- Table -->
       <table>
         <thead>
           <tr>
@@ -35,9 +57,17 @@
           </tr>
         </tbody>
       </table>
+
+      <!-- Chart -->
+      <div class="chart-container">
+        <canvas ref="chartCanvas"></canvas>
+      </div>
     </div>
 
-    <div v-if="!loading && tableData.length === 0 && selectedTable" class="no-data">
+    <div
+      v-if="!loading && tableData.length === 0 && selectedTable"
+      class="no-data"
+    >
       No records found for this exercise yet.
     </div>
 
@@ -47,6 +77,8 @@
 
 <script>
 import axios from "axios";
+import { Chart, registerables } from "chart.js";
+Chart.register(...registerables);
 
 export default {
   name: "TableView",
@@ -56,6 +88,10 @@ export default {
       selectedTable: "",
       tableData: [],
       loading: false,
+      chart: null,
+      monthlyProgress: 0,
+      progressColor: "#9ca3af",
+      trackingDuration: "",
       availableTables: [
         { name: "Pull-ups", value: "pullups", type: "reps" },
         { name: "Dips", value: "dips", type: "reps" },
@@ -75,29 +111,44 @@ export default {
   },
   computed: {
     currentTableName() {
-      const selected = this.availableTables.find(t => t.value === this.selectedTable);
+      const selected = this.availableTables.find(
+        (t) => t.value === this.selectedTable
+      );
       return selected ? selected.name : "";
     },
     currentType() {
-      const selected = this.availableTables.find(t => t.value === this.selectedTable);
+      const selected = this.availableTables.find(
+        (t) => t.value === this.selectedTable
+      );
       return selected ? selected.type : "";
+    },
+    monthlyProgressDisplay() {
+      if (this.currentType === "runtime") {
+        return `${this.monthlyProgress.toFixed(2)} min/month`;
+      } else if (this.currentType === "1rm") {
+        return `${this.monthlyProgress.toFixed(2)} kg/month`;
+      } else {
+        return `${this.monthlyProgress.toFixed(2)} reps/month`;
+      }
     },
   },
   methods: {
     formatDate(dateStr) {
       return new Date(dateStr).toLocaleDateString();
     },
+
     async fetchData() {
       if (!this.selectedTable) return;
-
       this.loading = true;
       this.tableData = [];
 
       try {
         const res = await axios.get(`http://localhost:5000/${this.selectedTable}`);
-        // Filter only current user's data
-        this.tableData = res.data.filter(row => row.username === this.username);
-        console.log("Fetched data:", this.tableData);
+        this.tableData = res.data
+          .filter((row) => row.username === this.username)
+          .sort((a, b) => new Date(a.date) - new Date(b.date));
+
+        this.calculateProgress();
       } catch (err) {
         console.error("Fetch error:", err);
         alert("Error fetching data. Check backend logs.");
@@ -105,9 +156,119 @@ export default {
         this.loading = false;
       }
     },
+
+    calculateProgress() {
+      if (this.tableData.length < 2) {
+        this.monthlyProgress = 0;
+        this.trackingDuration = "Not enough data";
+        this.progressColor = "#9ca3af";
+        return;
+      }
+
+      const first = this.tableData[0];
+      const last = this.tableData[this.tableData.length - 1];
+      const firstDate = new Date(first.date);
+      const lastDate = new Date(last.date);
+      const months =
+        (lastDate - firstDate) / (1000 * 60 * 60 * 24 * 30.44) || 1;
+
+      const firstVal =
+        first.reps || first.oneRepMax || first.runtime || 0;
+      const lastVal =
+        last.reps || last.oneRepMax || last.runtime || 0;
+      let diff = lastVal - firstVal;
+
+      // For runtimes, improvement means smaller time
+      if (this.currentType === "runtime") diff = -diff;
+
+      this.monthlyProgress = diff / months;
+
+      // Duration string
+      const days = Math.floor((lastDate - firstDate) / (1000 * 60 * 60 * 24));
+      const totalMonths = Math.floor(days / 30);
+      const remainingDays = days % 30;
+      this.trackingDuration = `${totalMonths} months ${remainingDays} days`;
+
+      this.progressColor = this.getColorByProgress(this.monthlyProgress);
+    },
+
+    getColorByProgress(rate) {
+      if (this.currentType === "reps") {
+        if (rate > 5) return "#065f46";
+        if (rate > 2) return "#22c55e";
+        if (rate >= -1) return "#9ca3af";
+        if (rate > -5) return "#ef4444";
+        return "#7f1d1d";
+      } else if (this.currentType === "1rm") {
+        if (rate > 5) return "#065f46";
+        if (rate > 2) return "#22c55e";
+        if (rate >= -1) return "#9ca3af";
+        if (rate > -5) return "#ef4444";
+        return "#7f1d1d";
+      } else {
+        // runtime (lower is better)
+        if (rate < -1) return "#065f46";
+        if (rate < -0.5) return "#22c55e";
+        if (rate < 0.5) return "#9ca3af";
+        if (rate < 1) return "#ef4444";
+        return "#7f1d1d";
+      }
+    },
+
+    renderChart() {
+      if (this.chart) this.chart.destroy();
+
+      if (!this.$refs.chartCanvas) return;
+
+      const labels = this.tableData.map((row) => this.formatDate(row.date));
+      const values = this.tableData.map(
+        (row) => row.reps || row.runtime || row.oneRepMax || 0
+      );
+
+      const ctx = this.$refs.chartCanvas.getContext("2d");
+      this.chart = new Chart(ctx, {
+        type: "line",
+        data: {
+          labels,
+          datasets: [
+            {
+              label: `${this.currentTableName} Progress`,
+              data: values,
+              borderColor: this.progressColor,
+              backgroundColor: `${this.progressColor}33`,
+              tension: 0.3,
+              fill: true,
+              pointRadius: 4,
+              pointHoverRadius: 6,
+            },
+          ],
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          scales: {
+            y: { beginAtZero: true },
+          },
+        },
+      });
+    },
   },
+
+  watch: {
+    async tableData(newData) {
+      if (newData.length > 0) {
+        await this.$nextTick();
+        this.renderChart();
+      } else if (this.chart) {
+        this.chart.destroy();
+      }
+    },
+  },
+
   mounted() {
-    this.username = (localStorage.getItem("loggedInUser") || "nezināmais").toLowerCase();
+    this.username = (
+      localStorage.getItem("loggedInUser") || "nezināmais"
+    ).toLowerCase();
   },
 };
 </script>
@@ -134,6 +295,19 @@ export default {
   font-style: italic;
 }
 
+.summary {
+  background: #f9fafb;
+  border-radius: 8px;
+  padding: 10px 15px;
+  margin-top: 15px;
+  margin-bottom: 15px;
+}
+
+.summary p {
+  margin: 4px 0;
+  font-size: 1.1em;
+}
+
 table {
   width: 100%;
   border-collapse: collapse;
@@ -149,6 +323,12 @@ td {
 
 th {
   background-color: #f0f0f0;
+}
+
+.chart-container {
+  width: 100%;
+  height: 400px;
+  margin: 40px auto 0;
 }
 
 button.back-btn {
