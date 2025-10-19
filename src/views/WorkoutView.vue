@@ -12,6 +12,12 @@
       <label>Date:</label>
       <input type="date" v-model="date" required />
 
+      <label>Comment:</label>
+      <input type="text" v-model="comment" placeholder="Komentārs (nav obligāts)" />
+
+
+
+
       <button type="submit">Saglabāt</button>
     </form>
 
@@ -28,15 +34,15 @@
 export default {
   data() {
     return {
-      username: '',        // ielādēsim no localStorage
+      username: '',
       reps: 1,
-      date: new Date().toISOString().slice(0, 10), // Šodienas datums
+      date: new Date().toISOString().slice(0, 10),
+      comment: '', // <-- lowercase
       message: '',
       error: ''
     };
   },
   mounted() {
-    // Iegūstam username no localStorage, kā tavā ProgrammView
     this.username = (localStorage.getItem('loggedInUser') || 'nezināmais').toLowerCase();
   },
   methods: {
@@ -52,6 +58,7 @@ export default {
             username: this.username,
             reps: this.reps,
             date: this.date,
+            comment: this.comment // ✅ send the comment to backend
           })
         });
 
@@ -61,6 +68,7 @@ export default {
           this.message = data.message;
           this.reps = 1;
           this.date = new Date().toISOString().slice(0, 10);
+          this.comment = ''; // clear input
         } else {
           this.error = data.error || 'Nezināma kļūda';
         }
@@ -71,3 +79,4 @@ export default {
   }
 };
 </script>
+

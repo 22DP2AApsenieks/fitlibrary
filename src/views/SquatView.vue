@@ -3,11 +3,15 @@
     <h2>Pievieno squat treniņu</h2>
     <form @submit.prevent="submit">
       <p>Lietotājs: <strong>{{ username }}</strong></p>
+
       <label>Reps:</label>
       <input type="number" v-model.number="reps" required />
 
       <label>Date:</label>
       <input type="date" v-model="date" required />
+
+      <label>Comment:</label>
+      <input type="text" v-model="comment" placeholder="Komentārs (nav obligāts)" />
 
       <button type="submit">Saglabāt</button>
     </form>
@@ -24,9 +28,10 @@
 export default {
   data() {
     return {
-      username: localStorage.getItem('loggedInUser') || '', // use actual logged-in user
+      username: localStorage.getItem('loggedInUser') || '',
       reps: 1,
       date: new Date().toISOString().slice(0, 10),
+      comment: '', // added comment
       message: '',
       error: ''
     };
@@ -39,7 +44,8 @@ export default {
       const payload = {
         username: this.username,
         reps: this.reps,
-        date: this.date
+        date: this.date,
+        comment: this.comment // send comment
       };
 
       try {
@@ -51,7 +57,11 @@ export default {
 
         const data = await res.json();
         if (!res.ok) throw new Error(data.error || 'Nezināma kļūda');
+
         this.message = data.message;
+        this.reps = 1;
+        this.date = new Date().toISOString().slice(0, 10);
+        this.comment = ''; // clear comment input
       } catch (err) {
         this.error = err.message;
       }
