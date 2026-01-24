@@ -30,6 +30,15 @@
             <input type="number" v-model.number="exercise.oneRepMax" min="0" />
           </div>
 
+          <div class="input-group">
+            <label>Comment:</label>
+            <input
+              type="text"
+              v-model="exercise.comment"
+              placeholder="Add a note (optional)"
+            />
+          </div>
+
           <!-- Buttons -->
           <button @click="calculateOneRepMax(index)">Calculate 1RM</button>
 
@@ -71,6 +80,7 @@ export default {
           reps: 0,
           oneRepMax: 0,
           calculatedOneRepMax: null,
+          comment: "", // Add this
         },
         {
           name: "Deadlift",
@@ -79,14 +89,16 @@ export default {
           reps: 0,
           oneRepMax: 0,
           calculatedOneRepMax: null,
+          comment: "", // Add this
         },
         {
           name: "Squat",
-          api: "addgymsquat", // ✅ fixed: matches backend route
+          api: "addgymsquat",
           weight: 0,
           reps: 0,
           oneRepMax: 0,
           calculatedOneRepMax: null,
+          comment: "", // Add this
         },
         {
           name: "Overhead Press",
@@ -95,6 +107,7 @@ export default {
           reps: 0,
           oneRepMax: 0,
           calculatedOneRepMax: null,
+          comment: "", // Add this
         },
         {
           name: "Lat Pulldown",
@@ -103,6 +116,7 @@ export default {
           reps: 0,
           oneRepMax: 0,
           calculatedOneRepMax: null,
+          comment: "", // Add this
         },
       ],
     };
@@ -137,6 +151,7 @@ export default {
         username: this.username,
         date: new Date().toISOString().slice(0, 10),
         oneRepMax,
+        comment: exercise.comment || "", // Add this line
       };
 
       console.log(
@@ -150,6 +165,7 @@ export default {
           payload
         );
         alert(res.data.message || "Saved successfully!");
+        exercise.comment = ""; // Clear comment after save
       } catch (err) {
         console.error("Save error:", err);
         alert(

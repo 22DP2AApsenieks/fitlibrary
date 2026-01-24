@@ -317,12 +317,12 @@ function addGymExerciseRoute(route, table) {
     }
 
     db.query(
-      `INSERT INTO ${table} (username, date, oneRepMax, comment) VALUES (?, ?, ?, ?)`,
-      [username, date, oneRepMax, comment || ''], // save blank comment as empty string
+      `INSERT INTO ${table} (username, date, oneRepMax, comments) VALUES (?, ?, ?, ?)`,
+      [username, date, oneRepMax, comment || ''], // Note: comments (plural)
       (err) => {
         if (err) {
           console.error(`Error saving ${table}:`, err.message);
-          return res.status(500).json({ error: `Error saving ${table}` });
+          return res.status(500).json({ error: `Error saving ${table}`, details: err.message });
         }
         res.json({ message: `${table} saved successfully!` });
       }
