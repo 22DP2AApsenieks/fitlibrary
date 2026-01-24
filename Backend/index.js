@@ -340,41 +340,37 @@ addGymExerciseRoute('/addlatpulldown', 'latpulldown');
 
 // === RUNNING ROUTES ===
 
-// Middleware
-app.use(express.json());
-app.use(cors());
-
 // === GET routes for fetching results ===
-app.get('/run_1km', (req, res) => {
-  db.query('SELECT * FROM run_1km', (err, results) => {
+app.get('/1krun', (req, res) => {
+  db.query('SELECT * FROM 1krun', (err, results) => {
     if (err) return res.status(500).json({ error: err.message });
     res.json(results);
   });
 });
 
-app.get('/run_5km', (req, res) => {
-  db.query('SELECT * FROM run_5km', (err, results) => {
+app.get('/5krun', (req, res) => {
+  db.query('SELECT * FROM 5krun', (err, results) => {
     if (err) return res.status(500).json({ error: err.message });
     res.json(results);
   });
 });
 
-app.get('/run_10km', (req, res) => {
-  db.query('SELECT * FROM run_10km', (err, results) => {
+app.get('/10krun', (req, res) => {
+  db.query('SELECT * FROM 10krun', (err, results) => {
     if (err) return res.status(500).json({ error: err.message });
     res.json(results);
   });
 });
 
-app.get('/run_halfmarathon', (req, res) => {
-  db.query('SELECT * FROM run_halfmarathon', (err, results) => {
+app.get('/halfmarathon', (req, res) => {
+  db.query('SELECT * FROM halfmarathon', (err, results) => {
     if (err) return res.status(500).json({ error: err.message });
     res.json(results);
   });
 });
 
-app.get('/run_marathon', (req, res) => {
-  db.query('SELECT * FROM run_marathon', (err, results) => {
+app.get('/marathon', (req, res) => {
+  db.query('SELECT * FROM marathon', (err, results) => {
     if (err) return res.status(500).json({ error: err.message });
     res.json(results);
   });
@@ -383,19 +379,19 @@ app.get('/run_marathon', (req, res) => {
 // === POST routes for adding results ===
 function addRunRoute(route, table) {
   app.post(route, (req, res) => {
-    const { username, date, runtime } = req.body;
+    const { username, date, time, comment } = req.body;
 
-    if (!username || !date || !runtime) {
+    if (!username || !date || time === undefined || time === null) {
       return res.status(400).json({ error: 'Missing required fields' });
     }
 
     db.query(
-      `INSERT INTO ${table} (username, date, runtime) VALUES (?, ?, ?)`,
-      [username, date, runtime],
+      `INSERT INTO ${table} (username, date, time, comment) VALUES (?, ?, ?, ?)`,
+      [username, date, time, comment || ''],
       (err) => {
         if (err) {
           console.error(`❌ Error saving ${table}:`, err.message);
-          return res.status(500).json({ error: `Error saving ${table}` });
+          return res.status(500).json({ error: `Error saving ${table}`, details: err.message });
         }
         res.json({ message: `✅ ${table} time saved!` });
       }
@@ -403,12 +399,12 @@ function addRunRoute(route, table) {
   });
 }
 
-// === Define POST endpoints ===
-addRunRoute('/addrun_1km', 'run_1km');
-addRunRoute('/addrun_5km', 'run_5km');
-addRunRoute('/addrun_10km', 'run_10km');
-addRunRoute('/addrun_halfmarathon', 'run_halfmarathon');
-addRunRoute('/addrun_marathon', 'run_marathon');
+// === Define POST endpoints with new table names ===
+addRunRoute('/add1krun', '1krun');
+addRunRoute('/add5krun', '5krun');
+addRunRoute('/add10krun', '10krun');
+addRunRoute('/addhalfmarathon', 'halfmarathon');
+addRunRoute('/addmarathon', 'marathon');
 
 
 
