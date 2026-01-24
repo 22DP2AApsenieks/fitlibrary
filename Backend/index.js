@@ -166,20 +166,35 @@ app.post('/adddips', (req, res) => {
 
 // ado squats
 app.post('/addsquats', (req, res) => {
+  console.log('Received request body:', req.body);
+  
   const { username, date, reps, comment } = req.body;
 
-  if (!username || !date || !reps) {
+  console.log('Parsed values - username:', username, 'date:', date, 'reps:', reps, 'comment:', comment);
+
+  if (!username || !date || reps === undefined || reps === null) {
+    console.log('Missing or invalid fields');
     return res.status(400).json({ error: 'Missing required fields' });
+  }
+
+  // Ensure reps is a number
+  const repsNumber = parseInt(reps, 10);
+  if (isNaN(repsNumber)) {
+    console.log('Reps is not a valid number:', reps);
+    return res.status(400).json({ error: 'Reps must be a number' });
   }
 
   db.query(
     `INSERT INTO squats (username, date, reps, comment) VALUES (?, ?, ?, ?)`,
-    [username, date, reps, comment || ''], // save blank comment as empty string
+    [username, date, repsNumber, comment || ''],
     (err, result) => {
       if (err) {
-        console.error('Error saving squats workout:', err.message);
-        return res.status(500).json({ error: 'Neizdevās saglabāt treniņu' });
+        console.error('Database Error:', err);
+        console.error('Error Code:', err.code);
+        console.error('Error SQL:', err.sql);
+        return res.status(500).json({ error: 'Failed to save', details: err.message });
       }
+      console.log('Successfully inserted squat record');
       res.json({ message: 'Treniņš pievienots' });
     }
   );

@@ -25,6 +25,8 @@
 </template>
 
 <script>
+import axios from 'axios';
+
 export default {
   data() {
     return {
@@ -49,21 +51,13 @@ export default {
       };
 
       try {
-        const res = await fetch('http://localhost:5000/addsquats', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(payload)
-        });
-
-        const data = await res.json();
-        if (!res.ok) throw new Error(data.error || 'Nezināma kļūda');
-
-        this.message = data.message;
+        const response = await axios.post('http://localhost:5000/addsquats', payload);
+        this.message = response.data.message;
         this.reps = 1;
         this.date = new Date().toISOString().slice(0, 10);
         this.comment = ''; // clear comment input
-      } catch (err) {
-        this.error = err.message;
+      } catch (error) {
+        this.error = error.response?.data?.details || error.message;
       }
     }
   }
