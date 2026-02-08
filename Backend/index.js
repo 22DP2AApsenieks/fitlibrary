@@ -242,7 +242,7 @@ app.post('/reviews', (req, res) => {
 });
 
 app.get('/allreviews', (req, res) => {
-  db.query('SELECT review, email FROM reviews', (err, results) => {
+  db.query('SELECT review, email FROM reviews ORDER BY id DESC LIMIT 50', (err, results) => {
     if (err) return res.status(500).json({ error: err.message });
     res.json(results);
   });

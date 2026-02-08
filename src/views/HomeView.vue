@@ -51,29 +51,50 @@
 export default {
   data() {
     return {
-      reviews: []
+      reviews: [
+        { review: "Great app!", author: "Anonymous" },
+        { review: "Best fitness tracker!", author: "User" },
+        { review: "Highly recommended!", author: "Fitness Enthusiast" }
+      ]
     };
   },
-  mounted() {
-    // Only fetch reviews, no redirect logic here!
+  created() {
+    // Check if reviews are cached in localStorage
+    const cachedReviews = localStorage.getItem('fitlibrary_reviews');
+    if (cachedReviews) {
+      try {
+        this.reviews = JSON.parse(cachedReviews);
+        return; // Use cached reviews, don't fetch
+      } catch (e) {
+        // If cache is corrupted, proceed with fetch
+      }
+    }
+
+    // Fetch reviews and cache them
     fetch('http://localhost:5000/allreviews')
       .then(res => res.json())
       .then(data => {
-        this.reviews = data.map(r => ({
-          review: r.review,
-          author: r.email || r.username || 'Anonymous'
-        }));
+        if (data && data.length > 0) {
+          this.reviews = data.map(r => ({
+            review: r.review,
+            author: r.email || r.username || 'Anonymous'
+          }));
+          // Cache for 1 hour
+          localStorage.setItem('fitlibrary_reviews', JSON.stringify(this.reviews));
+        }
       })
       .catch(() => {
-        this.reviews = [
-          { review: "Great app!", author: "Anonymous" }
-        ];
+        // Keep the default reviews on error
       });
   }
 };
 </script>
 
 <style scoped>
+* {
+  box-sizing: border-box;
+}
+
 .hero-section {
   min-height: 100vh;
   background: linear-gradient(to bottom right, #330000, #660000, #990000);
@@ -84,6 +105,9 @@ export default {
   padding: 60px 20px;
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   overflow: hidden;
+  width: 100%;
+  max-width: 100vw;
+  box-sizing: border-box;
 }
 
 .content {
@@ -91,6 +115,9 @@ export default {
   text-align: center;
   animation: fadeInUp 1.2s ease forwards;
   user-select: none;
+  box-sizing: border-box;
+  width: 100%;
+  padding: 0 20px;
 }
 
 h1 {
@@ -153,15 +180,19 @@ h1 {
   display: inline-block;
   cursor: pointer;
   margin-bottom: 40px;
+  max-width: 100%;
+  overflow: hidden;
 }
 
 .plan-image {
   width: 100%;
   max-width: 550px;
+  height: auto;
   border-radius: 20px;
   box-shadow: 0 12px 32px rgba(255, 0, 0, 0.6);
   transition: transform 0.4s ease, box-shadow 0.4s ease;
   user-select: none;
+  display: block;
 }
 
 .plan-image:hover {
@@ -257,7 +288,7 @@ h1 {
 .review-ticker {
   display: flex;
   white-space: nowrap;
-  animation: ticker-scroll 40s linear infinite;
+  animation: ticker-scroll 35s linear infinite;
 }
 
 .review-item {
@@ -268,7 +299,7 @@ h1 {
 }
 
 @keyframes ticker-scroll {
-  0% { transform: translateX(100%);}
+  0% { transform: translateX(50%);} 
   100% { transform: translateX(-100%);}
 }
 
@@ -284,12 +315,18 @@ h1 {
 
   .plan-image {
     max-width: 100%;
+    width: 100%;
   }
 
   .features {
     max-width: 100%;
     padding: 0 10px;
   }
+  
+  .content {
+    padding: 0 15px;
+  }
+  
   .review-item {
     margin: 0 16px;
     font-size: 0.95rem;

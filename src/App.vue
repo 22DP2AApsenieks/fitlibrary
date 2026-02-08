@@ -13,9 +13,14 @@ import Footer from './components/Footer.vue'
 </template>
 
 <style scoped>
+* {
+  box-sizing: border-box;
+}
+
 #app-container {
   position: relative;
   /* min-height: 100vh; */
+  overflow: hidden;
 }
 
 header {
