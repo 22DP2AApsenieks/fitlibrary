@@ -337,40 +337,111 @@ addGymExerciseRoute('/addgymsquat', 'gymsquat');
 addGymExerciseRoute('/addoverheadpress', 'overheadpress');
 addGymExerciseRoute('/addlatpulldown', 'latpulldown');
 
+// === GET routes for gym exercises ===
+app.get('/benchpress', (req, res) => {
+  db.query('SELECT * FROM benchpress', (err, results) => {
+    if (err) return res.status(500).json({ error: err.message });
+    res.json(results);
+  });
+});
+
+app.get('/deadlift', (req, res) => {
+  db.query('SELECT * FROM deadlift', (err, results) => {
+    if (err) return res.status(500).json({ error: err.message });
+    res.json(results);
+  });
+});
+
+app.get('/gymsquat', (req, res) => {
+  db.query('SELECT * FROM gymsquat', (err, results) => {
+    if (err) return res.status(500).json({ error: err.message });
+    res.json(results);
+  });
+});
+
+app.get('/overheadpress', (req, res) => {
+  db.query('SELECT * FROM overheadpress', (err, results) => {
+    if (err) return res.status(500).json({ error: err.message });
+    res.json(results);
+  });
+});
+
+app.get('/latpulldown', (req, res) => {
+  db.query('SELECT * FROM latpulldown', (err, results) => {
+    if (err) return res.status(500).json({ error: err.message });
+    res.json(results);
+  });
+});
 
 // === RUNNING ROUTES ===
 
 // === GET routes for fetching results ===
+app.get('/run_1km', (req, res) => {
+  db.query('SELECT * FROM `1krun`', (err, results) => {
+    if (err) return res.status(500).json({ error: err.message });
+    res.json(results);
+  });
+});
+
+app.get('/run_5km', (req, res) => {
+  db.query('SELECT * FROM `5krun`', (err, results) => {
+    if (err) return res.status(500).json({ error: err.message });
+    res.json(results);
+  });
+});
+
+app.get('/run_10km', (req, res) => {
+  db.query('SELECT * FROM `10krun`', (err, results) => {
+    if (err) return res.status(500).json({ error: err.message });
+    res.json(results);
+  });
+});
+
+app.get('/run_halfmarathon', (req, res) => {
+  db.query('SELECT * FROM `halfmarathon`', (err, results) => {
+    if (err) return res.status(500).json({ error: err.message });
+    res.json(results);
+  });
+});
+
+app.get('/run_marathon', (req, res) => {
+  db.query('SELECT * FROM `marathon`', (err, results) => {
+    if (err) return res.status(500).json({ error: err.message });
+    res.json(results);
+  });
+});
+
+// Keep old routes for backward compatibility
 app.get('/1krun', (req, res) => {
-  db.query('SELECT * FROM 1krun', (err, results) => {
+  db.query('SELECT * FROM `1krun`', (err, results) => {
     if (err) return res.status(500).json({ error: err.message });
     res.json(results);
   });
 });
 
 app.get('/5krun', (req, res) => {
-  db.query('SELECT * FROM 5krun', (err, results) => {
+  db.query('SELECT * FROM `5krun`', (err, results) => {
     if (err) return res.status(500).json({ error: err.message });
     res.json(results);
   });
 });
 
 app.get('/10krun', (req, res) => {
-  db.query('SELECT * FROM 10krun', (err, results) => {
+  db.query('SELECT * FROM `10krun`', (err, results) => {
     if (err) return res.status(500).json({ error: err.message });
     res.json(results);
   });
 });
 
 app.get('/halfmarathon', (req, res) => {
-  db.query('SELECT * FROM halfmarathon', (err, results) => {
+  db.query('SELECT * FROM `halfmarathon`', (err, results) => {
     if (err) return res.status(500).json({ error: err.message });
     res.json(results);
   });
 });
 
 app.get('/marathon', (req, res) => {
-  db.query('SELECT * FROM marathon', (err, results) => {
+  db.query('SELECT * FROM `marathon`', (err, results) => {
     if (err) return res.status(500).json({ error: err.message });
     res.json(results);
   });

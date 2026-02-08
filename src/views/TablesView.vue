@@ -46,6 +46,7 @@
             <th v-if="currentType === 'reps'">Reps</th>
             <th v-else-if="currentType === 'runtime'">Time (min)</th>
             <th v-else>1RM (kg)</th>
+            <th>Comment</th>
           </tr>
         </thead>
         <tbody>
@@ -54,6 +55,7 @@
             <td v-if="row.reps">{{ row.reps }}</td>
             <td v-else-if="row.runtime">{{ row.runtime }}</td>
             <td v-else>{{ row.oneRepMax }}</td>
+            <td>{{ row.comment || '' }}</td>
           </tr>
         </tbody>
       </table>
@@ -146,6 +148,10 @@ export default {
         const res = await axios.get(`http://localhost:5000/${this.selectedTable}`);
         this.tableData = res.data
           .filter((row) => row.username === this.username)
+          .map((row) => ({
+            ...row,
+            runtime: row.time || row.runtime, // Map 'time' field to 'runtime' for running exercises
+          }))
           .sort((a, b) => new Date(a.date) - new Date(b.date));
 
         this.calculateProgress();
