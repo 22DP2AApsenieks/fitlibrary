@@ -1,45 +1,68 @@
 <template>
   <div class="full-background">
     <div class="programm-view">
-      <h1>Programm View</h1>
-      <p>Ur in, {{ username }}!</p>
+      <div class="header-section">
+        <h1>Your Fitness Dashboard</h1>
+        <p class="welcome-text">Welcome back, <span class="username">{{ username }}</span>! 💪</p>
+      </div>
 
-      <div v-if="loading">Loading data...</div>
+      <div v-if="loading" class="loading-spinner">
+        <div class="spinner"></div>
+        <p>Loading your progress...</p>
+      </div>
 
-      <div v-else>
-        <h2>U do great! WOW:</h2>
-          
-        <router-link to="/bexercises">
-          <button class="bexercises-button">Bodyweight Exercises</button>
-        </router-link>
-
-        <router-link to="/g">
-          <button class="bexercises-button">Gym Exercises</button>
-        </router-link>
-
-        <router-link to="/running">
-          <button class="bexercises-button">Running</button>
-        </router-link>
-
-        <router-link to="/tables">
-          <button class="bexercises-button">Tables</button>
-        </router-link>
-
-
-
-      
-        <div class="review-section">
-          <h3>Leave a Review</h3>
-          <textarea v-model="reviewText" placeholder="Do u like this programm?" rows="4"></textarea>
-          <button @click="submitReview" class="submit-review-button">Submit Review</button>
-          <p v-if="reviewMessage">{{ reviewMessage }}</p>
-          <!-- Debug: Show review payload -->
-          <pre style="background:#eee;padding:8px;border-radius:6px;margin-top:10px;">
-{{ reviewPayload }}
-          </pre>
+      <div v-else class="content">
+        <div class="motivation-card">
+          <h2>Keep Crushing Your Goals! 🔥</h2>
         </div>
-        <div style="margin-top: 40px;">
-          <button @click="confirmDelete" class="delete-button">Delete My Account</button>
+
+        <div class="navigation-grid">
+          <router-link to="/bexercises" class="nav-card">
+            <div class="card-icon">💪</div>
+            <h3>Bodyweight</h3>
+            <p>Pull-ups, Dips & More</p>
+          </router-link>
+
+          <router-link to="/g" class="nav-card">
+            <div class="card-icon">🏋️</div>
+            <h3>Gym Exercises</h3>
+            <p>Heavy Lifts & Strength</p>
+          </router-link>
+
+          <router-link to="/running" class="nav-card">
+            <div class="card-icon">🏃</div>
+            <h3>Running</h3>
+            <p>Track Your Speed</p>
+          </router-link>
+
+          <router-link to="/tables" class="nav-card">
+            <div class="card-icon">📊</div>
+            <h3>Progress Tables</h3>
+            <p>Detailed Analytics</p>
+          </router-link>
+        </div>
+
+        <div class="review-section">
+          <h3>Share Your Feedback</h3>
+          <p class="section-subtitle">Help us improve by sharing your thoughts</p>
+          <textarea 
+            v-model="reviewText" 
+            placeholder="What do you think about FitLibrary?" 
+            rows="4"
+            class="review-textarea"
+          ></textarea>
+          <button @click="submitReview" class="submit-review-button">
+            <span v-if="!reviewMessage">Submit Review</span>
+            <span v-else>{{ reviewMessage }}</span>
+          </button>
+        </div>
+
+        <div class="danger-zone">
+          <h3>Danger Zone</h3>
+          <p class="danger-text">Delete your account and all associated data</p>
+          <button @click="confirmDelete" class="delete-button">
+            Delete My Account
+          </button>
         </div>
       </div>
     </div>
@@ -235,32 +258,272 @@ export default {
 
 <style scoped>
 .full-background {
-  background: linear-gradient(to bottom right, #330000, #660000, #990000);
+  background: linear-gradient(135deg, #330000 0%, #660000 50%, #990000 100%);
   min-height: 100vh;
-  padding: 0;
+  padding: 40px 20px;
   margin: 0;
 }
 
 .programm-view {
-  padding: 20px;
-  max-width: 800px;
+  max-width: 1000px;
   margin: 0 auto;
-  background: linear-gradient(to bottom right, #ffffff, #a59494, #aaa0a0);
+  background: #fff;
+  border-radius: 24px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+  overflow: hidden;
+}
+
+.header-section {
+  background: linear-gradient(135deg, #990000 0%, #dd0000 100%);
+  color: white;
+  padding: 40px 30px;
+  text-align: center;
+}
+
+.header-section h1 {
+  font-size: 2.5rem;
+  margin: 0 0 10px 0;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+}
+
+.welcome-text {
+  font-size: 1.1rem;
+  margin: 0;
+  opacity: 0.95;
+}
+
+.username {
+  font-weight: 700;
+  text-transform: capitalize;
+}
+
+.content {
+  padding: 40px 30px;
+}
+
+.loading-spinner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 80px 30px;
+  color: #dd0000;
+}
+
+.spinner {
+  border: 4px solid #f0f0f0;
+  border-top: 4px solid #dd0000;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  animation: spin 0.8s linear infinite;
+  margin-bottom: 20px;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.motivation-card {
+  background: linear-gradient(135deg, #610000 0%, #000000 100%);
+  color: white;
+  padding: 30px;
   border-radius: 16px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  text-align: center;
+  margin-bottom: 40px;
+  box-shadow: 0 10px 30px rgba(221, 0, 0, 0.3);
 }
 
-.exercise-section {
-  margin-top: 30px;
-  background: #f9f9f9;
+.motivation-card h2 {
+  margin: 0;
+  font-size: 1.8rem;
+  font-weight: 700;
+}
+
+.navigation-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 20px;
+  margin-bottom: 40px;
+}
+
+.nav-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 30px;
+  background: #f8f9fa;
+  border: 2px solid #e9ecef;
+  border-radius: 16px;
+  text-decoration: none;
+  color: #333;
+  transition: all 0.3s ease;
+  cursor: pointer;
+}
+
+.nav-card:hover {
+  transform: translateY(-8px);
+  border-color: #dd0000;
+  box-shadow: 0 15px 40px rgba(221, 0, 0, 0.2);
+  background: linear-gradient(135deg, #fff5f5 0%, #ffe8e8 100%);
+}
+
+.card-icon {
+  font-size: 3rem;
+  margin-bottom: 15px;
+}
+
+.nav-card h3 {
+  margin: 0 0 8px 0;
+  font-size: 1.3rem;
+  font-weight: 700;
+}
+
+.nav-card p {
+  margin: 0;
+  font-size: 0.9rem;
+  color: #666;
+}
+
+.review-section {
+  background: #f8f9fa;
+  padding: 30px;
+  border-radius: 16px;
+  margin-bottom: 30px;
+  border-left: 4px solid #dd0000;
+}
+
+.review-section h3 {
+  margin: 0 0 8px 0;
+  color: #333;
+  font-size: 1.4rem;
+}
+
+.section-subtitle {
+  margin: 0 0 20px 0;
+  color: #666;
+  font-size: 0.95rem;
+}
+
+.review-textarea {
+  width: 100%;
+  padding: 15px;
+  border: 2px solid #e9ecef;
   border-radius: 12px;
-  padding: 20px;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+  font-family: inherit;
+  font-size: 1rem;
+  resize: vertical;
+  transition: all 0.3s ease;
 }
 
-canvas {
-  margin-top: 10px;
-  max-width: 100%;
-  height: 140px !important;
+.review-textarea:focus {
+  outline: none;
+  border-color: #dd0000;
+  box-shadow: 0 0 0 3px rgba(221, 0, 0, 0.1);
+}
+
+.submit-review-button {
+  width: 100%;
+  padding: 14px 30px;
+  margin-top: 15px;
+  background: linear-gradient(135deg, #006308 0%, #2fc900 100%);
+  color: white;
+  border: none;
+  border-radius: 12px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 5px 15px rgba(221, 0, 0, 0.3);
+}
+
+.submit-review-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(0, 94, 12, 0.4);
+}
+
+.submit-review-button:active {
+  transform: translateY(0);
+}
+
+.danger-zone {
+  background: #fff5f5;
+  padding: 30px;
+  border-radius: 16px;
+  border-left: 4px solid #e53e3e;
+}
+
+.danger-zone h3 {
+  margin: 0 0 8px 0;
+  color: #e53e3e;
+  font-size: 1.4rem;
+  font-weight: 700;
+}
+
+.danger-text {
+  margin: 0 0 20px 0;
+  color: #a0262f;
+  font-size: 0.95rem;
+}
+
+.delete-button {
+  width: 100%;
+  padding: 14px 30px;
+  background: linear-gradient(135deg, #e40000 0%, #70004b 100%);
+  color: white;
+  border: none;
+  border-radius: 12px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 5px 15px rgba(229, 62, 62, 0.3);
+}
+
+.delete-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(229, 62, 62, 0.4);
+}
+
+.delete-button:active {
+  transform: translateY(0);
+}
+
+@media (max-width: 768px) {
+  .full-background {
+    padding: 20px 10px;
+  }
+
+  .programm-view {
+    border-radius: 16px;
+  }
+
+  .header-section {
+    padding: 30px 20px;
+  }
+
+  .header-section h1 {
+    font-size: 2rem;
+  }
+
+  .content {
+    padding: 25px 20px;
+  }
+
+  .navigation-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 15px;
+  }
+
+  .nav-card {
+    padding: 20px;
+  }
+
+  .card-icon {
+    font-size: 2.5rem;
+  }
 }
 </style>

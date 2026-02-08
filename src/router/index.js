@@ -7,9 +7,6 @@ import BasicView from '@/views/BasicView.vue'
 import ProplanView from '@/views/ProplanView.vue'
 import ProplusView from '@/views/ProplusView.vue'
 import ProgrammView from '@/views/ProgrammView.vue'
-import WorkoutView from '@/views/WorkoutView.vue'
-import DipWorkoutView from '@/views/DipWorkoutView.vue'
-import SquatView from '@/views/SquatView.vue'
 import AdminView from '../views/AdminView.vue';
 import BodyweightExercisesView from '../views/BodyweightExercisesView.vue' 
 import GymExercisesView from '../views/GymExercisesView.vue'
@@ -67,21 +64,6 @@ const router = createRouter({
       path: '/programm',
       name: 'programm',
       component: ProgrammView,
-    },
-    {
-      path: '/workout',
-      name: 'WorkoutView',
-      component: WorkoutView,
-    },
-    {
-      path: '/dipworkout',
-      name: 'DipWorkoutView',
-      component: DipWorkoutView,
-    },
-    {
-      path: '/squatview',
-      name: 'SquatView',
-      component: SquatView
     },
     {
       path: '/admin',

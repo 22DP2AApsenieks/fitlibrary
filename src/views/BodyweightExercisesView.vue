@@ -1,285 +1,808 @@
 <template>
   <div class="full-background">
-    <div class="programm-view">
-      <h1>Programm View</h1>
-      <p>Ur in, {{ username }}!</p>
+    <div class="container">
+      <div class="header-banner">
+        <h1>💪 BODYWEIGHT EXERCISES 💪</h1>
+        <p class="subtitle">Track your reps, {{ username }}!</p>
+      </div>
 
-      <div v-if="loading">Loading data...</div>
+      <div v-if="loading" class="loading-state">
+        <div class="spinner-2000s"></div>
+        <p>Loading your workouts...</p>
+      </div>
 
-      <div v-else>
-        <h2>U do great! WOW:</h2>
-        <router-link to="/workout">
-          <button class="workout-button">Add pullup Workout</button>
-        </router-link>
-          
+      <div v-else class="content">
+        <!-- EXERCISE BUTTONS WITH INLINE EXPANDED FORMS -->
+        <div class="exercises-list">
+          <div v-for="(exercise, index) in exercises" :key="index" class="exercise-item">
+            <button
+              class="exercise-button"
+              :class="{ active: expandedIndex === index }"
+              @click="expandedIndex = expandedIndex === index ? null : index"
+            >
+              <span class="button-text">{{ exercise.name }}</span>
+              <span class="button-arrow" :class="{ open: expandedIndex === index }">▼</span>
+            </button>
 
-        <div class="exercise-section">
-          <h3>Pull-ups</h3>
-          <ul>
-            <li v-for="(entry, index) in pullups" :key="index">
-              {{ entry.reps }} reps ({{ formatDate(entry.date) }})
-            </li>
-          </ul>
-          <canvas id="pullupsChart"></canvas>
+            <!-- EXPANDED EXERCISE CARD - INLINE -->
+            <div v-if="expandedIndex === index" class="exercise-card expanded-card">
+              <div class="card-header-2000s">
+                <h2 class="exercise-title">🎯 {{ exercises[index].name }}</h2>
+                <button 
+                  class="close-btn"
+                  @click="expandedIndex = null"
+                >
+                  ✕
+                </button>
+              </div>
+
+              <div class="card-body">
+                <!-- INPUT FIELDS -->
+                <div class="input-section">
+                  <div class="input-group">
+                    <label>Reps performed:</label>
+                    <input 
+                      type="number" 
+                      v-model.number="exercises[index].reps" 
+                      min="0"
+                      placeholder="Enter reps"
+                    />
+                  </div>
+
+                  <div class="input-group">
+                    <label>Comment:</label>
+                    <input
+                      type="text"
+                      v-model="exercises[index].comment"
+                      placeholder="Add a note (optional)"
+                    />
+                  </div>
+                </div>
+
+                <!-- BUTTON -->
+                <div class="button-group">
+                  <button 
+                    @click="saveReps(index)"
+                    class="btn-save"
+                  >
+                    Save Reps
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
-        
 
-        <router-link to="/dipworkout">
-          <button class="dipworkout-button">Add Dips Workout</button>
-        </router-link>
-
-        <div class="exercise-section">
-          <h3>Dips</h3>
-          <ul>
-            <li v-for="(entry, index) in dips" :key="index">
-              {{ entry.reps }} reps ({{ formatDate(entry.date) }})
-            </li>
-          </ul>
-          <canvas id="dipsChart"></canvas>
+        <!-- BACK BUTTON -->
+        <div class="footer-action">
+          <button 
+            @click="$router.push('/programm')"
+            class="btn-back"
+          >
+            ← Back to Dashboard
+          </button>
         </div>
-
-        <router-link to="/squatview">
-          <button class="squatview-button">Add Squat Workout</button>
-        </router-link>
-
-        <div class="exercise-section">
-          <h3>Squats</h3>
-          <ul>
-            <li v-for="(entry, index) in squats" :key="index">
-              {{ entry.reps }} reps ({{ formatDate(entry.date) }})
-            </li>
-          </ul>
-          <canvas id="squatsChart"></canvas>
-        </div>
-
-         <router-link to="/programm">
-          <button class="back-button">Go back</button>
-        </router-link>
       </div>
     </div>
   </div>
 </template>
 
 <script>
-import { Chart, registerables } from 'chart.js';
-Chart.register(...registerables);
+import axios from "axios";
 
 export default {
-  name: 'ProgrammView',
+  name: "BodyweightView",
   data() {
     return {
-      username: '',
-      pullups: [],
-      dips: [],
-      squats: [],
+      username: "",
       loading: true,
-      charts: {},
-      reviewText: '',
-      reviewMessage: ''
+      expandedIndex: null,
+      exercises: [
+        {
+          name: "Pull-ups",
+          api: "addpullups",
+          reps: 0,
+          comment: "",
+        },
+        {
+          name: "Dips",
+          api: "adddips",
+          reps: 0,
+          comment: "",
+        },
+        {
+          name: "Squats",
+          api: "addsquats",
+          reps: 0,
+          comment: "",
+        },
+      ],
     };
   },
-  computed: {
-    reviewPayload() {
-      return JSON.stringify({
-        username: this.username,
-        review: this.reviewText
-      }, null, 2);
-    }
-  },
   methods: {
-    formatDate(dateStr) {
-      if (!dateStr) return 'nav datuma';
-      const date = new Date(dateStr);
-      return date.toLocaleDateString();
-    },
-    getTrendColor(data) {
-      if (data.length < 2) return 'blue';
-      const diff = data[data.length - 1].reps - data[0].reps;
-      if (diff > 0) return 'green';
-      if (diff < 0) return 'red';
-      return 'blue';
-    },
-    drawChart(canvasId, data) {
-      const ctx = document.getElementById(canvasId);
-      if (!ctx || data.length === 0) return;
+    async saveReps(index) {
+      const exercise = this.exercises[index];
+      const reps = exercise.reps;
 
-      // Destroy previous chart if exists to prevent overlay
-      if (this.charts[canvasId]) {
-        this.charts[canvasId].destroy();
-      }
-
-      const color = this.getTrendColor(data);
-
-      this.charts[canvasId] = new Chart(ctx, {
-        type: 'line',
-        data: {
-          labels: data.map(e => this.formatDate(e.date)),
-          datasets: [{
-            label: 'Reps',
-            data: data.map(e => e.reps),
-            fill: true,
-            backgroundColor: color === 'green'
-              ? 'rgba(0, 255, 0, 0.1)'
-              : color === 'red'
-              ? 'rgba(255, 0, 0, 0.1)'
-              : 'rgba(0, 123, 255, 0.1)',
-            borderColor: color,
-            tension: 0.3,
-            pointBackgroundColor: color,
-            pointBorderColor: '#fff',
-            pointRadius: 5
-          }]
-        },
-        options: {
-          responsive: true,
-          plugins: {
-            legend: { display: false },
-            tooltip: {
-              mode: 'index',
-              intersect: false,
-              backgroundColor: '#333',
-              titleColor: '#fff',
-              bodyColor: '#fff'
-            }
-          },
-          scales: {
-            y: {
-              beginAtZero: true,
-              ticks: { stepSize: 1 },
-              grid: { color: '#ddd' }
-            },
-            x: {
-              grid: { color: '#eee' }
-            }
-          }
-        }
-      });
-    },
-    async fetchData() {
-      try {
-        const [pullRes, dipRes, squatRes] = await Promise.all([
-          fetch('http://localhost:5000/pullups'),
-          fetch('http://localhost:5000/dips'),
-          fetch('http://localhost:5000/squat')
-        ]);
-
-        const [pullData, dipData, squatData] = await Promise.all([
-          pullRes.json(),
-          dipRes.json(),
-          squatRes.json()
-        ]);
-
-        this.pullups = pullData
-          .filter(e => e.username.toLowerCase() === this.username)
-          .sort((a, b) => new Date(a.date) - new Date(b.date));
-
-        this.dips = dipData
-          .filter(e => e.username.toLowerCase() === this.username)
-          .sort((a, b) => new Date(a.date) - new Date(b.date));
-
-        this.squats = squatData
-          .filter(e => e.username.toLowerCase() === this.username)
-          .sort((a, b) => new Date(a.date) - new Date(b.date));
-
-      } catch (error) {
-        console.error('Kļūda iegūstot treniņu datus:', error);
-      } finally {
-        this.loading = false;
-        this.$nextTick(() => {
-          this.drawChart('pullupsChart', this.pullups);
-          this.drawChart('dipsChart', this.dips);
-          this.drawChart('squatsChart', this.squats);
-        });
-      }
-    },
-    async submitReview() {
-      this.reviewMessage = '';
-      if (!this.reviewText.trim()) {
-        this.reviewMessage = 'Review cannot be empty!';
+      if (reps <= 0) {
+        alert("Please enter a valid number of reps.");
         return;
       }
-      // Log the payload before sending
+
       const payload = {
         username: this.username,
-        review: this.reviewText
+        date: new Date().toISOString().slice(0, 10),
+        reps,
+        comment: exercise.comment || "",
       };
-      console.log('Submitting review payload:', payload);
+
+      console.log(
+        `📤 Sending to ${exercise.api}:`,
+        JSON.stringify(payload, null, 2)
+      );
 
       try {
-        const res = await fetch('http://localhost:5000/reviews', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(payload)
-        });
-        const data = await res.json();
-        if (!res.ok) throw new Error(data.error || 'Failed to submit review');
-        this.reviewMessage = 'Review submitted!';
-        this.reviewText = '';
+        const res = await axios.post(
+          `http://localhost:5000/${exercise.api}`,
+          payload
+        );
+        alert(res.data.message || "Saved successfully!");
+        exercise.reps = 0;
+        exercise.comment = "";
+        this.expandedIndex = null;
       } catch (err) {
-        this.reviewMessage = err.message;
+        console.error("Save error:", err);
+        alert(
+          err.response?.data?.error || "❌ Error saving reps. Check backend logs."
+        );
       }
     },
-    confirmDelete() {
-      const answer = prompt("Are you sure you want to delete your account? Type 'yes' to confirm:");
-      if (answer?.toLowerCase() === 'yes') {
-        fetch(`http://localhost:5000/delete-account/${this.username}`, {
-          method: 'DELETE'
-        })
-        .then(res => {
-          if (!res.ok) throw new Error('Server error');
-          alert('Your account and data have been deleted.');
-          localStorage.removeItem('loggedInUser');
-          this.$router.push('/'); // Or '/login' if you want to redirect there
-        })
-        .catch(err => {
-          console.error('Error deleting account:', err);
-          alert('Failed to delete your account.');
-        });
-      } else {
-        alert('Account deletion cancelled.');
-      }
-    }
   },
   mounted() {
-    this.username = (localStorage.getItem('loggedInUser') || 'nezināmais').toLowerCase();
-    this.fetchData();
-  }
+    this.username =
+      (localStorage.getItem("loggedInUser") || "nezināmais").toLowerCase();
+    this.loading = false;
+  },
 };
 </script>
 
 <style scoped>
 .full-background {
-  background: linear-gradient(to bottom right, #330000, #660000, #990000);
+  background: linear-gradient(135deg, #330000 0%, #660000 50%, #990000 100%);
   min-height: 100vh;
-  padding: 0;
+  padding: 40px 20px;
   margin: 0;
 }
-.back-button {
-  margin-top: 20px; /* increases space above the button */
-  /* you can also add margin-bottom, margin-left, margin-right if needed */
+
+.container {
+  max-width: 900px;
+  margin: 0 auto;
 }
 
+/* HEADER BANNER */
+.header-banner {
+  background: linear-gradient(180deg, #990000 0%, #dd0000 100%);
+  padding: 30px 25px;
+  border-radius: 12px;
+  box-shadow: 
+    inset 0 1px 0 rgba(255, 255, 255, 0.3),
+    0 8px 20px rgba(0, 0, 0, 0.3);
+  margin-bottom: 30px;
+  border: 2px solid #660000;
+  text-align: center;
+}
 
-.programm-view {
+.header-banner h1 {
+  margin: 0;
+  font-size: 2rem;
+  color: #fff;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+  font-weight: 900;
+  letter-spacing: 1px;
+}
+
+.subtitle {
+  margin: 10px 0 0 0;
+  color: #fff;
+  font-size: 1rem;
+  font-weight: bold;
+  opacity: 0.95;
+}
+
+/* LOADING STATE */
+.loading-state {
+  text-align: center;
+  padding: 60px 20px;
+  color: #fff;
+  font-size: 1.2rem;
+}
+
+.spinner-2000s {
+  width: 50px;
+  height: 50px;
+  border: 4px solid #dd0000;
+  border-top: 4px solid #ffcc00;
+  border-radius: 50%;
+  animation: spin-2000s 1s linear infinite;
+  margin: 0 auto 20px;
+}
+
+@keyframes spin-2000s {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.content {
+  display: flex;
+  flex-direction: column;
+  gap: 25px;
+}
+
+/* EXERCISE ITEMS LIST */
+.exercises-list {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.exercise-item {
+  display: flex;
+  flex-direction: column;
+}
+
+/* EXERCISE BUTTONS */
+.exercise-button {
+  background: linear-gradient(135deg, #660000 0%, #990000 100%);
+  border: 2px solid #dd0000;
   padding: 20px;
-  max-width: 800px;
-  margin: 0 auto;
-  background: linear-gradient(to bottom right, #ffffff, #a59494, #aaa0a0);
-  border-radius: 16px;
+  border-radius: 10px;
+  cursor: pointer;
+  font-size: 1rem;
+  font-weight: bold;
+  color: #ffcc00;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  width: 100%;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.exercise-button:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 6px 16px rgba(221, 0, 0, 0.2);
+}
+
+.exercise-button.active {
+  background: linear-gradient(135deg, #dd0000 0%, #ff3333 100%);
+  border-color: #990000;
+  color: #fff;
+  box-shadow: 0 8px 20px rgba(221, 0, 0, 0.3);
+}
+
+.button-text {
+  display: block;
+  text-align: center;
+  flex: 1;
+}
+
+.button-arrow {
+  display: inline-block;
+  transition: transform 0.3s ease;
+  font-size: 0.8rem;
+}
+
+.button-arrow.open {
+  transform: rotate(180deg);
+}
+
+/* EXERCISE CARD */
+.exercise-card {
+  background: #fff;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+}
+
+.expanded-card {
+  animation: slideDown 0.3s ease forwards;
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.card-header-2000s {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: linear-gradient(90deg, #cc0000 0%, #ff3333 100%);
+  padding: 20px 25px;
+  border-bottom: 2px solid #990000;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2);
+}
+
+.exercise-title {
+  margin: 0;
+  color: #fff;
+  font-size: 1.5rem;
+  text-shadow: 2px 2px 3px rgba(0, 0, 0, 0.5);
+  font-weight: 900;
+  letter-spacing: 1px;
+}
+
+.close-btn {
+  background: transparent;
+  border: none;
+  color: #fff;
+  font-size: 1.5rem;
+  cursor: pointer;
+  padding: 5px 10px;
+  transition: all 0.2s ease;
+}
+
+.close-btn:hover {
+  transform: scale(1.2);
+}
+
+.card-body {
+  padding: 30px;
+  background: #f9f9f9;
+}
+
+/* INPUT SECTION */
+.input-section {
+  margin-bottom: 25px;
+  background: #fff;
+  padding: 20px;
+  border-radius: 8px;
+  border: 1px solid #e0e0e0;
+}
+
+.input-group {
+  margin-bottom: 18px;
+}
+
+.input-group:last-child {
+  margin-bottom: 0;
+}
+
+.input-group label {
+  display: block;
+  margin-bottom: 8px;
+  color: #333;
+  font-weight: bold;
+  font-size: 0.95rem;
+}
+
+.input-group input {
+  width: 100%;
+  padding: 12px 15px;
+  border: 2px solid #ddd;
+  border-radius: 6px;
+  font-size: 1rem;
+  box-sizing: border-box;
+  transition: all 0.2s ease;
+}
+
+.input-group input:focus {
+  outline: none;
+  border-color: #dd0000;
+  box-shadow: 0 0 0 3px rgba(221, 0, 0, 0.1);
+  background: #fff;
+}
+
+.input-group input::placeholder {
+  color: #999;
+}
+
+/* BUTTON GROUP */
+.button-group {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.btn-save {
+  padding: 12px 20px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: bold;
+  font-size: 0.95rem;
+  transition: all 0.2s ease;
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.15);
+  background: linear-gradient(180deg, #00cc00 0%, #009900 100%);
+  color: #fff;
+  flex: 1;
+  min-width: 150px;
+}
+
+.btn-save:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 5px 12px rgba(0, 204, 0, 0.3);
+}
+
+.btn-save:active {
+  transform: translateY(0);
+}
+
+/* FOOTER ACTION */
+.footer-action {
+  display: flex;
+  justify-content: center;
+  margin-top: 40px;
+}
+
+.btn-back {
+  padding: 15px 30px;
+  background: linear-gradient(180deg, #dd0000 0%, #990000 100%);
+  color: #fff;
+  border: 2px solid #660000;
+  border-radius: 10px;
+  font-size: 1rem;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.3s ease;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
 }
 
-.exercise-section {
-  margin-top: 30px;
-  background: #f9f9f9;
-  border-radius: 12px;
-  padding: 20px;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+.btn-back:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 6px 18px rgba(221, 0, 0, 0.3);
 }
 
-canvas {
-  margin-top: 10px;
-  max-width: 100%;
-  height: 140px !important;
+.btn-back:active {
+  transform: translateY(-1px);
+}
+
+/* MOBILE RESPONSIVE */
+@media (max-width: 768px) {
+  .header-banner h1 {
+    font-size: 1.5rem;
+  }
+
+  .card-body {
+    padding: 20px;
+  }
+
+  .exercise-button {
+    padding: 15px;
+    font-size: 0.9rem;
+  }
+
+  .exercise-title {
+    font-size: 1.2rem;
+  }
+}
+</style>
+
+<style scoped>
+.full-background {
+  background: linear-gradient(135deg, #330000 0%, #660000 50%, #990000 100%);
+  min-height: 100vh;
+  padding: 40px 20px;
+  margin: 0;
+}
+
+.container {
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+/* HEADER BANNER */
+.header-banner {
+  background: linear-gradient(180deg, #990000 0%, #dd0000 100%);
+  padding: 30px 25px;
+  border-radius: 12px;
+  box-shadow: 
+    inset 0 1px 0 rgba(255, 255, 255, 0.3),
+    0 8px 20px rgba(0, 0, 0, 0.3);
+  margin-bottom: 30px;
+  border: 2px solid #660000;
+  text-align: center;
+}
+
+.header-banner h1 {
+  margin: 0;
+  font-size: 2rem;
+  color: #fff;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+  font-weight: 900;
+  letter-spacing: 1px;
+}
+
+.subtitle {
+  margin: 10px 0 0 0;
+  color: #fff;
+  font-size: 1rem;
+  font-weight: bold;
+  opacity: 0.95;
+}
+
+/* LOADING STATE */
+.loading-state {
+  text-align: center;
+  padding: 60px 20px;
+  color: #fff;
+  font-size: 1.2rem;
+}
+
+.spinner-2000s {
+  width: 50px;
+  height: 50px;
+  border: 4px solid #dd0000;
+  border-top: 4px solid #ffcc00;
+  border-radius: 50%;
+  animation: spin-2000s 1s linear infinite;
+  margin: 0 auto 20px;
+}
+
+@keyframes spin-2000s {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.content {
+  display: flex;
+  flex-direction: column;
+  gap: 25px;
+}
+
+/* EXERCISE CARD */
+.exercise-card {
+  background: #fff;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.exercise-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.3);
+}
+
+.card-header-2000s {
+  background: linear-gradient(90deg, #cc0000 0%, #ff3333 100%);
+  padding: 20px 25px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 2px solid #990000;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2);
+}
+
+.exercise-title {
+  margin: 0;
+  color: #fff;
+  font-size: 1.5rem;
+  text-shadow: 2px 2px 3px rgba(0, 0, 0, 0.5);
+  font-weight: 900;
+  letter-spacing: 1px;
+}
+
+.btn-add-workout {
+  background: linear-gradient(180deg, #ffdd00 0%, #ffaa00 100%);
+  color: #333;
+  border: 2px solid #cc6600;
+  padding: 10px 16px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: bold;
+  font-size: 0.9rem;
+  box-shadow: 
+    inset 0 1px 0 rgba(255, 255, 255, 0.6),
+    0 4px 10px rgba(0, 0, 0, 0.25);
+  transition: all 0.2s ease;
+}
+
+.btn-add-workout:hover {
+  transform: translateY(-2px);
+  box-shadow: 
+    inset 0 1px 0 rgba(255, 255, 255, 0.6),
+    0 6px 14px rgba(0, 0, 0, 0.3);
+}
+
+.btn-add-workout:active {
+  transform: translateY(0);
+  box-shadow: 
+    inset 0 2px 4px rgba(0, 0, 0, 0.2),
+    0 2px 4px rgba(0, 0, 0, 0.15);
+}
+
+.card-body {
+  padding: 30px;
+  background: #f9f9f9;
+}
+
+.no-data {
+  text-align: center;
+  padding: 40px 30px;
+  color: #666;
+  font-style: italic;
+  border: 2px dashed #ccc;
+  border-radius: 8px;
+  background: #fff;
+  font-size: 1.05rem;
+}
+
+/* PR SECTION */
+.pr-section {
+  border-radius: 10px;
+  padding: 30px;
+  text-align: center;
+  box-shadow: 
+    inset 0 1px 0 rgba(255, 255, 255, 0.5),
+    0 6px 15px rgba(0, 0, 0, 0.25);
+  transition: all 0.3s ease;
+  background-size: 200% 200%;
+}
+
+.pr-title {
+  margin: 0 0 15px 0;
+  color: #333;
+  font-size: 1.1rem;
+  font-weight: bold;
+  text-shadow: 1px 1px 2px rgba(255, 255, 255, 0.5);
+  letter-spacing: 1px;
+}
+
+.pr-value {
+  font-size: 3rem;
+  color: #333;
+  font-weight: 900;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+  letter-spacing: 2px;
+}
+
+/* BENCHMARKS SECTION */
+.benchmarks-section {
+  background: #fff;
+  border: 2px solid #ddd;
+  border-radius: 10px;
+  padding: 25px;
+  margin-top: 25px;
+}
+
+.benchmarks-title {
+  margin: 0 0 18px 0;
+  color: #333;
+  font-size: 1.1rem;
+  font-weight: bold;
+  text-align: center;
+  letter-spacing: 1px;
+  border-bottom: 2px solid #dd0000;
+  padding-bottom: 12px;
+}
+
+.benchmark-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.benchmark-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 14px 16px;
+  background: linear-gradient(90deg, #f9f9f9 0%, #fff 100%);
+  border-left: 5px solid #dd0000;
+  border-radius: 6px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+  transition: all 0.2s ease;
+}
+
+.benchmark-item:hover {
+  background: linear-gradient(90deg, #f5f5f5 0%, #fefefe 100%);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.12);
+}
+
+.benchmark-level {
+  font-weight: bold;
+  color: #333;
+  font-size: 0.95rem;
+}
+
+.benchmark-value {
+  background: linear-gradient(135deg, #ffdd00 0%, #ffaa00 100%);
+  color: #333;
+  padding: 6px 14px;
+  border-radius: 20px;
+  font-weight: bold;
+  font-size: 0.9rem;
+  border: 1px solid #cc6600;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15);
+}
+
+/* FOOTER ACTION */
+.footer-action {
+  text-align: center;
+  padding: 25px;
+}
+
+.btn-back {
+  background: linear-gradient(180deg, #555 0%, #333 100%);
+  color: #fff;
+  border: 2px solid #000;
+  padding: 14px 32px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: bold;
+  font-size: 1rem;
+  box-shadow: 
+    inset 0 1px 0 rgba(255, 255, 255, 0.2),
+    0 5px 12px rgba(0, 0, 0, 0.3);
+  transition: all 0.2s ease;
+}
+
+.btn-back:hover {
+  background: linear-gradient(180deg, #666 0%, #444 100%);
+  transform: translateY(-2px);
+  box-shadow: 
+    inset 0 1px 0 rgba(255, 255, 255, 0.2),
+    0 7px 16px rgba(0, 0, 0, 0.4);
+}
+
+.btn-back:active {
+  transform: translateY(0);
+  box-shadow: 
+    inset 0 2px 4px rgba(0, 0, 0, 0.3),
+    0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+/* RESPONSIVE */
+@media (max-width: 768px) {
+  .header-banner h1 {
+    font-size: 1.5rem;
+  }
+
+  .card-header-2000s {
+    flex-direction: column;
+    gap: 15px;
+  }
+
+  .exercise-title {
+    font-size: 1.3rem;
+  }
+
+  .btn-add-workout {
+    width: 100%;
+  }
+
+  .card-body {
+    padding: 20px;
+  }
+
+  .pr-section {
+    padding: 20px;
+  }
+
+  .pr-value {
+    font-size: 2.2rem;
+  }
+
+  .benchmarks-section {
+    padding: 20px;
+  }
+
+  .benchmark-item {
+    flex-wrap: wrap;
+    padding: 12px 14px;
+  }
+
+  .benchmark-level {
+    width: 100%;
+    margin-bottom: 8px;
+  }
 }
 </style>
