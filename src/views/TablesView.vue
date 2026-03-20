@@ -54,15 +54,25 @@
                     <th>Date</th>
                     <th v-if="currentType === 'reps'">Reps</th>
                     <th v-else-if="currentType === 'runtime'">Time (min)</th>
+                    <th v-if="currentType === 'runtime'">Change</th>
                     <th v-else>1RM (kg)</th>
                     <th>Comment</th>
                   </tr>
                 </thead>
                 <tbody>
-                  <tr v-for="(row, index) in tableData" :key="index">
+                  <tr
+                    v-for="(row, index) in tableData"
+                    :key="index"
+                    :class="getRowClass(index, row)"
+                  >
                     <td>{{ formatDate(row.date) }}</td>
                     <td v-if="row.reps">{{ row.reps }}</td>
                     <td v-else-if="row.runtime">{{ row.runtime }}</td>
+                    <td v-if="currentType === 'runtime'">
+                      <span :class="getDeltaClass(index)">
+                        {{ getDelta(index) }}
+                      </span>
+                    </td>
                     <td v-else>{{ row.oneRepMax }}</td>
                     <td>{{ row.comment || '-' }}</td>
                   </tr>
@@ -147,14 +157,35 @@ export default {
       if (this.currentType === "runtime") {
         return `${this.monthlyProgress.toFixed(2)} min/month`;
       } else if (this.currentType === "1rm") {
-        return `${this.monthlyProgress.toFixed(2)} kg/month`;
+        const sign = this.monthlyProgress >= 0 ? "+" : "";
+        return `${sign}${this.monthlyProgress.toFixed(2)} kg/month`;
       }
-      return `${this.monthlyProgress.toFixed(2)} reps/month`;
+      const sign = this.monthlyProgress >= 0 ? "+" : "";
+      return `${sign}${this.monthlyProgress.toFixed(2)} reps/month`;
     },
   },
   methods: {
     formatDate(dateStr) {
       return new Date(dateStr).toLocaleDateString();
+    },
+    getDelta(index) {
+      if (this.currentType !== "runtime") return "";
+      if (index === 0) return "-";
+      const current = this.tableData[index]?.runtime;
+      const prev = this.tableData[index - 1]?.runtime;
+      if (current == null || prev == null) return "-";
+      const delta = current - prev;
+      return delta > 0 ? `+${delta.toFixed(2)} min` : `${delta.toFixed(2)} min`;
+    },
+    getDeltaClass(index) {
+      if (this.currentType !== "runtime" || index === 0) return "";
+      const current = this.tableData[index]?.runtime;
+      const prev = this.tableData[index - 1]?.runtime;
+      if (current == null || prev == null) return "";
+      const delta = current - prev;
+      if (delta < 0) return "runtime-good";
+      if (delta > 0) return "runtime-bad";
+      return "";
     },
     selectTable(value) {
       this.selectedTable = value;
@@ -193,13 +224,26 @@ export default {
       const firstVal = first.reps || first.oneRepMax || first.runtime || 0;
       const lastVal = last.reps || last.oneRepMax || last.runtime || 0;
       let diff = lastVal - firstVal;
-      if (this.currentType === "runtime") diff = -diff;
-      this.monthlyProgress = diff / months;
+      if (this.currentType === "runtime") {
+        // runtime improvement is when lower time; keep monthlyProgress as negative delta (lower is better)
+        this.monthlyProgress = (lastVal - firstVal) / months;
+      } else {
+        this.monthlyProgress = diff / months;
+      }
       const days = Math.floor((lastDate - firstDate) / (1000 * 60 * 60 * 24));
       const totalMonths = Math.floor(days / 30);
       const remainingDays = days % 30;
       this.trackingDuration = `${totalMonths} months ${remainingDays} days`;
       this.progressColor = this.getColorByProgress(this.monthlyProgress);
+    },
+    getRowClass(index, row) {
+      if (this.currentType !== "runtime" || !row.runtime) return "";
+      if (index === 0) return "";
+      const prev = this.tableData[index - 1];
+      if (!prev || prev.runtime == null) return "";
+      if (row.runtime < prev.runtime) return "runtime-good";
+      if (row.runtime > prev.runtime) return "runtime-bad";
+      return "";
     },
     getColorByProgress(rate) {
       if (this.currentType === "reps") {
@@ -450,6 +494,9 @@ th {
 }
 
 tbody tr:hover { background: #f3f4f6; }
+
+.runtime-good { background: #ecfdf3 !important; color: #065f46; }
+.runtime-bad { background: #fef2f2 !important; color: #b91c1c; }
 
 .chart-container {
   width: 100%;
