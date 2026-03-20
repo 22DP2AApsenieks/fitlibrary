@@ -274,7 +274,7 @@ export default {
 }
 
 .header-section {
-  background: linear-gradient(135deg, #990000 0%, #dd0000 100%);
+  background: linear-gradient(135deg, #000000 0%, #1e1e1e 100%);
   color: white;
   padding: 40px 30px;
   text-align: center;
@@ -429,7 +429,7 @@ export default {
   width: 100%;
   padding: 14px 30px;
   margin-top: 15px;
-  background: linear-gradient(135deg, #006308 0%, #2fc900 100%);
+  background: linear-gradient(135deg, #00450a 0%, #000000 100%);
   color: white;
   border: none;
   border-radius: 12px;
@@ -472,7 +472,7 @@ export default {
 .delete-button {
   width: 100%;
   padding: 14px 30px;
-  background: linear-gradient(135deg, #e40000 0%, #70004b 100%);
+  background: linear-gradient(135deg, #000000 0%, #70001e 100%);
   color: white;
   border: none;
   border-radius: 12px;
