@@ -314,7 +314,7 @@ export default {
 
 <style scoped>
 .full-background {
-  background: linear-gradient(135deg, #330000 0%, #660000 50%, #990000 100%);
+  background: linear-gradient(135deg, #0f1419 0%, #1a1f2e 50%, #0d1117 100%);
   min-height: 100vh;
   padding: 30px 10px 20px;
 }
@@ -325,34 +325,36 @@ export default {
 }
 
 .header-banner {
-  background: linear-gradient(180deg, #990000 0%, #dd0000 100%);
+  background: linear-gradient(180deg, #3a1a1a 0%, #5a2a2a 100%);
   border-radius: 12px;
   padding: 20px 18px;
-  border: 2px solid #660000;
+  border: 1px solid #8a4a4a;
   color: #fff;
   text-align: center;
-  box-shadow: 0 8px 22px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 8px 22px rgba(0, 0, 0, 0.5);
 }
 
 .header-banner h1 {
   margin: 0;
   font-size: 2rem;
   letter-spacing: 1px;
-  text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.2);
+  text-shadow: 2px 2px 3px rgba(0, 0, 0, 0.8);
 }
 
 .subtitle {
   margin: 8px 0 0;
   font-weight: 700;
-  opacity: 0.95;
+  opacity: 0.9;
+  color: #e0e0e0;
 }
 
 .inner-card {
   margin-top: 20px;
   border-radius: 14px;
-  background: #fff;
+  background: #1a1a1a;
   padding: 18px;
-  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.6);
+  border: 1px solid #2a2a2a;
 }
 
 .group-list {
@@ -363,8 +365,8 @@ export default {
 }
 
 .group-card {
-  background: #f8fafc;
-  border: 1px solid #e5e7eb;
+  background: #2a2a2a;
+  border: 1px solid #444;
   border-radius: 12px;
   padding: 14px;
 }
@@ -382,21 +384,21 @@ export default {
   align-items: center;
   justify-content: center;
   border-radius: 10px;
-  background: #fff5f5;
-  border: 1px solid #f7c6c6;
+  background: #3a2a2a;
+  border: 1px solid #8a4a4a;
   font-size: 1rem;
 }
 
 .group-card h3 {
   margin: 0;
   font-size: 1.1rem;
-  color: #2d0f0f;
+  color: #ffffff;
 }
 
 .group-card p {
   margin: 4px 0 0;
   font-size: 0.9rem;
-  color: #4b5563;
+  color: #b0b0b0;
 }
 
 .group-buttons {
@@ -407,48 +409,49 @@ export default {
 
 .exercise-card-btn {
   text-align: left;
-  border: 1px solid #e2e8f0;
-  background: #ffffff;
+  border: 1px solid #444;
+  background: #2a2a2a;
   border-radius: 8px;
   padding: 8px 12px;
   font-weight: 600;
-  color: #1f2937;
+  color: #e0e0e0;
   cursor: pointer;
   transition: all 0.2s ease;
   letter-spacing: 0.2px;
 }
 
 .exercise-card-btn:hover {
-  background: #fff7ed;
-  border-color: #fbbf24;
+  background: #333333;
+  border-color: #666;
 }
 
 .exercise-card-btn.active {
-  background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
-  border-color: #f59e0b;
-  box-shadow: 0 4px 10px rgba(245, 158, 11, 0.2);
+  background: #6a3a3a;
+  border-color: #8a4a4a;
+  box-shadow: 0 4px 10px rgba(138, 74, 74, 0.3);
+  color: #ffffff;
 }
 
-.item-dot { color: #f59e0b; margin-right: 6px; }
+.item-dot { color: #8a4a4a; margin-right: 6px; }
 
 .selected-label {
   font-weight: 700;
-  color: #111827;
+  color: #e0e0e0;
   margin: 8px 0 10px;
   font-size: 0.95rem;
 }
 
 .loading-state {
   text-align: center;
-  color: #333;
+  color: #e0e0e0;
   padding: 24px;
 }
 
 .spinner-2000s {
   width: 42px;
   height: 42px;
-  border: 4px solid #dd0000;
-  border-top: 4px solid #ffcc00;
+  border: 4px solid #444;
+  border-top: 4px solid #8a4a4a;
   border-radius: 50%;
   animation: spin-2000s 1s linear infinite;
   margin: 0 auto 10px;
@@ -464,36 +467,37 @@ export default {
   gap: 10px;
 }
 
-.result-header h2 { margin: 0; color: #330000; }
+.result-header h2 { margin: 0; color: #ffffff; }
 
 .summary-pill {
-  background: #f4f6f8;
-  border: 1px solid #ddd;
+  background: #2a2a2a;
+  border: 1px solid #444;
   border-radius: 10px;
   padding: 10px 12px;
   display: inline-flex;
   gap: 10px;
   font-weight: 600;
-  color: #1f2937;
+  color: #e0e0e0;
 }
 
-.table-wrap { overflow-x: auto; margin-top: 12px; border-radius: 10px; border: 1px solid #e5e7eb; }
+.table-wrap { overflow-x: auto; margin-top: 12px; border-radius: 10px; border: 1px solid #444; }
 
 table { width: 100%; border-collapse: collapse; }
 
 th, td {
   padding: 10px 12px;
-  border-bottom: 1px solid #e5e7eb;
+  border-bottom: 1px solid #444;
   text-align: center;
+  color: #e0e0e0;
 }
 
 th {
-  background: #f9fafb;
-  color: #111827;
+  background: #2a2a2a;
+  color: #ffffff;
   font-weight: 700;
 }
 
-tbody tr:hover { background: #f3f4f6; }
+tbody tr:hover { background: #2a2a2a; }
 
 .runtime-good { background: #ecfdf3 !important; color: #065f46; }
 .runtime-bad { background: #fef2f2 !important; color: #b91c1c; }
@@ -503,8 +507,8 @@ tbody tr:hover { background: #f3f4f6; }
   min-height: 330px;
   margin-top: 18px;
   border-radius: 10px;
-  background: #fff;
-  border: 1px solid #e2e8f0;
+  background: #2a2a2a;
+  border: 1px solid #444;
   padding: 8px;
 }
 
@@ -512,22 +516,24 @@ tbody tr:hover { background: #f3f4f6; }
   text-align: center;
   margin: 18px 0;
   font-style: italic;
-  color: #4b5563;
+  color: #b0b0b0;
 }
 
 .footer-action { text-align: center; margin-top: 18px; }
 
 .btn-back {
-  background: linear-gradient(180deg, #555 0%, #333 100%);
+  background: #6a3a3a;
   color: #fff;
-  border: none;
+  border: 1px solid #8a5a5a;
   border-radius: 8px;
   padding: 12px 24px;
   cursor: pointer;
   font-weight: 700;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
 }
 
-.btn-back:hover { transform: translateY(-1px); box-shadow: 0 4px 12px rgba(0,0,0,0.28); }
+.btn-back:hover { transform: translateY(-1px); box-shadow: 0 6px 16px rgba(0, 0, 0, 0.5); background: #7a4a4a; }
 
 @media (max-width: 800px) {
   .header-banner h1 { font-size: 1.6rem; }

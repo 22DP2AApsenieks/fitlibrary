@@ -258,7 +258,7 @@ export default {
 
 <style scoped>
 .full-background {
-  background: linear-gradient(135deg, #330000 0%, #660000 50%, #990000 100%);
+  background: linear-gradient(135deg, #0f1419 0%, #1a1f2e 50%, #0d1117 100%);
   min-height: 100vh;
   padding: 40px 20px;
   margin: 0;
@@ -267,17 +267,18 @@ export default {
 .programm-view {
   max-width: 1000px;
   margin: 0 auto;
-  background: #fff;
+  background: #1a1a1a;
   border-radius: 24px;
-  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.6);
   overflow: hidden;
 }
 
 .header-section {
-  background: linear-gradient(135deg, #000000 0%, #1e1e1e 100%);
+  background: linear-gradient(135deg, #3a1a1a 0%, #5a2a2a 100%);
   color: white;
   padding: 40px 30px;
   text-align: center;
+  border-bottom: 2px solid #8a4a4a;
 }
 
 .header-section h1 {
@@ -290,7 +291,8 @@ export default {
 .welcome-text {
   font-size: 1.1rem;
   margin: 0;
-  opacity: 0.95;
+  opacity: 0.9;
+  color: #e0e0e0;
 }
 
 .username {
@@ -300,6 +302,7 @@ export default {
 
 .content {
   padding: 40px 30px;
+  background: #1a1a1a;
 }
 
 .loading-spinner {
@@ -308,12 +311,12 @@ export default {
   align-items: center;
   justify-content: center;
   padding: 80px 30px;
-  color: #dd0000;
+  color: #e0e0e0;
 }
 
 .spinner {
-  border: 4px solid #f0f0f0;
-  border-top: 4px solid #dd0000;
+  border: 4px solid #444;
+  border-top: 4px solid #8a4a4a;
   border-radius: 50%;
   width: 40px;
   height: 40px;
@@ -327,13 +330,14 @@ export default {
 }
 
 .motivation-card {
-  background: linear-gradient(135deg, #610000 0%, #000000 100%);
+  background: linear-gradient(135deg, #3a2a2a 0%, #2a1a1a 100%);
   color: white;
   padding: 30px;
   border-radius: 16px;
   text-align: center;
   margin-bottom: 40px;
-  box-shadow: 0 10px 30px rgba(221, 0, 0, 0.3);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+  border: 1px solid #8a4a4a;
 }
 
 .motivation-card h2 {
@@ -355,20 +359,20 @@ export default {
   align-items: center;
   justify-content: center;
   padding: 30px;
-  background: #f8f9fa;
-  border: 2px solid #e9ecef;
+  background: #2a2a2a;
+  border: 1px solid #444;
   border-radius: 16px;
   text-decoration: none;
-  color: #333;
+  color: #e0e0e0;
   transition: all 0.3s ease;
   cursor: pointer;
 }
 
 .nav-card:hover {
   transform: translateY(-8px);
-  border-color: #dd0000;
-  box-shadow: 0 15px 40px rgba(221, 0, 0, 0.2);
-  background: linear-gradient(135deg, #fff5f5 0%, #ffe8e8 100%);
+  border-color: #8a4a4a;
+  box-shadow: 0 15px 40px rgba(138, 74, 74, 0.3);
+  background: #333333;
 }
 
 .card-icon {
@@ -380,69 +384,74 @@ export default {
   margin: 0 0 8px 0;
   font-size: 1.3rem;
   font-weight: 700;
+  color: #ffffff;
 }
 
 .nav-card p {
   margin: 0;
   font-size: 0.9rem;
-  color: #666;
+  color: #b0b0b0;
 }
 
 .review-section {
-  background: #f8f9fa;
+  background: #2a2a2a;
   padding: 30px;
   border-radius: 16px;
   margin-bottom: 30px;
-  border-left: 4px solid #dd0000;
+  border-left: 4px solid #8a4a4a;
 }
 
 .review-section h3 {
   margin: 0 0 8px 0;
-  color: #333;
+  color: #ffffff;
   font-size: 1.4rem;
 }
 
 .section-subtitle {
   margin: 0 0 20px 0;
-  color: #666;
+  color: #b0b0b0;
   font-size: 0.95rem;
 }
 
 .review-textarea {
   width: 100%;
   padding: 15px;
-  border: 2px solid #e9ecef;
+  border: 1px solid #444;
   border-radius: 12px;
   font-family: inherit;
   font-size: 1rem;
   resize: vertical;
   transition: all 0.3s ease;
+  background: #2a2a2a;
+  color: #ffffff;
 }
 
 .review-textarea:focus {
   outline: none;
-  border-color: #dd0000;
-  box-shadow: 0 0 0 3px rgba(221, 0, 0, 0.1);
+  border-color: #666;
+  box-shadow: 0 0 0 3px rgba(200, 100, 100, 0.15);
+  background: #333333;
 }
 
 .submit-review-button {
   width: 100%;
   padding: 14px 30px;
   margin-top: 15px;
-  background: linear-gradient(135deg, #00450a 0%, #000000 100%);
+  background: #007011;
   color: white;
-  border: none;
+  border: 1px solid #00ff00;
   border-radius: 12px;
   font-size: 1rem;
   font-weight: 600;
   cursor: pointer;
   transition: all 0.3s ease;
-  box-shadow: 0 5px 15px rgba(221, 0, 0, 0.3);
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.4);
 }
 
 .submit-review-button:hover {
   transform: translateY(-2px);
-  box-shadow: 0 8px 25px rgba(0, 94, 12, 0.4);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.5);
+  background: #00ff40;
 }
 
 .submit-review-button:active {
@@ -450,42 +459,43 @@ export default {
 }
 
 .danger-zone {
-  background: #fff5f5;
+  background: #2a1a1a;
   padding: 30px;
   border-radius: 16px;
-  border-left: 4px solid #e53e3e;
+  border-left: 4px solid #8a4a4a;
 }
 
 .danger-zone h3 {
   margin: 0 0 8px 0;
-  color: #e53e3e;
+  color: #ffaaaa;
   font-size: 1.4rem;
   font-weight: 700;
 }
 
 .danger-text {
   margin: 0 0 20px 0;
-  color: #a0262f;
+  color: #b0b0b0;
   font-size: 0.95rem;
 }
 
 .delete-button {
   width: 100%;
   padding: 14px 30px;
-  background: linear-gradient(135deg, #000000 0%, #70001e 100%);
+  background: #890000;
   color: white;
-  border: none;
+  border: 1px solid #680000;
   border-radius: 12px;
   font-size: 1rem;
   font-weight: 600;
   cursor: pointer;
   transition: all 0.3s ease;
-  box-shadow: 0 5px 15px rgba(229, 62, 62, 0.3);
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.4);
 }
 
 .delete-button:hover {
   transform: translateY(-2px);
-  box-shadow: 0 8px 25px rgba(229, 62, 62, 0.4);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.5);
+  background: #970000;
 }
 
 .delete-button:active {
