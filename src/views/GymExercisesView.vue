@@ -256,7 +256,7 @@ export default {
 
 /* HEADER BANNER */
 .header-banner {
-  background: linear-gradient(180deg, #990000 0%, #dd0000 100%);
+  background: linear-gradient(180deg, #630000 0%, #171616 100%);
   padding: 30px 25px;
   border-radius: 12px;
   box-shadow: 

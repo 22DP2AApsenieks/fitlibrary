@@ -141,7 +141,7 @@ export default {
 }
 
 .header-banner {
-  background: linear-gradient(180deg, #990000 0%, #dd0000 100%);
+  background: linear-gradient(180deg, #630000 0%, #171616 100%);
   padding: 30px 25px;
   border-radius: 12px;
   box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.3), 0 8px 20px rgba(0, 0, 0, 0.3);
