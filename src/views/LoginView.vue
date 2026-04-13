@@ -1,16 +1,22 @@
 <template>
-  <div class="login-container">
-    <form @submit.prevent="login" class="email-section">
-      <h1>Logins</h1>
-      <input type="text" v-model="form.Username" placeholder="Username" required />
-      <input type="password" v-model="form.Password" placeholder="Parole" required />
-      <button type="submit" class="login-button">Login</button>
-      <p v-if="errorMessage" class="error-message">{{ errorMessage }}</p>
-      <div class="Signup-section">
-        <p>Forgot password? <router-link to="/signup" class="Signup-link">Haha. Biezpiens jāēd</router-link></p>
-      </div>
-    </form>
-  </div>
+  <section class="signup-section">
+    <div class="signup-content">
+      <form @submit.prevent="login" class="signup-form">
+        <h1>Log In</h1>
+        <input type="text" v-model="form.Username" placeholder="Username" required />
+        <input type="password" v-model="form.Password" placeholder="Password" required />
+        <button type="submit" class="signup-button">Log In</button>
+
+        <p v-if="errorMessage" class="error-message">{{ errorMessage }}</p>
+
+        <div class="redirect-login">
+          <p>Don't have an account?
+            <router-link to="/signup" class="login-link">Sign up here</router-link>
+          </p>
+        </div>
+      </form>
+    </div>
+  </section>
 </template>
 
 <script setup>
@@ -59,121 +65,108 @@ const login = async () => {
 </script>
 
 <style scoped>
-.login-container {
+.signup-section {
   min-height: 100vh;
-  background: linear-gradient(to bottom right, #000000, #202020, #302500,  #000000);
+  background: linear-gradient(to bottom right, #330000, #660000, #990000);
   display: flex;
-  flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding: 40px 20px;
+  padding: 60px 20px;
+  color: #fff;
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  color: #f5f5f5;
 }
 
-.email-section {
-  background: linear-gradient(to bottom right, #f70000, #bb0000 , #800101);
-  padding: 30px;
+.signup-content {
+  background: linear-gradient(to bottom right, #000000, #3f3f3f, #666666);
+  padding: 40px;
   border-radius: 20px;
-  box-shadow: 0 8px 24px rgba(255, 0, 0, 0.3);
-  max-width: 400px;
+  box-shadow: 0 12px 32px rgba(255, 0, 0, 0.6);
+  max-width: 500px;
   width: 100%;
+  animation: fadeInUp 1.2s ease forwards;
+}
+
+.signup-form h1 {
+  font-size: 2.5rem;
+  margin-bottom: 25px;
   text-align: center;
-  animation: fadeIn 1s ease-in-out;
-}
-
-.email-section h1 {
-  margin-bottom: 20px;
-  font-size: 2rem;
-  color: #fff;
-}
-
-.email-section > input {
-  width: 100%;
-  padding: 12px;
-  margin: 12px 0;
-  border: none;
-  border-radius: 8px;
-  font-size: 16px;
-  background: #222;
-  color: #fff;
-  transition: border 0.3s ease;
-}
-
-.email-section > input:focus {
-  outline: none;
-  border: 2px solid #ff6666;
-}
-
-.login-button {
-  width: 100%;
-  padding: 12px;
-  background: linear-gradient(to right, #ff4444, #cc0000);
-  color: #fff;
-  border: none;
-  border-radius: 8px;
-  cursor: pointer;
-  font-size: 16px;
   font-weight: bold;
-  margin-top: 12px;
-  transition: background 0.3s ease, transform 0.3s ease;
+  text-shadow: 0 0 15px #ff3b3fcc;
 }
 
-.login-button:hover {
-  background: linear-gradient(to right, #e60000, #990000);
-  transform: scale(1.03);
+.signup-form input {
+  width: 100%;
+  padding: 14px;
+  margin-bottom: 16px;
+  border: none;
+  border-radius: 10px;
+  font-size: 1rem;
+  background: #fff;
+  color: #333;
+  box-shadow: 0 4px 10px rgba(255, 0, 0, 0.3);
+  transition: box-shadow 0.3s ease;
 }
 
-.signup-link {
-  color: #ffaaaa;
-  text-decoration: underline;
-  font-weight: 500;
+.signup-form input:focus {
+  outline: none;
+  box-shadow: 0 0 10px rgba(255, 204, 0, 0.9);
 }
 
-.Signup-section {
-  margin-top: 15px;
+.signup-button {
+  width: 100%;
+  padding: 14px;
+  background: linear-gradient(to right, #ffcc00, #ff9900);
+  color: black;
+  font-size: 1.1rem;
+  font-weight: bold;
+  border: none;
+  border-radius: 30px;
+  cursor: pointer;
+  box-shadow: 0 6px 18px rgba(255, 204, 0, 0.4);
+  transition: transform 0.3s ease, background 0.3s ease;
+}
+
+.signup-button:hover {
+  background: linear-gradient(to right, #e6b800, #cc8400);
+  transform: scale(1.05);
 }
 
 .error-message {
-  color: #ffaaaa;
+  color: #ff9999;
   margin-top: 10px;
-  font-size: 14px;
+  text-align: center;
+  font-weight: 500;
 }
 
-.user-list {
-  margin-top: 40px;
-  background: #222;
-  padding: 20px;
-  border-radius: 12px;
-  max-width: 500px;
-  width: 100%;
-  color: #ddd;
-  box-shadow: 0 6px 16px rgba(255, 0, 0, 0.1);
+.redirect-login {
+  text-align: center;
+  margin-top: 20px;
 }
 
-.user-list h2 {
-  margin-bottom: 15px;
-  color: #ff6666;
+.login-link {
+  color: #ffd700;
+  font-weight: 600;
+  text-decoration: underline;
 }
 
-.user-list ul {
-  list-style: none;
-  padding: 0;
-}
-
-.user-list li {
-  padding: 12px;
-  border-bottom: 1px solid #444;
-}
-
-@keyframes fadeIn {
+@keyframes fadeInUp {
   from {
     opacity: 0;
-    transform: translateY(20px);
+    transform: translateY(40px);
   }
   to {
     opacity: 1;
     transform: translateY(0);
+  }
+}
+
+@media (max-width: 600px) {
+  .signup-content {
+    padding: 25px 20px;
+  }
+
+  .signup-form h1 {
+    font-size: 2rem;
   }
 }
 </style>

@@ -6,6 +6,7 @@ import LoginView from '@/views/LoginView.vue'
 import BasicView from '@/views/BasicView.vue'
 import ProplanView from '@/views/ProplanView.vue'
 import ProplusView from '@/views/ProplusView.vue'
+import CheckoutView from '@/views/CheckoutView.vue'
 import ProgrammView from '@/views/ProgrammView.vue'
 import AdminView from '../views/AdminView.vue';
 import BodyweightExercisesView from '../views/BodyweightExercisesView.vue' 
@@ -59,6 +60,11 @@ const router = createRouter({
       path: '/proplus',
       name: 'proplus',
       component: ProplusView,
+    },
+    {
+      path: '/checkout',
+      name: 'checkout',
+      component: CheckoutView,
     },
     {
       path: '/programm',
