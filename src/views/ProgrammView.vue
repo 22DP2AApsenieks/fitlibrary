@@ -439,7 +439,7 @@ export default {
   margin-top: 15px;
   background: #007011;
   color: white;
-  border: 1px solid #00ff00;
+  border: 1px solid #002500;
   border-radius: 12px;
   font-size: 1rem;
   font-weight: 600;
@@ -451,7 +451,7 @@ export default {
 .submit-review-button:hover {
   transform: translateY(-2px);
   box-shadow: 0 8px 25px rgba(0, 0, 0, 0.5);
-  background: #00ff40;
+  background: #00c631;
 }
 
 .submit-review-button:active {

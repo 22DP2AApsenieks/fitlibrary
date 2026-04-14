@@ -47,6 +47,13 @@
               </div>
             </div>
 
+            <div class="insights-card">
+              <h3>Training Tips</h3>
+              <ul>
+                <li v-for="(tip, index) in aiTips" :key="index">{{ tip }}</li>
+              </ul>
+            </div>
+
             <div class="table-wrap">
               <table>
                 <thead>
@@ -101,6 +108,7 @@
 <script>
 import axios from "axios";
 import { Chart, registerables } from "chart.js";
+import { generateWorkoutTips } from "@/utils/workoutAI";
 Chart.register(...registerables);
 
 export default {
@@ -115,6 +123,7 @@ export default {
       monthlyProgress: 0,
       progressColor: "#9ca3af",
       trackingDuration: "",
+      aiTips: [],
       availableTables: [
         { name: "Pull-ups", value: "pullups", type: "reps", group: "Bodyweight" },
         { name: "Dips", value: "dips", type: "reps", group: "Bodyweight" },
@@ -201,7 +210,7 @@ export default {
           .filter((row) => row.username === this.username)
           .map((row) => ({ ...row, runtime: row.time || row.runtime }))
           .sort((a, b) => new Date(a.date) - new Date(b.date));
-        this.calculateProgress();
+        await this.calculateProgress();
       } catch (err) {
         console.error("Fetch error:", err);
         alert("Error fetching data. Check backend logs.");
@@ -209,7 +218,7 @@ export default {
         this.loading = false;
       }
     },
-    calculateProgress() {
+    async calculateProgress() {
       if (this.tableData.length < 2) {
         this.monthlyProgress = 0;
         this.trackingDuration = "Not enough data";
@@ -235,6 +244,12 @@ export default {
       const remainingDays = days % 30;
       this.trackingDuration = `${totalMonths} months ${remainingDays} days`;
       this.progressColor = this.getColorByProgress(this.monthlyProgress);
+      this.aiTips = generateWorkoutTips({
+        tableData: this.tableData,
+        selectedTable: this.selectedTable,
+        currentType: this.currentType,
+        monthlyProgress: this.monthlyProgress,
+      });
     },
     getRowClass(index, row) {
       if (this.currentType !== "runtime" || !row.runtime) return "";
@@ -469,16 +484,41 @@ export default {
 
 .result-header h2 { margin: 0; color: #ffffff; }
 
-.summary-pill {
-  background: #2a2a2a;
-  border: 1px solid #444;
-  border-radius: 10px;
-  padding: 10px 12px;
-  display: inline-flex;
-  gap: 10px;
-  font-weight: 600;
-  color: #e0e0e0;
-}
+    .insights-card {
+      background: #11151f;
+      border: 1px solid #444;
+      border-radius: 12px;
+      padding: 14px 16px;
+      margin-bottom: 16px;
+      color: #e0e0e0;
+    }
+
+    .insights-card h3 {
+      margin: 0 0 10px;
+      font-size: 1.05rem;
+      color: #fff;
+    }
+
+    .insights-card ul {
+      margin: 0;
+      padding-left: 18px;
+      color: #cbd5e1;
+    }
+
+    .insights-card li {
+      margin-bottom: 8px;
+      line-height: 1.4;
+    }
+
+    .summary-pill {
+      border: 1px solid #444;
+      border-radius: 10px;
+      padding: 10px 12px;
+      display: inline-flex;
+      gap: 10px;
+      font-weight: 600;
+      color: #e0e0e0;
+    }
 
 .table-wrap { overflow-x: auto; margin-top: 12px; border-radius: 10px; border: 1px solid #444; }
 

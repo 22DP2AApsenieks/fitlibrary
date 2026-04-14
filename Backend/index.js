@@ -6,8 +6,14 @@ console.log("Server is starting...");
 import express from 'express';
 import mysql from 'mysql2';
 import cors from 'cors';
+import dotenv from 'dotenv';
+import OpenAI from 'openai';
+
+dotenv.config();
 
 const app = express();
+
+const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
 
 // Middleware
 app.use(cors({
@@ -246,6 +252,51 @@ app.get('/allreviews', (req, res) => {
     if (err) return res.status(500).json({ error: err.message });
     res.json(results);
   });
+});
+
+app.post('/ai/workout-tips', async (req, res) => {
+  const { username, selectedTable, currentType, tableData, monthlyProgress } = req.body;
+
+  if (!username || !selectedTable || !Array.isArray(tableData)) {
+    return res.status(400).json({ error: 'Missing required fields' });
+  }
+
+  if (!process.env.OPENAI_API_KEY) {
+    return res.status(500).json({ error: 'OPENAI_API_KEY is not configured in backend' });
+  }
+
+  const tableName = selectedTable.replace(/_/g, ' ');
+  const items = tableData.map((row, index) => {
+    const value = row.reps ?? row.oneRepMax ?? row.time ?? row.runtime ?? '';
+    const comment = row.comment ? `Comment: ${row.comment}` : 'No comment';
+    return `${index + 1}. ${row.date}: ${value} ${currentType === 'runtime' ? 'min' : ''} — ${comment}`;
+  });
+
+  const prompt = `You are a friendly and practical workout coach. A user logged ${tableName} history with ${tableData.length} sessions. Their metric type is ${currentType}. Their monthly progress is ${monthlyProgress.toFixed(2)}. Here are the recent records:\n\n${items.join('\n')}\n\nProvide 4 short, useful tips in plain language. Mention any trend you see, how to improve safely, and encourage the user to use comments for recovery or technical notes. Do not mention you are an AI.`;
+
+  try {
+    const response = await openai.chat.completions.create({
+      model: 'gpt-3.5-turbo',
+      messages: [
+        {
+          role: 'system',
+          content: 'You provide friendly workout advice based on logged workout data and comments.',
+        },
+        {
+          role: 'user',
+          content: prompt,
+        },
+      ],
+      max_tokens: 300,
+      temperature: 0.75,
+    });
+
+    const aiText = response.choices?.[0]?.message?.content?.trim() || 'No response from AI.';
+    return res.json({ message: aiText });
+  } catch (error) {
+    console.error('AI route error:', error);
+    return res.status(500).json({ error: 'AI service failed', details: error.message });
+  }
 });
 
 
