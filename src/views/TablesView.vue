@@ -98,19 +98,6 @@
           </ul>
         </div>
 
-        <!-- 💬 ASK AI -->
-        <div class="ai-chat">
-          <h3>💬 Ask AI Coach</h3>
-          <div class="ai-chat-row">
-            <input v-model="question" placeholder="Ask about your workout..." @keyup.enter="askAI" />
-            <button @click="askAI" :disabled="aiLoading">
-              <span v-if="aiLoading">...</span>
-              <span v-else>Ask</span>
-            </button>
-          </div>
-          <p v-if="aiAnswer" class="ai-answer">{{ aiAnswer }}</p>
-        </div>
-
         <div class="footer-action">
           <button class="btn-back" @click="$router.push('/programm')">← Back to Dashboard</button>
         </div>

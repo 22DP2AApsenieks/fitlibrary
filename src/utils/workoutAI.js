@@ -1,179 +1,152 @@
-// src/utils/workoutAi.js
-
 export function generateWorkoutTips({ tableData, selectedTable, currentType, monthlyProgress }) {
   if (!tableData || tableData.length < 2) return [];
 
   const tips = [];
   const last = tableData[tableData.length - 1];
   const prev = tableData[tableData.length - 2];
+  const first = tableData[0];
+
   const count = tableData.length;
 
+  const firstVal = first.reps || first.oneRepMax || first.runtime || 0;
+  const lastVal = last.reps || last.oneRepMax || last.runtime || 0;
+
+  const progressTotal = lastVal - firstVal;
+
+  // =========================
+  // 🏃 RUNNING (runtime)
+  // =========================
   if (currentType === "runtime") {
+
+    // 📊 Progress analysis
     if (monthlyProgress < -2) {
-      tips.push("🔥 Izcils temps! Tu kļūsti ievērojami ātrāks katru mēnesi — tas ir augstākā līmeņa progress.");
-    } else if (monthlyProgress < -1) {
-      tips.push("📈 Lielisks tempa uzlabojums! Turpini regulāri skriet un optimizē elpošanas tehnika.");
-    } else if (monthlyProgress < 0) {
-      tips.push("✅ Neliels uzlabojums tempā — konsekvence atmaksājas. Pievieno intervālu treniņus ātrākai izaugsmei.");
-    } else if (monthlyProgress > 1) {
-      tips.push("⚠️ Tavs temps ir palēninājies. Apsver vieglākus atjaunošanās skrējienus un pārbaudi miegu un uzturu.");
+      tips.push(`🔥 Ļoti straujš progress! Tavs temps uzlabojas par ~${Math.abs(monthlyProgress).toFixed(2)} min/mēnesī. Tas nozīmē, ka tavs VO2max un aerobā kapacitāte būtiski aug. Turpini ar 2-3 strukturētiem treniņiem nedēļā (intervāli + vieglie skrējieni).`);
+    } else if (monthlyProgress < -0.5) {
+      tips.push(`📈 Labs progress tempā (~${Math.abs(monthlyProgress).toFixed(2)} min/mēnesī). Lai paātrinātu uzlabojumus, pievieno 1 intervālu treniņu nedēļā (piem: 6x400m ātrāk par sacensību tempu).`);
+    } else if (monthlyProgress > 0.5) {
+      tips.push(`⚠️ Temps pasliktinās (~+${monthlyProgress.toFixed(2)} min/mēnesī). Iespējams pārtrenēšanās vai nepietiekama atjaunošanās. Ieteikums: 1 nedēļa ar 30-40% mazāku apjomu + 7–9h miega.`);
     } else {
-      tips.push("➡️ Temps ir stabils. Izmēģini Fartlek vai tempa skrējienus, lai izlauztos cauri plato.");
+      tips.push(`➡️ Progress stagnē. Lai izlauztos no plato:
+1) 1x nedēļā tempo skrējiens (20 min pie ~85% piepūles)
+2) 1x intervāli
+3) pārējie skrējieni viegli`);
     }
 
-    if (count >= 10) {
-      tips.push(`🗓️ Izcila konsekvence — ${count} sesijas reģistrētas! Regulāra izsekošana ir viens no svarīgākajiem progresa faktoriem.`);
-    } else if (count >= 5) {
-      tips.push(`📋 Laba sākuma bāze ar ${count} sesijām. Turpini reģistrēt katru skrējienu precīzākai analīzei.`);
+    // 📊 Consistency
+    if (count >= 12) {
+      tips.push(`🧠 Tev ir ${count} skrējieni — tas ir lielisks datu apjoms. Tu vari sākt analizēt tendences (nogurums, labākās dienas, temps vs miegs).`);
+    } else {
+      tips.push(`📋 Datu vēl maz (${count} sesijas). Lai AI kļūtu precīzāks, mēģini reģistrēt vismaz 10–15 skrējienus.`);
     }
 
-    if (last && prev && last.runtime && prev.runtime) {
+    // ⚡ Last performance
+    if (last.runtime && prev.runtime) {
       const delta = last.runtime - prev.runtime;
+
       if (delta < -1) {
-        tips.push("⚡ Pēdējais skrājiens bija tavs labākais pēdējā laikā — lieliski!");
+        tips.push(`⚡ Pēdējais skrējiens bija būtiski ātrāks (${delta.toFixed(2)} min). Tas var nozīmēt:
+- superkompensāciju
+- labu atjaunošanos
+👉 Nākamajā treniņā nepārspīlē, saglabā progresu.`);
       } else if (delta > 1) {
-        tips.push("😓 Pēdējais skrājiens bija lēnāks — tas ir normāli. Atpūties un nāk nākamreiz ar svaigām kājām.");
+        tips.push(`😓 Pēdējais skrējiens bija lēnāks (+${delta.toFixed(2)} min). Iespējamie iemesli:
+- nogurums
+- miega trūkums
+- pārāk liels treniņu apjoms`);
       }
     }
 
-  } else if (currentType === "1rm") {
+  }
+
+  // =========================
+  // 🏋️ STRENGTH (1RM)
+  // =========================
+  else if (currentType === "1rm") {
+
     if (monthlyProgress > 5) {
-      tips.push("💪 Izcili spēka pieaugumi! Pārliecinies, ka uzņem pietiekami daudz olbaltumvielu (1.6–2.2g/kg ķermeņa svara).");
+      tips.push(`💪 Ļoti straujš spēka pieaugums (+${monthlyProgress.toFixed(2)} kg/mēn). Tas nozīmē, ka:
+- nervu sistēma adaptējas
+- progresīvā pārslodze strādā
+
+👉 Uzmanies no pārslodzes:
+- 1 deload nedēļa ik pēc 6–8 nedēļām
+- proteīns: 1.6–2.2g/kg`);
     } else if (monthlyProgress > 2) {
-      tips.push("📊 Stabils mēneša spēka progress. Progresīvā pārslodze darbojas — turpini palielināt svaru pakāpeniski.");
-    } else if (monthlyProgress > 0) {
-      tips.push("🔄 Lēns, bet stabils progress. Apsver periodizāciju — mainot intensitāti un apjomu ik pēc 4-6 nedēļām.");
-    } else if (monthlyProgress < -2) {
-      tips.push("🚨 1RM ir ievērojami samazinājies. Pārbaudi atveseļošanos, miegu (7–9h), kaloriju uzņemšanu un stresa līmeni.");
-    } else if (monthlyProgress < 0) {
-      tips.push("😓 Neliels 1RM kritums — apsver atslodzes nedēļu, pēc tam turpini ar jaunu intensitāti.");
+      tips.push(`📈 Stabils spēka progress. Ideāls diapazons ilgtermiņam.
+👉 Ieteikums:
+- turpini +2.5kg pie lielajiem vingrinājumiem
+- fokusējies uz tehniku`);
+    } else if (monthlyProgress <= 0) {
+      tips.push(`⚠️ Spēks neaug vai krītas.
+Iespējamie iemesli:
+1) kaloriju deficīts
+2) miegs <7h
+3) pārtrenēšanās
+
+👉 Risinājums:
+- 1 nedēļa ar -40% apjomu
+- pārbaudi uzturu`);
     }
 
     if (count >= 8) {
-      tips.push(`📈 ${count} reģistrētas 1RM sesijas — lielisks datu kopums precīzai spēka analīzei!`);
+      tips.push(`📊 ${count} spēka sesijas ļauj analizēt progresu. Vari sākt izmantot periodizāciju:
+- 3 nedēļas slodze
+- 1 nedēļa viegla`);
     }
 
-  } else if (currentType === "reps") {
+    // Plateau detection
+    if (Math.abs(progressTotal) < 2 && count > 6) {
+      tips.push(`🧱 Tu esi plateau.
+👉 Lai izlauztos:
+- maini atkārtojumu diapazonu (5 → 8 vai 3 → 6)
+- pievieno palīgvingrinājumus`);
+    }
+
+  }
+
+  // =========================
+  // 🔁 REPS (bodyweight)
+  // =========================
+  else if (currentType === "reps") {
+
     if (monthlyProgress > 5) {
-      tips.push("🚀 Atkārtojumu skaits strauji aug! Lai palielinātu izaicinājumu, apsver svara pievienošanu (jostas ar atsvaru).");
+      tips.push(`🚀 Ļoti ātrs progress atkārtojumos (+${monthlyProgress.toFixed(2)} mēn).
+👉 Laiks palielināt grūtību:
+- pievieno svaru
+- vai palēnini tempu (3 sek lejā)`);
     } else if (monthlyProgress > 2) {
-      tips.push("✅ Labs atkārtojumu progress. Kad sasniegs mērķi, sāc strādāt pie lēnākiem, kontrolētākiem kustību tempiem.");
-    } else if (monthlyProgress > 0) {
-      tips.push("📌 Lēns progress ar atkārtojumiem. Izmēģini 'grease the groove' metodi — bieži, bet ne līdz atteicei.");
-    } else if (monthlyProgress < -2) {
-      tips.push("⚠️ Atkārtojumu skaits krītas. Iespējama pārtrenēšanās — ļauj muskuļiem atpūsties un palielini olbaltumvielu uzņemšanu.");
-    } else if (monthlyProgress < 0) {
-      tips.push("🔍 Neliels atkārtojumu kritums. Pārbaudi, vai pietiekami atpūties starp sesijām.");
+      tips.push(`✅ Labs progress. Tu esi pareizajā zonā.
+👉 Vari pievienot:
+- pause reps
+- kontrolētu negatīvo fāzi`);
+    } else if (monthlyProgress <= 0) {
+      tips.push(`⚠️ Atkārtojumi neaug.
+👉 Ieteikums:
+- “grease the groove” (bieži, bet viegli)
+- 4–5 sesijas nedēļā, ne līdz atteicei`);
+    }
+
+    if (count >= 10) {
+      tips.push(`📊 ${count} sesijas — laba konsekvence. Vari sākt strukturēt programmu (push/pull split).`);
+    }
+
+    // Fatigue detection
+    if (last.reps && prev.reps && last.reps < prev.reps) {
+      tips.push(`😴 Pēdējais rezultāts sliktāks → iespējams nogurums.
+👉 Paņem 1–2 atpūtas dienas.`);
     }
   }
+
+  // =========================
+  // 🧠 UNIVERSAL SMART TIP
+  // =========================
+
+  tips.push(`🧠 Universāls ieteikums:
+- Miegs: 7–9h
+- Proteīns: 1.6–2.2g/kg
+- Progress = slodze + atjaunošanās
+
+Bez atjaunošanās nebūs izaugsmes.`);
 
   return tips;
-}
-
-export async function answerWorkoutQuestion(question, context = {}) {
-  if (!question || !question.trim()) return "";
-
-  const { tableData = [], selectedTable = "", currentType = "", monthlyProgress = 0 } = context;
-
-  const isLatvian = detectLatvian(question);
-  const isGreeting = detectGreeting(question);
-
-  // Build rich context string
-  let contextString = "";
-  if (selectedTable && tableData.length > 0) {
-    const first = tableData[0];
-    const last = tableData[tableData.length - 1];
-    const firstVal = first.reps || first.oneRepMax || first.runtime || "?";
-    const lastVal = last.reps || last.oneRepMax || last.runtime || "?";
-    const firstDate = new Date(first.date).toLocaleDateString();
-    const lastDate = new Date(last.date).toLocaleDateString();
-
-    contextString = `
-User's current tracked exercise: "${selectedTable}" (type: ${currentType}).
-Monthly progress rate: ${monthlyProgress.toFixed(2)} ${currentType === "runtime" ? "min/month" : currentType === "1rm" ? "kg/month" : "reps/month"}.
-Total logged sessions: ${tableData.length}.
-First recorded value: ${firstVal} on ${firstDate}.
-Most recent value: ${lastVal} on ${lastDate}.
-    `.trim();
-  } else {
-    contextString = "The user has not selected a specific exercise yet.";
-  }
-
-  const systemPrompt = `
-You are an expert, highly knowledgeable personal fitness coach and sports scientist named "FitCoach AI". 
-
-LANGUAGE RULES (CRITICAL):
-- If the user writes in Latvian, ALWAYS respond in Latvian. Never switch to English for a Latvian speaker.
-- If the user writes in English, respond in English.
-- If the user greets you (e.g. "hi", "hello", "sveiks", "čau", "labdien"), respond with a warm greeting in their language, introduce yourself briefly as FitCoach AI, and explain that if they mention a specific exercise or fitness topic, you can give them detailed, personalized advice. Mention that you have access to their workout data if they've selected a table.
-
-PERSONALITY & STYLE:
-- Be detailed, specific, and science-backed. Never give vague advice like "eat healthy" — give concrete numbers, methods, and reasoning.
-- Be motivating but honest. If progress is poor, explain why it might be happening and what to do about it.
-- When relevant, reference the user's actual data (progress rate, session count, first vs latest value).
-- Use structured responses with short paragraphs or numbered steps when explaining methods.
-- Keep responses focused — detailed but not overwhelming. Aim for 3–6 sentences for simple questions, up to 10–15 sentences for complex ones.
-
-EXPERTISE AREAS:
-- Strength training (progressive overload, periodization, 1RM testing, deload weeks)
-- Bodyweight training (calisthenics, pull-up/dip progressions, grease-the-groove)
-- Running (VO2max, tempo runs, interval training, base building, race pacing)
-- Nutrition (protein intake, caloric surplus/deficit, meal timing, hydration)
-- Recovery (sleep, active recovery, overtraining signs, mobility)
-- Exercise form and technique
-- Goal setting and program design
-
-USER CONTEXT:
-${contextString}
-  `.trim();
-
-  try {
-    const response = await fetch("https://api.anthropic.com/v1/messages", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        model: "claude-sonnet-4-20250514",
-        max_tokens: 1000,
-        system: systemPrompt,
-        messages: [
-          { role: "user", content: question }
-        ],
-      }),
-    });
-
-    const data = await response.json();
-    const text = data.content?.map(i => i.text || "").join("\n") || "";
-    return text.trim() || (isLatvian
-      ? "Atvainojiet, šobrīd nevaru saņemt atbildi. Lūdzu, mēģiniet vēlreiz."
-      : "Sorry, I couldn't get a response right now. Please try again.");
-  } catch (err) {
-    console.error("AI error:", err);
-    return isLatvian
-      ? "Kļūda savienojumā ar AI treneri. Lūdzu, pārbaudi interneta savienojumu."
-      : "Connection error with AI coach. Please check your internet connection.";
-  }
-}
-
-function detectLatvian(text) {
-  const latvianWords = [
-    "sveiks", "sveiki", "labdien", "čau", "cau", "kā", "ka", "ir", "nav",
-    "man", "es", "tu", "mēs", "viņš", "viņa", "kas", "ko", "kur", "kad",
-    "labi", "slikti", "palīdzi", "palīdziet", "vēlos", "gribu", "treniņš",
-    "skriešana", "spēks", "svars", "vingrinājums", "progress", "mērķis",
-    "paldies", "lūdzu", "jā", "nē", "arī", "bet", "un", "vai", "cik",
-    "daudz", "mazāk", "vairāk", "labāk", "sliktāk", "ātrāk", "lēnāk"
-  ];
-  const lower = text.toLowerCase();
-  return latvianWords.some(word => lower.includes(word));
-}
-
-function detectGreeting(text) {
-  const greetings = [
-    "hi", "hello", "hey", "sveiks", "sveiki", "čau", "cau",
-    "labdien", "labrīt", "labvakar", "yo", "sup", "howdy"
-  ];
-  const lower = text.toLowerCase().trim();
-  return greetings.some(g => lower === g || lower.startsWith(g + " ") || lower.startsWith(g + "!"));
 }
