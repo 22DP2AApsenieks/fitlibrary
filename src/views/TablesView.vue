@@ -90,6 +90,27 @@
           </div>
         </div>
 
+        <!-- 🤖 AI COACH TIPS -->
+        <div v-if="aiTips.length" class="ai-box">
+          <h3>🤖 AI Coach</h3>
+          <ul>
+            <li v-for="(tip, i) in aiTips" :key="i">{{ tip }}</li>
+          </ul>
+        </div>
+
+        <!-- 💬 ASK AI -->
+        <div class="ai-chat">
+          <h3>💬 Ask AI Coach</h3>
+          <div class="ai-chat-row">
+            <input v-model="question" placeholder="Ask about your workout..." @keyup.enter="askAI" />
+            <button @click="askAI" :disabled="aiLoading">
+              <span v-if="aiLoading">...</span>
+              <span v-else>Ask</span>
+            </button>
+          </div>
+          <p v-if="aiAnswer" class="ai-answer">{{ aiAnswer }}</p>
+        </div>
+
         <div class="footer-action">
           <button class="btn-back" @click="$router.push('/programm')">← Back to Dashboard</button>
         </div>
@@ -101,6 +122,7 @@
 <script>
 import axios from "axios";
 import { Chart, registerables } from "chart.js";
+import { generateWorkoutTips, answerWorkoutQuestion } from "@/utils/workoutAi";
 Chart.register(...registerables);
 
 export default {
@@ -111,6 +133,7 @@ export default {
       selectedTable: "",
       tableData: [],
       loading: false,
+      aiLoading: false,
       chart: null,
       monthlyProgress: 0,
       progressColor: "#9ca3af",
@@ -130,6 +153,8 @@ export default {
         { name: "Half Marathon", value: "run_halfmarathon", type: "runtime", group: "Running" },
         { name: "Marathon", value: "run_marathon", type: "runtime", group: "Running" },
       ],
+      question: "",
+      aiAnswer: "",
     };
   },
   computed: {
@@ -163,6 +188,14 @@ export default {
       const sign = this.monthlyProgress >= 0 ? "+" : "";
       return `${sign}${this.monthlyProgress.toFixed(2)} reps/month`;
     },
+    aiTips() {
+      return generateWorkoutTips({
+        tableData: this.tableData,
+        selectedTable: this.selectedTable,
+        currentType: this.currentType,
+        monthlyProgress: this.monthlyProgress,
+      });
+    },
   },
   methods: {
     formatDate(dateStr) {
@@ -189,6 +222,7 @@ export default {
     },
     selectTable(value) {
       this.selectedTable = value;
+      this.aiAnswer = "";
       this.fetchData();
     },
     async fetchData() {
@@ -223,9 +257,8 @@ export default {
       const months = (lastDate - firstDate) / (1000 * 60 * 60 * 24 * 30.44) || 1;
       const firstVal = first.reps || first.oneRepMax || first.runtime || 0;
       const lastVal = last.reps || last.oneRepMax || last.runtime || 0;
-      let diff = lastVal - firstVal;
+      const diff = lastVal - firstVal;
       if (this.currentType === "runtime") {
-        // runtime improvement is when lower time; keep monthlyProgress as negative delta (lower is better)
         this.monthlyProgress = (lastVal - firstVal) / months;
       } else {
         this.monthlyProgress = diff / months;
@@ -235,6 +268,18 @@ export default {
       const remainingDays = days % 30;
       this.trackingDuration = `${totalMonths} months ${remainingDays} days`;
       this.progressColor = this.getColorByProgress(this.monthlyProgress);
+    },
+    async askAI() {
+      if (!this.question.trim()) return;
+      this.aiLoading = true;
+      this.aiAnswer = "";
+      this.aiAnswer = await answerWorkoutQuestion(this.question, {
+        tableData: this.tableData,
+        selectedTable: this.selectedTable,
+        currentType: this.currentType,
+        monthlyProgress: this.monthlyProgress,
+      });
+      this.aiLoading = false;
     },
     getRowClass(index, row) {
       if (this.currentType !== "runtime" || !row.runtime) return "";
@@ -519,6 +564,95 @@ tbody tr:hover { background: #2a2a2a; }
   color: #b0b0b0;
 }
 
+/* AI BOX */
+.ai-box {
+  margin-top: 18px;
+  background: #1e2a1e;
+  border: 1px solid #2d4a2d;
+  border-radius: 12px;
+  padding: 14px 18px;
+}
+
+.ai-box h3 {
+  margin: 0 0 10px;
+  color: #86efac;
+  font-size: 1rem;
+}
+
+.ai-box ul {
+  margin: 0;
+  padding-left: 18px;
+  color: #d1fae5;
+  font-size: 0.95rem;
+  line-height: 1.6;
+}
+
+/* AI CHAT */
+.ai-chat {
+  margin-top: 16px;
+  background: #1a1e2e;
+  border: 1px solid #2a3a5a;
+  border-radius: 12px;
+  padding: 14px 18px;
+}
+
+.ai-chat h3 {
+  margin: 0 0 10px;
+  color: #93c5fd;
+  font-size: 1rem;
+}
+
+.ai-chat-row {
+  display: flex;
+  gap: 8px;
+}
+
+.ai-chat input {
+  flex: 1;
+  background: #2a2a3a;
+  border: 1px solid #444;
+  border-radius: 8px;
+  padding: 9px 12px;
+  color: #e0e0e0;
+  font-size: 0.95rem;
+  outline: none;
+  transition: border-color 0.2s;
+}
+
+.ai-chat input:focus {
+  border-color: #6a8aaa;
+}
+
+.ai-chat button {
+  background: #3a5a8a;
+  color: #fff;
+  border: 1px solid #4a6a9a;
+  border-radius: 8px;
+  padding: 9px 18px;
+  cursor: pointer;
+  font-weight: 700;
+  transition: background 0.2s;
+  min-width: 64px;
+}
+
+.ai-chat button:hover:not(:disabled) {
+  background: #4a6aaa;
+}
+
+.ai-chat button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.ai-answer {
+  margin: 12px 0 0;
+  color: #bfdbfe;
+  font-size: 0.95rem;
+  line-height: 1.6;
+  border-top: 1px solid #2a3a5a;
+  padding-top: 10px;
+}
+
 .footer-action { text-align: center; margin-top: 18px; }
 
 .btn-back {
@@ -539,5 +673,6 @@ tbody tr:hover { background: #2a2a2a; }
   .header-banner h1 { font-size: 1.6rem; }
   .summary-pill { width: 100%; justify-content: center; }
   .chart-container { min-height: 280px; }
+  .ai-chat-row { flex-direction: column; }
 }
 </style>
