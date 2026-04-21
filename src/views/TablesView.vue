@@ -109,7 +109,6 @@
 <script>
 import axios from "axios";
 import { Chart, registerables } from "chart.js";
-import { generateWorkoutTips, answerWorkoutQuestion } from "@/utils/workoutAi";
 Chart.register(...registerables);
 
 export default {

@@ -1,35 +1,35 @@
 <template>
   <section class="coaching-section">
     <div class="coaching-content">
-      <h2>Coaching Plans</h2>
+      <h2>Treniņu plāni</h2>
       <div class="coaching-plans">
         <router-link to="/basic">
           <div class="plan red-gradient">
-            <img src="../assets/images/noobplan.jfif" alt="Basic Plan" />
-            <h3>Basic Plan</h3>
-            <p>Coaching plans</p>
+            <img src="../assets/images/noobplan.jfif" alt="Pamata plāns" />
+            <h3>Pamata plāns</h3>
+            <p>Koučinga plāni</p>
           </div>
         </router-link>
 
         <router-link to="/pro">
           <div class="plan red-gradient">
-            <img src="../assets/images/proplan.jfif" alt="Pro Plan" />
-            <h3>Pro Plan</h3>
-            <p>Coaching + diet recommendations + support</p>
+            <img src="../assets/images/proplan.jfif" alt="Pro plāns" />
+            <h3>Pro plāns</h3>
+            <p>Koučings + uztura ieteikumi + atbalsts</p>
           </div>
         </router-link>
 
         <router-link to="/proplus">
           <div class="plan red-gradient">
-            <img src="../assets/images/pro+plan.jfif" alt="Pro+ Plan" />
-            <h3>Pro+ Plan</h3>
-            <p>All maxed out with 24/7 support</p>
+            <img src="../assets/images/pro+plan.jfif" alt="Pro+ plāns" />
+            <h3>Pro+ plāns</h3>
+            <p>Viss maksimāli ar 24/7 atbalstu</p>
           </div>
         </router-link>
       </div>
 
       <router-link to="/checkout" class="take-my-money">
-        <button class="cta-button">Take My Money</button>
+        <button class="cta-button">Ņem manu naudu</button>
       </router-link>
     </div>
   </section>
@@ -46,7 +46,6 @@
   padding: 30px 20px 60px; /* Mazāks top padding, vairāk apakšā */
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
-
 
 .coaching-content {
   max-width: 1200px;

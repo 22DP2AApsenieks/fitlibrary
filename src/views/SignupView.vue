@@ -2,17 +2,17 @@
   <section class="signup-section">
     <div class="signup-content">
       <form @submit.prevent="signup" class="signup-form">
-        <h1>Sign Up</h1>
-        <input type="text" v-model="form.Username" placeholder="Username" required />
-        <input type="email" v-model="form.Email" placeholder="Email" required />
-        <input type="password" v-model="form.Password" placeholder="Password" required />
-        <button type="submit" class="signup-button">Sign Up</button>
+        <h1>Rēģistrēšanās</h1>
+        <input type="text" v-model="form.Username" placeholder="Lietotājvārds" required />
+        <input type="email" v-model="form.Email" placeholder="E pasts" required />
+        <input type="password" v-model="form.Password" placeholder="Parole" required />
+        <button type="submit" class="signup-button">Rēģistrēties</button>
 
         <p v-if="errorMessage" class="error-message">{{ errorMessage }}</p>
 
         <div class="redirect-login">
-          <p>Already have an account?
-            <router-link to="/login" class="login-link"> Log in here</router-link>
+          <p>Es jau reģistrēts?
+            <router-link to="/login" class="login-link"> Pieslēdzies šeit</router-link>
           </p>
         </div>
       </form>

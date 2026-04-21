@@ -2,66 +2,66 @@
   <div class="full-background">
     <div class="programm-view">
       <div class="header-section">
-        <h1>Your Fitness Dashboard</h1>
-        <p class="welcome-text">Welcome back, <span class="username">{{ username }}</span>! 💪</p>
+        <h1>Tavs fitnesa panelis</h1>
+        <p class="welcome-text">Sveiks, <span class="username">{{ username }}</span>! 💪</p>
       </div>
 
       <div v-if="loading" class="loading-spinner">
         <div class="spinner"></div>
-        <p>Loading your progress...</p>
+        <p>Ielādējam...</p>
       </div>
 
       <div v-else class="content">
         <div class="motivation-card">
-          <h2>Keep Crushing Your Goals! 🔥</h2>
+          <h2>Tā tik turpināt! 🔥</h2>
         </div>
 
         <div class="navigation-grid">
           <router-link to="/bexercises" class="nav-card">
             <div class="card-icon">💪</div>
-            <h3>Bodyweight</h3>
-            <p>Pull-ups, Dips & More</p>
+            <h3>Ar savu svaru</h3>
+            <p>Pievilkšanās, līdztekas u.c.</p>
           </router-link>
 
           <router-link to="/g" class="nav-card">
             <div class="card-icon">🏋️</div>
-            <h3>Gym Exercises</h3>
-            <p>Heavy Lifts & Strength</p>
+            <h3>Trenažieru zāle</h3>
+            <p>Smagie svari un spēks</p>
           </router-link>
 
           <router-link to="/running" class="nav-card">
             <div class="card-icon">🏃</div>
-            <h3>Running</h3>
-            <p>Track Your Speed</p>
+            <h3>Skriešana</h3>
+            <p>Seko savam ātrumam</p>
           </router-link>
 
           <router-link to="/tables" class="nav-card">
             <div class="card-icon">📊</div>
-            <h3>Progress Tables</h3>
-            <p>Detailed Analytics</p>
+            <h3>Progresa tabulas</h3>
+            <p>Detalizēta analīze</p>
           </router-link>
         </div>
 
         <div class="review-section">
-          <h3>Share Your Feedback</h3>
-          <p class="section-subtitle">Help us improve by sharing your thoughts</p>
+          <h3>Dalies ar atsauksmi</h3>
+          <p class="section-subtitle">Palīdzi mums uzlabot lietotni</p>
           <textarea 
             v-model="reviewText" 
-            placeholder="What do you think about FitLibrary?" 
+            placeholder="Ko tu domā par FitLibrary?" 
             rows="4"
             class="review-textarea"
           ></textarea>
           <button @click="submitReview" class="submit-review-button">
-            <span v-if="!reviewMessage">Submit Review</span>
+            <span v-if="!reviewMessage">Iesniegt atsauksmi</span>
             <span v-else>{{ reviewMessage }}</span>
           </button>
         </div>
 
         <div class="danger-zone">
-          <h3>Danger Zone</h3>
-          <p class="danger-text">Delete your account and all associated data</p>
+          <h3>Bīstamā zona</h3>
+          <p class="danger-text">Dzēst kontu un visus saistītos datus</p>
           <button @click="confirmDelete" class="delete-button">
-            Delete My Account
+            Dzēst manu kontu
           </button>
         </div>
       </div>
@@ -89,6 +89,7 @@ export default {
   },
   computed: {
     reviewPayload() {
+      // vienkārši sagatavojam payload preview/debugam
       return JSON.stringify({
         username: this.username,
         review: this.reviewText
@@ -102,6 +103,7 @@ export default {
       return date.toLocaleDateString();
     },
     getTrendColor(data) {
+      // nosaka vai progress iet uz augšu vai leju
       if (data.length < 2) return 'blue';
       const diff = data[data.length - 1].reps - data[0].reps;
       if (diff > 0) return 'green';
@@ -112,7 +114,7 @@ export default {
       const ctx = document.getElementById(canvasId);
       if (!ctx || data.length === 0) return;
 
-      // Destroy previous chart if exists to prevent overlay
+      // ja jau eksistē chart, iznīcinam, lai neuzkrājas virsū
       if (this.charts[canvasId]) {
         this.charts[canvasId].destroy();
       }
@@ -166,6 +168,7 @@ export default {
     },
     async fetchData() {
       try {
+        // paņemam visus datus paralēli, lai ātrāk
         const [pullRes, dipRes, squatRes] = await Promise.all([
           fetch('http://localhost:5000/pullups'),
           fetch('http://localhost:5000/dips'),
@@ -178,6 +181,7 @@ export default {
           squatRes.json()
         ]);
 
+        // filtrējam tikai konkrētā user datus + sakārtojam pēc datuma
         this.pullups = pullData
           .filter(e => e.username.toLowerCase() === this.username)
           .sort((a, b) => new Date(a.date) - new Date(b.date));
@@ -204,15 +208,16 @@ export default {
     async submitReview() {
       this.reviewMessage = '';
       if (!this.reviewText.trim()) {
-        this.reviewMessage = 'Review cannot be empty!';
+        this.reviewMessage = 'Atsauksme nevar būt tukša!';
         return;
       }
-      // Log the payload before sending
+
       const payload = {
         username: this.username,
         review: this.reviewText
       };
-      console.log('Submitting review payload:', payload);
+
+      console.log('Sūtam atsauksmi:', payload);
 
       try {
         const res = await fetch('http://localhost:5000/reviews', {
@@ -221,31 +226,31 @@ export default {
           body: JSON.stringify(payload)
         });
         const data = await res.json();
-        if (!res.ok) throw new Error(data.error || 'Failed to submit review');
-        this.reviewMessage = 'Review submitted!';
+        if (!res.ok) throw new Error(data.error || 'Neizdevās iesniegt atsauksmi');
+        this.reviewMessage = 'Atsauksme nosūtīta!';
         this.reviewText = '';
       } catch (err) {
         this.reviewMessage = err.message;
       }
     },
     confirmDelete() {
-      const answer = prompt("Are you sure you want to delete your account? Type 'yes' to confirm:");
+      const answer = prompt("Vai tiešām vēlies dzēst kontu? Ieraksti 'yes', lai apstiprinātu:");
       if (answer?.toLowerCase() === 'yes') {
         fetch(`http://localhost:5000/delete-account/${this.username}`, {
           method: 'DELETE'
         })
         .then(res => {
-          if (!res.ok) throw new Error('Server error');
-          alert('Your account and data have been deleted.');
+          if (!res.ok) throw new Error('Servera kļūda');
+          alert('Tavs konts un dati tika dzēsti.');
           localStorage.removeItem('loggedInUser');
-          this.$router.push('/'); // Or '/login' if you want to redirect there
+          this.$router.push('/');
         })
         .catch(err => {
-          console.error('Error deleting account:', err);
-          alert('Failed to delete your account.');
+          console.error('Kļūda dzēšot kontu:', err);
+          alert('Neizdevās dzēst kontu.');
         });
       } else {
-        alert('Account deletion cancelled.');
+        alert('Konts netika dzēsts.');
       }
     }
   },

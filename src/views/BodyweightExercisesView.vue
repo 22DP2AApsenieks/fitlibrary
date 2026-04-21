@@ -2,13 +2,13 @@
   <div class="full-background">
     <div class="container">
       <div class="header-banner">
-        <h1>💪 BODYWEIGHT EXERCISES 💪</h1>
-        <p class="subtitle">Track your reps, {{ username }}!</p>
+        <h1>💪 TRENIŅI AR SAVU SVARU 💪</h1>
+        <p class="subtitle">Ievadi savus rezultātus, {{ username }}!</p>
       </div>
 
       <div v-if="loading" class="loading-state">
         <div class="spinner-2000s"></div>
-        <p>Loading your workouts...</p>
+        <p>Ielādējam tavus treniņus...</p>
       </div>
 
       <div v-else class="content">
@@ -40,21 +40,21 @@
                 <!-- INPUT FIELDS -->
                 <div class="input-section">
                   <div class="input-group">
-                    <label>Reps performed:</label>
+                    <label>Atkārtojumu skaits:</label>
                     <input 
                       type="number" 
                       v-model.number="exercises[index].reps" 
                       min="0"
-                      placeholder="Enter reps"
+                      placeholder="Ievadi atkārtojumus"
                     />
                   </div>
 
                   <div class="input-group">
-                    <label>Comment:</label>
+                    <label>Komentārs:</label>
                     <input
                       type="text"
                       v-model="exercises[index].comment"
-                      placeholder="Add a note (optional)"
+                      placeholder="Pievieno piezīmi (nav obligāti)"
                     />
                   </div>
                 </div>
@@ -65,7 +65,7 @@
                     @click="saveReps(index)"
                     class="btn-save"
                   >
-                    Save Reps
+                    Saglabāt atkārtojumus
                   </button>
                 </div>
               </div>
@@ -79,7 +79,7 @@
             @click="$router.push('/programm')"
             class="btn-back"
           >
-            ← Back to Dashboard
+            ← Atpakaļ uz paneli
           </button>
         </div>
       </div>
@@ -99,19 +99,19 @@ export default {
       expandedIndex: null,
       exercises: [
         {
-          name: "Pull-ups",
+          name: "Pievilkšanās",
           api: "addpullups",
           reps: 0,
           comment: "",
         },
         {
-          name: "Dips",
+          name: "Līdztekas (Dips)",
           api: "adddips",
           reps: 0,
           comment: "",
         },
         {
-          name: "Squats",
+          name: "Pietupieni",
           api: "addsquats",
           reps: 0,
           comment: "",
@@ -125,7 +125,7 @@ export default {
       const reps = exercise.reps;
 
       if (reps <= 0) {
-        alert("Please enter a valid number of reps.");
+        alert("Ievadi derīgu atkārtojumu skaitu.");
         return;
       }
 
@@ -136,8 +136,9 @@ export default {
         comment: exercise.comment || "",
       };
 
+      // debugam paskatīties, ko tieši sūtam uz backend
       console.log(
-        `📤 Sending to ${exercise.api}:`,
+        `📤 Sūtam uz ${exercise.api}:`,
         JSON.stringify(payload, null, 2)
       );
 
@@ -146,19 +147,20 @@ export default {
           `http://localhost:5000/${exercise.api}`,
           payload
         );
-        alert(res.data.message || "Saved successfully!");
+        alert(res.data.message || "Saglabāts!");
         exercise.reps = 0;
         exercise.comment = "";
         this.expandedIndex = null;
       } catch (err) {
-        console.error("Save error:", err);
+        console.error("Saglabāšanas kļūda:", err);
         alert(
-          err.response?.data?.error || "❌ Error saving reps. Check backend logs."
+          err.response?.data?.error || "❌ Kļūda saglabājot. Pārbaudi backend logus."
         );
       }
     },
   },
   mounted() {
+    // paņemam user no localStorage (fallback ja nav)
     this.username =
       (localStorage.getItem("loggedInUser") || "nezināmais").toLowerCase();
     this.loading = false;

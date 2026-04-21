@@ -6,31 +6,31 @@ const schoolImage = new URL('../assets/images/school.jpg', import.meta.url).href
   <section class="hero-section about-hero">
     <div class="content about-hero-inner">
       <div class="about-copy">
-        <p class="eyebrow">About Fitlibrary</p>
-        <h1>Built for everyone who wants to progress.</h1>
+        <p class="eyebrow">Par Fitlibrary</p>
+        <h1>Izveidots ikvienam, kurš vēlas progresēt.</h1>
         <p class="intro">
-          Designed to keep workout routines clean, simple, and easy to follow.
+          Izstrādāts, lai treniņu rutīnas būtu tīras, vienkāršas un viegli saprotamas.
         </p>
-        <p class="details">The app combines polished visuals with practical training features.</p>
+        <p class="details">Lietotne apvieno kvalitatīvu dizainu ar praktiskām treniņu apkopošanas funkcijām.</p>
         <div class="hero-actions">
           <router-link to="/signup">
-            <button class="cta-button">Start your training</button>
+            <button class="cta-button">Sāc trenēties</button>
           </router-link>
         </div>
       </div>
 
       <div class="about-panel">
-        <span class="panel-badge">School project</span>
+        <span class="panel-badge">Skolas projekts</span>
         <h2>Rīgas Valsts tehnikums</h2>
         <p class="panel-text">Krišjāņa Valdemāra iela 1C, Centra rajons, Rīga</p>
         <div class="panel-grid">
           <div>
-            <strong>Focus</strong>
-            <p>Progress tracking, routine clarity, and user friendlieness</p>
+            <strong>Fokuss</strong>
+            <p>Progresa uzskaite, skaidra struktūra un lietotāja ērtums</p>
           </div>
           <div>
-            <strong>Why we built it?</strong>
-            <p>Adam had this idea about helping people achieve their fitness goals. He saw that big reason why people platoe is that they dont track their progress.</p>
+            <strong>Kāpēc mēs to izveidojām?</strong>
+            <p>Ādamam bija ideja palīdzēt cilvēkiem sasniegt savus fitnesa mērķus. Viņš saprata, ka viens no galvenajiem iemesliem, kāpēc cilvēki stagnē, ir tas, ka viņi neseko līdzi savam progresam.</p>
           </div>
         </div>
       </div>

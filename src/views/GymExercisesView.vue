@@ -2,13 +2,13 @@
   <div class="full-background">
     <div class="container">
       <div class="header-banner">
-        <h1>🏋️ GYM EXERCISES 🏋️</h1>
-        <p class="subtitle">Track your 1RM, {{ username }}!</p>
+        <h1>🏋️ TRENIŅI ZĀLĒ 🏋️</h1>
+        <p class="subtitle">Seko savam 1RM, {{ username }}!</p>
       </div>
 
       <div v-if="loading" class="loading-state">
         <div class="spinner-2000s"></div>
-        <p>Loading your workouts...</p>
+        <p>Ielādējam tavus treniņus...</p>
       </div>
 
       <div v-else class="content">
@@ -24,68 +24,61 @@
               <span class="button-arrow" :class="{ open: expandedIndex === index }">▼</span>
             </button>
 
-            <!-- EXPANDED EXERCISE CARD - INLINE -->
+            <!-- EXPANDED EXERCISE CARD -->
             <div v-if="expandedIndex === index" class="exercise-card expanded-card">
               <div class="card-header-2000s">
                 <h2 class="exercise-title">🎯 {{ exercises[index].name }}</h2>
-                <button 
-                  class="close-btn"
-                  @click="expandedIndex = null"
-                >
-                  ✕
-                </button>
+                <button class="close-btn" @click="expandedIndex = null">✕</button>
               </div>
 
               <div class="card-body">
-                <!-- INPUT FIELDS -->
                 <div class="input-section">
                   <div class="input-group">
-                    <label>Weight lifted (kg):</label>
+                    <label>Svars (kg):</label>
                     <input 
                       type="number" 
                       v-model.number="exercises[index].weight" 
                       min="0"
-                      placeholder="Enter weight"
+                      placeholder="Ievadi svaru"
                     />
                   </div>
 
                   <div class="input-group">
-                    <label>Reps performed:</label>
+                    <label>Atkārtojumi:</label>
                     <input 
                       type="number" 
                       v-model.number="exercises[index].reps" 
                       min="1"
-                      placeholder="Enter reps"
+                      placeholder="Ievadi atkārtojumus"
                     />
                   </div>
 
                   <div class="input-group">
-                    <label>Or enter your 1RM directly (kg):</label>
+                    <label>Vai ievadi savu 1RM (kg):</label>
                     <input 
                       type="number" 
                       v-model.number="exercises[index].oneRepMax" 
                       min="0"
-                      placeholder="Enter 1RM"
+                      placeholder="Ievadi 1RM"
                     />
                   </div>
 
                   <div class="input-group">
-                    <label>Comment:</label>
+                    <label>Komentārs:</label>
                     <input
                       type="text"
                       v-model="exercises[index].comment"
-                      placeholder="Add a note (optional)"
+                      placeholder="Piezīme (nav obligāti)"
                     />
                   </div>
                 </div>
 
-                <!-- BUTTONS -->
                 <div class="button-group">
                   <button 
                     @click="calculateOneRepMax(index)"
                     class="btn-calculate"
                   >
-                    Calculate 1RM
+                    Aprēķināt 1RM
                   </button>
 
                   <button
@@ -93,13 +86,12 @@
                     @click="saveOneRepMax(index)"
                     class="btn-save"
                   >
-                    Save 1RM
+                    Saglabāt 1RM
                   </button>
                 </div>
 
-                <!-- RESULT -->
                 <div v-if="exercises[index].calculatedOneRepMax !== null" class="result-section">
-                  <p class="result-label">Estimated 1RM:</p>
+                  <p class="result-label">Aprēķinātais 1RM:</p>
                   <p class="result-value">{{ exercises[index].calculatedOneRepMax }} kg</p>
                 </div>
               </div>
@@ -107,13 +99,12 @@
           </div>
         </div>
 
-        <!-- BACK BUTTON -->
         <div class="footer-action">
           <button 
             @click="$router.push('/programm')"
             class="btn-back"
           >
-            ← Back to Dashboard
+            ← Atpakaļ uz paneli
           </button>
         </div>
       </div>
@@ -133,7 +124,7 @@ export default {
       expandedIndex: null,
       exercises: [
         {
-          name: "Bench Press",
+          name: "Spiešana guļus",
           api: "addbenchpress",
           weight: 0,
           reps: 0,
@@ -142,7 +133,7 @@ export default {
           comment: "",
         },
         {
-          name: "Deadlift",
+          name: "Vilce no zemes (Deadlift)",
           api: "adddeadlift",
           weight: 0,
           reps: 0,
@@ -151,7 +142,7 @@ export default {
           comment: "",
         },
         {
-          name: "Squat",
+          name: "Pietupiens ar svaru",
           api: "addgymsquat",
           weight: 0,
           reps: 0,
@@ -160,7 +151,7 @@ export default {
           comment: "",
         },
         {
-          name: "Overhead Press",
+          name: "Spiešana virs galvas",
           api: "addoverheadpress",
           weight: 0,
           reps: 0,
@@ -169,7 +160,7 @@ export default {
           comment: "",
         },
         {
-          name: "Lat Pulldown",
+          name: "Vilkme no aukšas (Lat Pulldown)",
           api: "addlatpulldown",
           weight: 0,
           reps: 0,
@@ -185,15 +176,16 @@ export default {
       const exercise = this.exercises[index];
 
       if (exercise.oneRepMax > 0) {
+        // ja user jau ievadīja 1RM, izmantojam to
         exercise.calculatedOneRepMax = exercise.oneRepMax;
       } else if (exercise.weight > 0 && exercise.reps > 0) {
-        // Epley formula
+        // Epley formula 1RM aprēķinam
         exercise.calculatedOneRepMax = Math.round(
           exercise.weight * (1 + exercise.reps / 30)
         );
       } else {
         exercise.calculatedOneRepMax = null;
-        alert("Enter weight & reps OR a 1RM.");
+        alert("Ievadi svaru un atkārtojumus vai 1RM.");
       }
     },
 
@@ -202,7 +194,7 @@ export default {
       const oneRepMax = exercise.calculatedOneRepMax;
 
       if (!oneRepMax || oneRepMax <= 0) {
-        alert("Please calculate or enter a valid 1RM before saving.");
+        alert("Vispirms aprēķini vai ievadi derīgu 1RM.");
         return;
       }
 
@@ -210,11 +202,11 @@ export default {
         username: this.username,
         date: new Date().toISOString().slice(0, 10),
         oneRepMax,
-        comment: exercise.comment || "", // Add this line
+        comment: exercise.comment || "",
       };
 
       console.log(
-        `📤 Sending to ${exercise.api}:`,
+        `📤 Sūtam uz ${exercise.api}:`,
         JSON.stringify(payload, null, 2)
       );
 
@@ -223,17 +215,18 @@ export default {
           `http://localhost:5000/${exercise.api}`,
           payload
         );
-        alert(res.data.message || "Saved successfully!");
-        exercise.comment = ""; // Clear comment after save
+        alert(res.data.message || "Saglabāts!");
+        exercise.comment = "";
       } catch (err) {
-        console.error("Save error:", err);
+        console.error("Saglabāšanas kļūda:", err);
         alert(
-          err.response?.data?.error || "❌ Error saving 1RM. Check backend logs."
+          err.response?.data?.error || "❌ Kļūda saglabājot 1RM."
         );
       }
     },
   },
   mounted() {
+    // paņem username no localStorage
     this.username =
       (localStorage.getItem("loggedInUser") || "nezināmais").toLowerCase();
     this.loading = false;

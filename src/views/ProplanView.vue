@@ -1,31 +1,31 @@
 <template>
   <section class="hero-section">
     <div class="content">
-      <h1>Pro Coaching Plan</h1>
+      <h1>Pro plāns</h1>
       <p class="intro">
-        This plan is for those who want the highest level of support and performance.
-        We've built it for ambitious individuals who are ready to take full control of their fitness and transformation journey — no shortcuts, just results.
+        Šis plāns ir paredzēts tiem, kuri vēlas augstāko līmeni atbalstā un rezultātos.
+        Mēs to izveidojām ambicioziem cilvēkiem, kuri ir gatavi pilnībā pārņemt kontroli pār savu fizisko sagatavotību
       </p>
 
       <p class="details">
-        With the Pro Plan, you don’t just get workouts. You get a system, a coach, and a proven roadmap. Everything is tailored to you:
+        Ar Pro plānu tu nesaņem tikai treniņus. Tu saņem sistēmu, treneri un pārbaudītu ceļa karti. Viss ir pielāgots tieši tev:
       </p>
 
       <ul class="features">
-        <li>All full-body, split, PPL and calisthenics programs included</li>
-        <li>Ongoing updates to plans based on your progress</li>
-        <li>Personal coach feedback via email or video check-ins</li>
-        <li>Basic meal plans and diet guidance from certified trainer</li>
-        <li>Direct access to us for questions and accountability</li>
+        <li>Visas pilna ķermeņa, split, PPL un ielu vingrošanas programmas</li>
+        <li>Regulāri plāna atjauninājumi balstoties uz tavu progresu</li>
+        <li>Personīga trenera atgriezeniskā saite caur e-pastu vai video check-in</li>
+        <li>Pamata uztura plāni un vadlīnijas no sertificēta trenera</li>
+        <li>Tieša piekļuve mums jautājumiem un disciplīnas uzturēšanai</li>
       </ul>
 
-      <img class="plan-image" src="../assets/images/proplan.jfif" alt="Pro Plan" />
+      <img class="plan-image" src="../assets/images/proplan.jfif" alt="Pro plāns" />
 
       <div class="action">
         <router-link to="/checkout">
-          <button class="cta-button">Subscribe – $59.99/month</button>
+          <button class="cta-button">Abonēt – $59.99/mēnesī</button>
         </router-link>
-        <p class="note">Includes coaching, updates and priority support.</p>
+        <p class="note">Iekļauts koučings, atjauninājumi un atbalsts.</p>
       </div>
     </div>
   </section>

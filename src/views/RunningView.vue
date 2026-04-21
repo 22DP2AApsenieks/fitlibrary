@@ -2,13 +2,13 @@
   <div class="full-background">
     <div class="container">
       <div class="header-banner">
-        <h1>🏃 Running Tracker 🏃</h1>
-        <p class="subtitle">Record your run time, {{ username }}!</p>
+        <h1>🏃 Skriešanas panelis 🏃</h1>
+        <p class="subtitle">Pieraksti savu skrējiena laiku, {{ username }}!</p>
       </div>
 
       <div v-if="loading" class="loading-state">
         <div class="spinner-2000s"></div>
-        <p>Loading your run entries...</p>
+        <p>Ielādējam tavus skrējienus...</p>
       </div>
 
       <div v-else class="content">
@@ -38,23 +38,28 @@
               <div class="card-body">
                 <div class="input-section">
                   <div class="input-group">
-                    <label>Time (minutes):</label>
-                    <input type="number" v-model.number="distance.time" min="0" placeholder="Enter run time" />
+                    <label>Laiks (minūtēs):</label>
+                    <input 
+                      type="number" 
+                      v-model.number="distance.time" 
+                      min="0" 
+                      placeholder="Ievadi laiku" 
+                    />
                   </div>
 
                   <div class="input-group">
-                    <label>Comment:</label>
+                    <label>Komentārs:</label>
                     <input
                       type="text"
                       v-model="distance.comment"
-                      placeholder="Add a note (optional)"
+                      placeholder="Pievieno piezīmi (nav obligāti)"
                     />
                   </div>
                 </div>
 
                 <div class="button-group">
                   <button class="btn-save" @click="saveDistance(index)">
-                    Save Time
+                    Saglabāt laiku
                   </button>
                 </div>
               </div>
@@ -64,7 +69,7 @@
 
         <div class="footer-action">
           <button @click="$router.push('/programm')" class="btn-back">
-            ← Back to Dashboard
+            ← Atpakaļ uz paneli
           </button>
         </div>
       </div>
@@ -83,11 +88,11 @@ export default {
       loading: true,
       expandedIndex: null,
       distances: [
-        { name: "1K Run", api: "add1krun", time: 0, comment: "" },
-        { name: "5K Run", api: "add5krun", time: 0, comment: "" },
-        { name: "10K Run", api: "add10krun", time: 0, comment: "" },
-        { name: "Half Marathon", api: "addhalfmarathon", time: 0, comment: "" },
-        { name: "Marathon", api: "addmarathon", time: 0, comment: "" },
+        { name: "1 km skrējiens", api: "add1krun", time: 0, comment: "" },
+        { name: "5 km skrējiens", api: "add5krun", time: 0, comment: "" },
+        { name: "10 km skrējiens", api: "add10krun", time: 0, comment: "" },
+        { name: "Pusmaratons", api: "addhalfmarathon", time: 0, comment: "" },
+        { name: "Maratons", api: "addmarathon", time: 0, comment: "" },
       ],
     };
   },
@@ -96,7 +101,7 @@ export default {
       const distance = this.distances[index];
 
       if (!distance.time || distance.time <= 0) {
-        alert("Please enter a valid time.");
+        alert("Ievadi derīgu laiku.");
         return;
       }
 
@@ -107,20 +112,22 @@ export default {
         comment: distance.comment || "",
       };
 
-      console.log(`📤 Sending to ${distance.api}:`, JSON.stringify(payload, null, 2));
+      // debug – redzam, ko tieši sūtam uz serveri
+      console.log(`📤 Sūtam uz ${distance.api}:`, JSON.stringify(payload, null, 2));
 
       try {
         const res = await axios.post(`http://localhost:5000/${distance.api}`, payload);
-        alert(res.data.message || "Saved successfully!");
+        alert(res.data.message || "Saglabāts!");
         distance.time = 0;
         distance.comment = "";
       } catch (err) {
-        console.error("Save error:", err);
-        alert(err.response?.data?.error || "❌ Error saving. Check backend logs.");
+        console.error("Saglabāšanas kļūda:", err);
+        alert(err.response?.data?.error || "❌ Kļūda saglabājot. Pārbaudi backend logus.");
       }
     },
   },
   mounted() {
+    // paņem lietotāju no localStorage
     this.username = (localStorage.getItem("loggedInUser") || "nezināmais").toLowerCase();
     this.loading = false;
   },

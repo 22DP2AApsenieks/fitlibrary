@@ -1,31 +1,31 @@
 <template>
   <section class="hero-section">
     <div class="content">
-      <h1>Pro+ Coaching Plan</h1>
+      <h1>Pro+  plāns</h1>
       <p class="intro">
-        The **Pro+ Plan** is our most exclusive coaching experience — designed for serious individuals who demand elite results. This isn’t just a fitness plan. It’s a direct gateway to your peak potential.
+        **Pro+ plāns** ir ekskluzīvākā  pieredze — radīta nopietniem cilvēkiem, kuri vēlas elitārus rezultātus. Tas nav tikai fitnesa plāns. Tā ir tieša piekļuve tavam maksimālajam potenciālam.
       </p>
 
       <p class="details">
-        Everything we know, everything we’ve tested — distilled into a personalized, always-available support system:
+        Viss, ko mēs zinām, viss, ko esam pārbaudījuši — apvienots personalizētā, vienmēr pieejamā atbalsta sistēmā:
       </p>
 
       <ul class="features">
-        <li>All workout programs: strength, calisthenics, running, aesthetics — unlocked</li>
-        <li>Direct access to your personal coach 24/7</li>
-        <li>Customized meal plans + weekly check-ins</li>
-        <li>Technique review (form checks via video)</li>
-        <li>Exclusive Pro+ Discord & video Q&A access</li>
-        <li><strong>Gold Membership Card</strong> — lifetime badge of commitment</li>
+        <li>Visas treniņu programmas: spēks, ielu vingrošana, skriešana, estētika — pilnībā pieejamas</li>
+        <li>Tieša piekļuve personīgajam trenerim 24/7</li>
+        <li>Pielāgoti uztura plāni + iknedēļas check-in</li>
+        <li>Tehnikas pārbaude (form check caur video)</li>
+        <li>Ekskluzīva Pro+ Discord un video Q&A piekļuve</li>
+        <li><strong>Zelta biedra karte</strong> — mūža apņemšanās simbols</li>
       </ul>
 
-      <img class="plan-image" src="../assets/images/pro+plan.jfif" alt="Pro+ Plan" />
+      <img class="plan-image" src="../assets/images/pro+plan.jfif" alt="Pro+ plāns" />
 
       <div class="action">
         <router-link to="/checkout">
-          <button class="cta-button">Join Pro+ — $99.99/month</button>
+          <button class="cta-button">Pievienojies Pro+ — $199.99/mēnesī</button>
         </router-link>
-        <p class="note">For those who want it all. Results guaranteed, effort required.</p>
+        <p class="note">Tiem, kuri vēlas visu. Rezultāti garantēti, darbs obligāts.</p>
       </div>
     </div>
   </section>

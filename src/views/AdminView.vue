@@ -1,9 +1,9 @@
 <template>
   <div>
-    <h1>Admin Panel</h1>
-    <p>Welcome, {{ username }}!</p>
+    <h1>Administratora panelis</h1>
+    <p>Laipni lūgts, {{ username }}!</p>
 
-    <h2>All Users</h2>
+    <h2>Visi lietotāji</h2>
     <ul v-if="users.length" class="user-list">
       <li v-for="user in users" :key="user.username" class="user-item">
         <span v-if="!editingUser || editingUser !== user.username">{{ user.username }}</span>
@@ -14,13 +14,33 @@
           @blur="cancelEdit"
           class="edit-input"
         />
-        <button class="edit-btn" @click="startEdit(user.username, user.username)" v-if="!editingUser || editingUser !== user.username">Edit</button>
-        <button class="save-btn" @click="saveEdit(user.username)" v-if="editingUser === user.username">Save</button>
-        <button class="cancel-btn" @click="cancelEdit" v-if="editingUser === user.username">Cancel</button>
-        <button class="delete-btn" @click="deleteUser(user.username)">Delete</button>
+        <button 
+          class="edit-btn" 
+          @click="startEdit(user.username, user.username)" 
+          v-if="!editingUser || editingUser !== user.username"
+        >
+          Rediģēt
+        </button>
+        <button 
+          class="save-btn" 
+          @click="saveEdit(user.username)" 
+          v-if="editingUser === user.username"
+        >
+          Saglabāt
+        </button>
+        <button 
+          class="cancel-btn" 
+          @click="cancelEdit" 
+          v-if="editingUser === user.username"
+        >
+          Atcelt
+        </button>
+        <button class="delete-btn" @click="deleteUser(user.username)">
+          Dzēst
+        </button>
       </li>
     </ul>
-    <p v-else>No users found.</p>
+    <p v-else>Nav atrasti lietotāji.</p>
   </div>
 </template>
 
@@ -36,6 +56,7 @@ export default {
   },
   methods: {
     fetchUsers() {
+      // paņemam visus lietotājus no backend
       fetch('http://localhost:5000/users')
         .then(res => res.json())
         .then(data => {
@@ -46,10 +67,11 @@ export default {
         });
     },
     deleteUser(username) {
-      if (confirm(`Delete user "${username}"?`)) {
+      if (confirm(`Dzēst lietotāju "${username}"?`)) {
         fetch(`http://localhost:5000/delete-account/${username}`, { method: 'DELETE' })
           .then(res => res.json())
           .then(() => {
+            // izmetam no loka bez reload
             this.users = this.users.filter(u => u.username !== username);
           });
       }
@@ -64,15 +86,19 @@ export default {
     },
     saveEdit(oldUsername) {
       if (!this.editUsername.trim()) return;
+
       fetch(`http://localhost:5000/edit-username`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ oldUsername, newUsername: this.editUsername.trim() })
+        body: JSON.stringify({ 
+          oldUsername, 
+          newUsername: this.editUsername.trim() 
+        })
       })
         .then(res => res.json())
         .then(() => {
           this.cancelEdit();
-          this.fetchUsers(); // Refresh list after edit
+          this.fetchUsers(); // pēc edit refreshojam listu
         });
     }
   },

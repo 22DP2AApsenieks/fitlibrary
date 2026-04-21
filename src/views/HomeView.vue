@@ -1,43 +1,43 @@
 <template>
   <section class="hero-section">
     <div class="content">
-      <h1>Welcome to FITLIBRARY</h1>
+      <h1>Laipni lūgts FITLIBRARY</h1>
       <p class="intro">
-        Discover the ultimate app to track your progress, smash your goals, and visualize your true potential.
-        No more guessing — just real, actionable insights tailored to your fitness journey.
+        Sāc lietot labāko lietotni, lai sekotu savam progresam, sasniegtu savus mērķus un vizualizētu savu progresa potenciālu.
+        Vairs nekādas minēšanas — šeit tu analizēsi savu progresu ērti!
       </p>
 
       <p class="details">
-        FITLIBRARY gives you everything you need:
+        FITLIBRARY piedāvā visu, kas tev nepieciešams:
       </p>
 
       <ul class="features">
-        <li>Personalized workout tracking</li>
-        <li>Progress visualization with graphs and stats</li>
-        <li>Motivational reminders and PR tracking</li>
-        <li>Clean, intuitive interface made for all levels</li>
-        <li>Continuous updates with new features</li>
+        <li>Elementāra treniņu ievade</li>
+        <li>Progresa vizualizācija ar grafikiem un statistiku</li>
+        <li>Vairāki treniņu veidi vienviet</li>
+        <li>Tīrs, intuitīvs un motivējošs interfeiss </li>
+        <li>Mākslīgā intelekta treniņu apkopojums</li>
       </ul>
 
       <div class="image-wrapper">
         <img
           class="plan-image"
-          src="../assets/images/pro+plan.jfif"
-          alt="Average app user"
+          src="C:\Users\adams\Desktop\fitlibrary\src\assets\images\IMG_5874 (1).jpeg"
+          alt="Vidējais lietotnes lietotājs"
         />
-        <span class="tooltip">Most average app user</span>
+        <span class="tooltip">lietotnes lietotāji</span>
       </div>
 
       <div class="action">
         <router-link to="/signup">
-          <button class="cta-button">Get Started Now</button>
+          <button class="cta-button">Sākt tagad</button>
         </router-link>
-        <p class="note">Join thousands who’ve transformed their fitness journey.</p>
+        <p class="note">Pievienojies tiem, kuri jau uzlabojuši savu fitnesa ceļu.</p>
       </div>
     </div>
   </section>
 
-  <!-- attelo -->
+  <!-- atsauksmju josla -->
   <div class="review-ticker-container" v-if="reviews.length">
     <div class="review-ticker">
       <span v-for="(review, idx) in reviews" :key="idx" class="review-item">
@@ -52,39 +52,40 @@ export default {
   data() {
     return {
       reviews: [
-        { review: "Great app!", author: "Anonymous" },
-        { review: "Best fitness tracker!", author: "User" },
-        { review: "Highly recommended!", author: "Fitness Enthusiast" }
+        { review: "Lieliska lietotne!", author: "Anonīms" },
+        { review: "Labākais fitnesa trekeris!", author: "Lietotājs" },
+        { review: "Noteikti iesaku!", author: "Fitnesa entuziasts" }
       ]
     };
   },
   created() {
-    // Check if reviews are cached in localStorage
+    // mēģinam paņemt atsauksmes no localStorage, lai lieki nesistu serveri
     const cachedReviews = localStorage.getItem('fitlibrary_reviews');
     if (cachedReviews) {
       try {
         this.reviews = JSON.parse(cachedReviews);
-        return; // Use cached reviews, don't fetch
+        return; // ja viss ok, izmantojam cache un viss
       } catch (e) {
-        // If cache is corrupted, proceed with fetch
+        // ja kaut kas saplīsis (piem. JSON bojāts), ignorējam un ejam fetch
       }
     }
 
-    // Fetch reviews and cache them
+    // velkam atsauksmes no backend
     fetch('http://localhost:5000/allreviews')
       .then(res => res.json())
       .then(data => {
         if (data && data.length > 0) {
           this.reviews = data.map(r => ({
             review: r.review,
-            author: r.email || r.username || 'Anonymous'
+            // dažreiz backend neatdod email, tad fallback uz username vai anonīms
+            author: r.email || r.username || 'Anonīms'
           }));
-          // Cache for 1 hour
+          // saglabājam uz 1h (reāli te varētu arī timestamp pielikt, bet pagaidām pietiek)
           localStorage.setItem('fitlibrary_reviews', JSON.stringify(this.reviews));
         }
       })
       .catch(() => {
-        // Keep the default reviews on error
+        // ja fetch nokrīt, atstājam default atsauksmes, lai UI nav tukšs
       });
   }
 };
@@ -174,7 +175,7 @@ h1 {
   text-shadow: 0 0 3px #ffd93baa;
 }
 
-/* Image wrapper to position tooltip */
+/* bilde + tooltip */
 .image-wrapper {
   position: relative;
   display: inline-block;
@@ -186,10 +187,10 @@ h1 {
 
 .plan-image {
   width: 100%;
-  max-width: 550px;
+  max-width: 300px;
   height: auto;
   border-radius: 20px;
-  box-shadow: 0 12px 32px rgba(255, 0, 0, 0.6);
+  box-shadow: 0 12px 32px rgba(118, 0, 0, 0.6);
   transition: transform 0.4s ease, box-shadow 0.4s ease;
   user-select: none;
   display: block;
@@ -200,7 +201,7 @@ h1 {
   box-shadow: 0 20px 40px rgba(255, 50, 50, 0.9);
 }
 
-/* Tooltip that appears on image hover */
+/* tooltip uz hover */
 .tooltip {
   position: absolute;
   bottom: 10px;
@@ -227,7 +228,7 @@ h1 {
   transform: translateX(-50%) translateY(0);
 }
 
-/* Call to action */
+/* CTA */
 .action {
   margin-top: 30px;
 }
@@ -258,7 +259,7 @@ h1 {
   user-select: none;
 }
 
-/* Animations */
+/* animācija */
 @keyframes fadeInUp {
   from {
     opacity: 0;
@@ -270,7 +271,7 @@ h1 {
   }
 }
 
-/* Review Ticker Styles */
+/* atsauksmju ticker */
 .review-ticker-container {
   position: fixed;
   left: 0;
@@ -303,7 +304,7 @@ h1 {
   100% { transform: translateX(-100%);}
 }
 
-/* Responsive */
+/* responsive */
 @media (max-width: 720px) {
   h1 {
     font-size: 2.6rem;

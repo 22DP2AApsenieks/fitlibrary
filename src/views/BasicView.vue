@@ -1,32 +1,31 @@
 <template>
   <section class="hero-section">
     <div class="content">
-      <h1>FitLibrary Coaching Plans</h1>
+      <h1>Pamata plāns</h1>
       <p class="intro">
-        This program was built out of passion to help people finally stop guessing what to do at the gym or in calisthenics.
-        We created it because most plans are either overcomplicated or completely useless. We wanted something real – something that actually works.
+        Šeit tiek iekļauts pat minimus lai palīdzētu tev kautcik progresēt
       </p>
 
       <p class="details">
-        Whether you're training for strength, aesthetics, or endurance – we've got you. Our plan combines proven methods from both gym-based and calisthenics training to give you flexible but effective routines.
-        This includes:
+        Neatkarīgi no tā, vai trenējies spēkam, izskatam vai izturībai – mums ir risinājums. Mūsu plāns apvieno pārbaudītas metodes gan no sporta zāles, gan kalistēnikas, lai sniegtu elastīgas, bet efektīvas programmas.
+        Tas ietver:
       </p>
 
       <ul class="features">
-        <li>Full upper/lower and push/pull/legs gym routines</li>
-        <li>Customizable for strength or physique goals</li>
-        <li>Calisthenics plans for all levels – strength or endurance focused</li>
-        <li>Running programs to build engine and stamina</li>
-        <li>Real structure. Real progress. No fluff.</li>
+        <li>Pilnas upper/lower un push/pull/legs treniņu programmas zālei vai ielu vingrošanai</li>
+        <li>Pielāgojams spēka vai fiziskā izskata mērķiem</li>
+        <li>Ielu vingrošanas plāni visiem līmeņiem – spēkam vai izturībai</li>
+        <li>Skriešanas programmas izturības un ātruma attīstīšanai</li>
+        <li>Reāla struktūra. Reāls progress. Bez liekā.</li>
       </ul>
 
-      <img class="plan-image" src="../assets/images/noobplan.jfif" alt="Plan preview" />
+      <img class="plan-image" src="../assets/images/noobplan.jfif" alt="Plāna priekšskatījums" />
 
       <div class="action">
         <router-link to="/checkout">
-          <button class="cta-button">Join Now – Just $9.99</button>
+          <button class="cta-button">Pievienojies tagad – tikai $9.99</button>
         </router-link>
-        <p class="note">One-time payment. Instant lifetime access.</p>
+        <p class="note">Vienreizējs maksājums. Piekļuve uz mūžu.</p>
       </div>
     </div>
   </section>
