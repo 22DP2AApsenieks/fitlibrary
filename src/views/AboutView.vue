@@ -47,7 +47,7 @@ const schoolImage = new URL('../assets/images/school.jpg', import.meta.url).href
   align-items: center;
   justify-content: center;
   background: radial-gradient(circle at top left, rgba(255, 215, 90, 0.14), transparent 30%),
-    linear-gradient(135deg, #2f0b0b, #5f1a1a 45%, #7d2d2d 100%);
+    linear-gradient(135deg, #290000, #530b0b 45%, #2f0b0b 100%);
   color: #fff;
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
@@ -56,11 +56,11 @@ const schoolImage = new URL('../assets/images/school.jpg', import.meta.url).href
   max-width: 1120px;
   width: 100%;
   text-align: center;
-  animation: fadeInUp 1.2s ease forwards;
   user-select: none;
   padding: 0 20px;
 }
 
+/* GRID */
 .about-hero-inner {
   display: grid;
   grid-template-columns: 1.4fr 1fr;
@@ -69,12 +69,26 @@ const schoolImage = new URL('../assets/images/school.jpg', import.meta.url).href
   align-items: center;
 }
 
+/* LEFT SIDE TEXT */
 .about-copy {
   max-width: 620px;
   margin: 0 auto;
   text-align: left;
 }
 
+/* 🔥 STAGGER ANIMATION */
+.about-copy > * {
+  opacity: 0;
+  animation: fadeInUp 0.8s ease forwards;
+}
+
+.about-copy > *:nth-child(1) { animation-delay: 0.1s; }
+.about-copy > *:nth-child(2) { animation-delay: 0.2s; }
+.about-copy > *:nth-child(3) { animation-delay: 0.3s; }
+.about-copy > *:nth-child(4) { animation-delay: 0.4s; }
+.about-copy > *:nth-child(5) { animation-delay: 0.5s; }
+
+/* TEXT STYLES */
 .details {
   font-size: 1.05rem;
   margin: 0 0 28px;
@@ -106,6 +120,7 @@ const schoolImage = new URL('../assets/images/school.jpg', import.meta.url).href
   color: #f5e8e8;
 }
 
+/* BUTTON */
 .hero-actions {
   display: flex;
   justify-content: flex-start;
@@ -130,6 +145,7 @@ const schoolImage = new URL('../assets/images/school.jpg', import.meta.url).href
   transform: translateY(-2px);
 }
 
+/* RIGHT PANEL */
 .about-panel {
   padding: 34px;
   border-radius: 32px;
@@ -137,6 +153,11 @@ const schoolImage = new URL('../assets/images/school.jpg', import.meta.url).href
   border: 1px solid rgba(255, 255, 255, 0.16);
   box-shadow: 0 30px 70px rgba(0, 0, 0, 0.25);
   backdrop-filter: blur(12px);
+
+  /* 🔥 animate panel */
+  opacity: 0;
+  animation: fadeInUp 1s ease forwards;
+  animation-delay: 0.4s;
 }
 
 .panel-badge {
@@ -187,97 +208,36 @@ const schoolImage = new URL('../assets/images/school.jpg', import.meta.url).href
   line-height: 1.75;
 }
 
-.about-grid {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 24px;
-  width: min(1120px, 100%);
-  margin: 52px auto 0;
+/* RESPONSIVE */
+@media (max-width: 1024px) {
+  .about-hero-inner {
+    grid-template-columns: 1fr;
+  }
 }
 
-.about-grid article {
-  padding: 26px;
-  border-radius: 24px;
-  background: rgba(255, 255, 255, 0.08);
-  border: 1px solid rgba(255, 255, 255, 0.14);
-  box-shadow: 0 18px 36px rgba(0, 0, 0, 0.16);
+@media (max-width: 720px) {
+  .about-hero {
+    padding: 40px 16px;
+  }
+
+  .about-copy h1 {
+    font-size: 2.4rem;
+  }
+
+  .about-panel {
+    padding: 20px;
+  }
 }
 
-.about-grid h3 {
-  margin-top: 0;
-  font-size: 1.4rem;
+/* ✅ IMPORTANT: animation must be OUTSIDE media queries */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(40px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
-
-.about-grid p {
-  margin: 16px 0 0;
-  color: #d8d8d8;
-  line-height: 1.75;
-}
-
-  .about-image {
-    display: grid;
-    grid-template-columns: 1.1fr 0.9fr;
-    gap: 32px;
-    width: min(1120px, 100%);
-    margin: 0 auto 80px;
-    align-items: center;
-  }
-
-  .image-copy h2 {
-    margin: 0 0 20px;
-    font-size: 2.2rem;
-  }
-
-  .image-copy p {
-    margin: 0;
-    color: #d8d8d8;
-    line-height: 1.8;
-  }
-
-  .image-frame {
-    border-radius: 28px;
-    overflow: hidden;
-    background: rgba(255, 255, 255, 0.05);
-    border: 1px solid rgba(255, 255, 255, 0.12);
-    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.18);
-    padding: 18px;
-  }
-
-  .image-frame img {
-    width: 100%;
-    display: block;
-    border-radius: 20px;
-    object-fit: cover;
-  }
-
-  .image-note {
-    margin: 16px 0 0;
-    font-size: 0.98rem;
-    color: #d8d8d8;
-    text-align: center;
-  }
-
-  @media (max-width: 1024px) {
-    .about-hero-inner,
-    .about-grid,
-    .about-image {
-      grid-template-columns: 1fr;
-    }
-  }
-
-  @media (max-width: 720px) {
-    .about-hero {
-      padding: 40px 16px;
-    }
-
-    .about-copy h1 {
-      font-size: 2.4rem;
-    }
-
-    .about-panel,
-    .about-grid article,
-    .image-frame {
-      padding: 20px;
-    }
-  }
 </style>
