@@ -2,22 +2,25 @@
   <div class="full-background">
     <div class="container">
       <div class="header-banner">
-        <h1>📊 Progress Tables</h1>
-        <p class="subtitle">Review your progress and chart growth, {{ username }}!</p>
+        <h1>📊 Progresa tabulas</h1>
+        <p class="subtitle">
+          Pārskati savu progresu un attīstību, {{ username }}!
+        </p>
       </div>
 
       <div class="inner-card">
+
+        <!-- GRUPAS -->
         <div class="group-list">
           <div v-for="group in groupedTables" :key="group.name" class="group-card">
-            <div class="group-header">
-              <div class="group-title-row">
-                <span class="group-icon">{{ group.icon }}</span>
-                <div>
-                  <h3>{{ group.name }}</h3>
-                  <p>{{ group.description }}</p>
-                </div>
+            <div class="group-title-row">
+              <span class="group-icon">{{ group.icon }}</span>
+              <div>
+                <h3>{{ group.name }}</h3>
+                <p>{{ group.description }}</p>
               </div>
             </div>
+
             <div class="group-buttons">
               <button
                 v-for="item in group.items"
@@ -25,82 +28,71 @@
                 :class="['exercise-card-btn', selectedTable === item.value ? 'active' : '']"
                 @click="selectTable(item.value)"
               >
-                <span class="item-dot">•</span> {{ item.name }}
+                • {{ item.name }}
               </button>
             </div>
           </div>
         </div>
 
+        <!-- IELĀDE -->
         <div v-if="loading" class="loading-state">
           <div class="spinner-2000s"></div>
-          <p>Loading data ...</p>
+          <p>Ielādē datus...</p>
         </div>
 
+        <!-- DATI -->
         <div v-else>
-          <div v-if="selectedTable" class="selected-label">Selected: {{ currentTableName }}</div>
-          <div v-if="tableData.length > 0" class="results">
-            <div class="result-header">
-              <h2>{{ currentTableName }}</h2>
-              <div class="summary-pill">
-                <span>Tracking: {{ trackingDuration }}</span>
-                <span :style="{ color: progressColor }">{{ monthlyProgressDisplay }}</span>
-              </div>
-            </div>
+          <div v-if="selectedTable" class="selected-label">
+            Izvēlēts: {{ currentTableName }}
+          </div>
 
-            <div class="table-wrap">
-              <table>
-                <thead>
-                  <tr>
-                    <th>Date</th>
-                    <th v-if="currentType === 'reps'">Reps</th>
-                    <th v-else-if="currentType === 'runtime'">Time (min)</th>
-                    <th v-if="currentType === 'runtime'">Change</th>
-                    <th v-else>1RM (kg)</th>
-                    <th>Comment</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr
-                    v-for="(row, index) in tableData"
-                    :key="index"
-                    :class="getRowClass(index, row)"
-                  >
-                    <td>{{ formatDate(row.date) }}</td>
-                    <td v-if="row.reps">{{ row.reps }}</td>
-                    <td v-else-if="row.runtime">{{ row.runtime }}</td>
-                    <td v-if="currentType === 'runtime'">
-                      <span :class="getDeltaClass(index)">
-                        {{ getDelta(index) }}
-                      </span>
-                    </td>
-                    <td v-else>{{ row.oneRepMax }}</td>
-                    <td>{{ row.comment || '-' }}</td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
+          <div v-if="tableData.length > 0">
+            <table>
+              <thead>
+                <tr>
+                  <th>Datums</th>
+                  <th v-if="currentType === 'reps'">Atkārtojumi</th>
+                  <th v-else-if="currentType === 'runtime'">Laiks</th>
+                  <th v-else>1RM</th>
+                  <th>Komentārs</th>
+                </tr>
+              </thead>
+
+              <tbody>
+                <tr v-for="(row, i) in tableData" :key="i">
+                  <td>{{ formatDate(row.date) }}</td>
+                  <td v-if="row.reps">{{ row.reps }}</td>
+                  <td v-else-if="row.runtime">{{ row.runtime }}</td>
+                  <td v-else>{{ row.oneRepMax }}</td>
+                  <td>{{ row.comment || '-' }}</td>
+                </tr>
+              </tbody>
+            </table>
 
             <div class="chart-container">
               <canvas ref="chartCanvas"></canvas>
             </div>
           </div>
 
-          <div v-if="!loading && tableData.length === 0 && selectedTable" class="no-data">
-            No records found yet. Run or lift and check again!
+          <div v-if="selectedTable && tableData.length === 0">
+            Vēl nav datu.
           </div>
         </div>
 
-        <!-- 🤖 AI COACH TIPS -->
+        <!-- 🤖 AI TRENERIS -->
         <div v-if="aiTips.length" class="ai-box">
-          <h3>🤖 AI Coach</h3>
+          <h3>🤖 AI treneris</h3>
           <ul>
             <li v-for="(tip, i) in aiTips" :key="i">{{ tip }}</li>
           </ul>
         </div>
 
         <div class="footer-action">
-          <button class="btn-back" @click="$router.push('/programm')">← Back to Dashboard</button>
+          <button @click="$router.push('/programm')">
+            ← Atpakaļ
+          </button>
         </div>
+
       </div>
     </div>
   </div>
@@ -112,233 +104,173 @@ import { Chart, registerables } from "chart.js";
 Chart.register(...registerables);
 
 export default {
-  name: "TableView",
   data() {
     return {
       username: "",
       selectedTable: "",
       tableData: [],
       loading: false,
-      aiLoading: false,
       chart: null,
-      monthlyProgress: 0,
-      progressColor: "#9ca3af",
-      trackingDuration: "",
+
       availableTables: [
-        { name: "Pull-ups", value: "pullups", type: "reps", group: "Bodyweight" },
-        { name: "Dips", value: "dips", type: "reps", group: "Bodyweight" },
-        { name: "Squat", value: "squat", type: "reps", group: "Bodyweight" },
-        { name: "Bench Press", value: "benchpress", type: "1rm", group: "Gym" },
+        { name: "Pievilkšanās", value: "pullups", type: "reps", group: "Bodyweight" },
+        { name: "Dipsi", value: "dips", type: "reps", group: "Bodyweight" },
+        { name: "Pietupieni", value: "squat", type: "reps", group: "Bodyweight" },
+
+        { name: "Spiešana guļus", value: "benchpress", type: "1rm", group: "Gym" },
         { name: "Deadlift", value: "deadlift", type: "1rm", group: "Gym" },
-        { name: "Gym Squat", value: "gymsquat", type: "1rm", group: "Gym" },
-        { name: "Overhead Press", value: "overheadpress", type: "1rm", group: "Gym" },
-        { name: "Lat Pulldown", value: "latpulldown", type: "1rm", group: "Gym" },
-        { name: "Run 1km", value: "run_1km", type: "runtime", group: "Running" },
-        { name: "Run 5km", value: "run_5km", type: "runtime", group: "Running" },
-        { name: "Run 10km", value: "run_10km", type: "runtime", group: "Running" },
-        { name: "Half Marathon", value: "run_halfmarathon", type: "runtime", group: "Running" },
-        { name: "Marathon", value: "run_marathon", type: "runtime", group: "Running" },
+        { name: "Pietupieni (gym)", value: "gymsquat", type: "1rm", group: "Gym" },
+        { name: "Plecu spiešana", value: "overheadpress", type: "1rm", group: "Gym" },
+        { name: "Lat pulldown", value: "latpulldown", type: "1rm", group: "Gym" },
+
+        { name: "Skrējiens 1km", value: "run_1km", type: "runtime", group: "Running" },
+        { name: "Skrējiens 5km", value: "run_5km", type: "runtime", group: "Running" },
+        { name: "Skrējiens 10km", value: "run_10km", type: "runtime", group: "Running" },
+        { name: "Pusmaratons", value: "run_halfmarathon", type: "runtime", group: "Running" },
+        { name: "Maratons", value: "run_marathon", type: "runtime", group: "Running" },
       ],
-      question: "",
-      aiAnswer: "",
     };
   },
+
   computed: {
     groupedTables() {
-      const groups = [
-        { name: "Bodyweight", description: "Pull-up and dips progression.", icon: "💪", items: [] },
-        { name: "Gym", description: "Track your 1RM lifts.", icon: "🏋️", items: [] },
-        { name: "Running", description: "Time-based running metrics.", icon: "🏃", items: [] },
-      ];
+      const groups = {
+        Bodyweight: { name: "Svars ar ķermeni", icon: "💪", description: "Treniņi ar savu svaru", items: [] },
+        Gym: { name: "Zāle", icon: "🏋️", description: "Spēka treniņi", items: [] },
+        Running: { name: "Skriešana", icon: "🏃", description: "Ātrums un izturība", items: [] },
+      };
+
       this.availableTables.forEach((item) => {
-        const group = groups.find((g) => g.name === item.group);
-        if (group) group.items.push(item);
+        groups[item.group].items.push(item);
       });
-      return groups;
+
+      return Object.values(groups);
     },
+
     currentTableName() {
-      const selected = this.availableTables.find((t) => t.value === this.selectedTable);
-      return selected ? selected.name : "";
+      const t = this.availableTables.find((t) => t.value === this.selectedTable);
+      return t ? t.name : "";
     },
+
     currentType() {
-      const selected = this.availableTables.find((t) => t.value === this.selectedTable);
-      return selected ? selected.type : "";
+      const t = this.availableTables.find((t) => t.value === this.selectedTable);
+      return t ? t.type : "";
     },
-    monthlyProgressDisplay() {
-      if (this.currentType === "runtime") {
-        return `${this.monthlyProgress.toFixed(2)} min/month`;
-      } else if (this.currentType === "1rm") {
-        const sign = this.monthlyProgress >= 0 ? "+" : "";
-        return `${sign}${this.monthlyProgress.toFixed(2)} kg/month`;
-      }
-      const sign = this.monthlyProgress >= 0 ? "+" : "";
-      return `${sign}${this.monthlyProgress.toFixed(2)} reps/month`;
-    },
+
     aiTips() {
-      return generateWorkoutTips({
-        tableData: this.tableData,
-        selectedTable: this.selectedTable,
-        currentType: this.currentType,
-        monthlyProgress: this.monthlyProgress,
-      });
+      if (!this.tableData.length) return [];
+
+      const tips = [];
+
+      const first = this.tableData[0];
+      const last = this.tableData[this.tableData.length - 1];
+
+      const firstVal = first.reps || first.runtime || first.oneRepMax || 0;
+      const lastVal = last.reps || last.runtime || last.oneRepMax || 0;
+
+      const diff = lastVal - firstVal;
+
+      if (this.currentType === "runtime") {
+        if (diff < 0) {
+          tips.push("🔥 Tavs skriešanas laiks uzlabojas — turpini!");
+        } else if (diff > 0) {
+          tips.push("⚠️ Laiks pasliktinājās — pievērs uzmanību atjaunošanai.");
+        } else {
+          tips.push("➖ Nav izmaiņu — mēģini palielināt intensitāti.");
+        }
+      } else {
+        if (diff > 0) {
+          tips.push("💪 Spēks aug — lieliski!");
+        } else if (diff < 0) {
+          tips.push("⚠️ Spēks samazinājās — pārbaudi atpūtu un uzturu.");
+        } else {
+          tips.push("➖ Plateau — palielini svaru vai atkārtojumus.");
+        }
+      }
+
+      if (this.tableData.length < 3) {
+        tips.push("📊 Pievieno vairāk treniņu datu.");
+      } else {
+        tips.push("📈 Laba konsekvence — turpini!");
+      }
+
+      return tips;
     },
   },
+
   methods: {
-    formatDate(dateStr) {
-      return new Date(dateStr).toLocaleDateString();
+    formatDate(d) {
+      return new Date(d).toLocaleDateString();
     },
-    getDelta(index) {
-      if (this.currentType !== "runtime") return "";
-      if (index === 0) return "-";
-      const current = this.tableData[index]?.runtime;
-      const prev = this.tableData[index - 1]?.runtime;
-      if (current == null || prev == null) return "-";
-      const delta = current - prev;
-      return delta > 0 ? `+${delta.toFixed(2)} min` : `${delta.toFixed(2)} min`;
-    },
-    getDeltaClass(index) {
-      if (this.currentType !== "runtime" || index === 0) return "";
-      const current = this.tableData[index]?.runtime;
-      const prev = this.tableData[index - 1]?.runtime;
-      if (current == null || prev == null) return "";
-      const delta = current - prev;
-      if (delta < 0) return "runtime-good";
-      if (delta > 0) return "runtime-bad";
-      return "";
-    },
-    selectTable(value) {
-      this.selectedTable = value;
-      this.aiAnswer = "";
+
+    selectTable(val) {
+      this.selectedTable = val;
       this.fetchData();
     },
+
     async fetchData() {
       if (!this.selectedTable) return;
+
       this.loading = true;
       this.tableData = [];
+
       try {
-        const res = await axios.get(`http://localhost:5000/${this.selectedTable}`);
+        const res = await axios.get(
+          `http://localhost:5000/${this.selectedTable}`
+        );
+
         this.tableData = res.data
-          .filter((row) => row.username === this.username)
-          .map((row) => ({ ...row, runtime: row.time || row.runtime }))
+          .filter(
+            (row) =>
+              row.username &&
+              row.username.toLowerCase() === this.username
+          )
+          .map((row) => ({
+            ...row,
+            runtime: row.time || row.runtime,
+          }))
           .sort((a, b) => new Date(a.date) - new Date(b.date));
-        this.calculateProgress();
+
+        this.$nextTick(() => {
+          this.renderChart();
+        });
       } catch (err) {
         console.error("Fetch error:", err);
-        alert("Error fetching data. Check backend logs.");
       } finally {
         this.loading = false;
       }
     },
-    calculateProgress() {
-      if (this.tableData.length < 2) {
-        this.monthlyProgress = 0;
-        this.trackingDuration = "Not enough data";
-        this.progressColor = "#9ca3af";
-        return;
-      }
-      const first = this.tableData[0];
-      const last = this.tableData[this.tableData.length - 1];
-      const firstDate = new Date(first.date);
-      const lastDate = new Date(last.date);
-      const months = (lastDate - firstDate) / (1000 * 60 * 60 * 24 * 30.44) || 1;
-      const firstVal = first.reps || first.oneRepMax || first.runtime || 0;
-      const lastVal = last.reps || last.oneRepMax || last.runtime || 0;
-      const diff = lastVal - firstVal;
-      if (this.currentType === "runtime") {
-        this.monthlyProgress = (lastVal - firstVal) / months;
-      } else {
-        this.monthlyProgress = diff / months;
-      }
-      const days = Math.floor((lastDate - firstDate) / (1000 * 60 * 60 * 24));
-      const totalMonths = Math.floor(days / 30);
-      const remainingDays = days % 30;
-      this.trackingDuration = `${totalMonths} months ${remainingDays} days`;
-      this.progressColor = this.getColorByProgress(this.monthlyProgress);
-    },
-    async askAI() {
-      if (!this.question.trim()) return;
-      this.aiLoading = true;
-      this.aiAnswer = "";
-      this.aiAnswer = await answerWorkoutQuestion(this.question, {
-        tableData: this.tableData,
-        selectedTable: this.selectedTable,
-        currentType: this.currentType,
-        monthlyProgress: this.monthlyProgress,
-      });
-      this.aiLoading = false;
-    },
-    getRowClass(index, row) {
-      if (this.currentType !== "runtime" || !row.runtime) return "";
-      if (index === 0) return "";
-      const prev = this.tableData[index - 1];
-      if (!prev || prev.runtime == null) return "";
-      if (row.runtime < prev.runtime) return "runtime-good";
-      if (row.runtime > prev.runtime) return "runtime-bad";
-      return "";
-    },
-    getColorByProgress(rate) {
-      if (this.currentType === "reps") {
-        if (rate > 5) return "#065f46";
-        if (rate > 2) return "#22c55e";
-        if (rate >= -1) return "#9ca3af";
-        if (rate > -5) return "#ef4444";
-        return "#7f1d1d";
-      } else if (this.currentType === "1rm") {
-        if (rate > 5) return "#065f46";
-        if (rate > 2) return "#22c55e";
-        if (rate >= -1) return "#9ca3af";
-        if (rate > -5) return "#ef4444";
-        return "#7f1d1d";
-      }
-      if (rate < -1) return "#065f46";
-      if (rate < -0.5) return "#22c55e";
-      if (rate < 0.5) return "#9ca3af";
-      if (rate < 1) return "#ef4444";
-      return "#7f1d1d";
-    },
+
     renderChart() {
+      if (!this.$refs.chartCanvas || !this.tableData.length) return;
+
       if (this.chart) this.chart.destroy();
-      if (!this.$refs.chartCanvas) return;
-      const labels = this.tableData.map((row) => this.formatDate(row.date));
-      const values = this.tableData.map((row) => row.reps || row.runtime || row.oneRepMax || 0);
+
       const ctx = this.$refs.chartCanvas.getContext("2d");
+
       this.chart = new Chart(ctx, {
         type: "line",
         data: {
-          labels,
+          labels: this.tableData.map((r) =>
+            this.formatDate(r.date)
+          ),
           datasets: [
             {
-              label: `${this.currentTableName} Progress`,
-              data: values,
-              borderColor: this.progressColor,
-              backgroundColor: `${this.progressColor}33`,
+              data: this.tableData.map(
+                (r) => r.reps || r.runtime || r.oneRepMax || 0
+              ),
+              borderColor: "red",
               tension: 0.3,
-              fill: true,
-              pointRadius: 4,
-              pointHoverRadius: 6,
             },
           ],
-        },
-        options: {
-          responsive: true,
-          maintainAspectRatio: false,
-          scales: { y: { beginAtZero: true } },
         },
       });
     },
   },
-  watch: {
-    async tableData(newData) {
-      if (newData.length > 0) {
-        await this.$nextTick();
-        this.renderChart();
-      } else if (this.chart) {
-        this.chart.destroy();
-      }
-    },
-  },
+
   mounted() {
-    this.username = (localStorage.getItem("loggedInUser") || "nezināmais").toLowerCase();
+    this.username =
+      (localStorage.getItem("loggedInUser") || "nezināmais").toLowerCase();
   },
 };
 </script>
