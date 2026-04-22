@@ -219,98 +219,193 @@ export default {
 
 <style scoped>
 .admin-container {
-  padding: 30px;
-  background: #121212;
-  color: #eee;
-  font-family: Arial;
+  min-height: 100vh;
+  background: linear-gradient(to bottom right, #330000, #660000, #990000);
+  padding: 40px 20px;
+  color: #fff;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
-h1 { color: #ff3b3b; }
+/* TITLE */
+.title {
+  text-align: center;
+  font-size: 2.8rem;
+  font-weight: 900;
+  margin-bottom: 30px;
+  text-shadow: 0 0 15px #ff3b3bcc;
+}
 
+/* DASHBOARD */
 .dashboard {
   display: flex;
   gap: 20px;
-  margin-bottom: 20px;
+  margin-bottom: 25px;
+  flex-wrap: wrap;
 }
 
 .card {
-  background: #1e1e1e;
-  padding: 20px;
-  border-radius: 10px;
   flex: 1;
+  min-width: 150px;
+  background: rgba(0,0,0,0.3);
+  backdrop-filter: blur(10px);
+  padding: 25px;
+  border-radius: 18px;
+  text-align: center;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.4);
+  transition: transform 0.3s ease;
 }
 
+.card:hover {
+  transform: translateY(-5px) scale(1.03);
+}
+
+.card h3 {
+  color: #ffb0b0;
+}
+
+.card p {
+  font-size: 2rem;
+  font-weight: bold;
+  color: #ffd700;
+}
+
+/* SEARCH */
 .search {
-  padding: 10px;
   width: 100%;
-  margin-bottom: 20px;
-  background: #1e1e1e;
+  padding: 14px;
+  border-radius: 30px;
   border: none;
+  margin-bottom: 25px;
+  background: rgba(0,0,0,0.4);
   color: white;
+  outline: none;
+  box-shadow: 0 0 10px rgba(255,0,0,0.4);
 }
 
+/* LEADERBOARD */
+.leaderboard {
+  background: rgba(0,0,0,0.35);
+  padding: 20px;
+  border-radius: 18px;
+  margin-bottom: 25px;
+  box-shadow: 0 8px 25px rgba(0,0,0,0.4);
+}
+
+.leader-item {
+  margin: 8px 0;
+  color: #ffd700;
+  font-weight: 600;
+}
+
+/* USER CARD */
 .user-card {
-  background: #1a1a1a;
-  padding: 15px;
-  margin-bottom: 12px;
-  border-radius: 10px;
+  background: rgba(0,0,0,0.35);
+  padding: 18px;
+  margin-bottom: 15px;
+  border-radius: 18px;
+  box-shadow: 0 8px 25px rgba(0,0,0,0.4);
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+.user-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 30px rgba(255,50,50,0.4);
 }
 
 .user-card.inactive {
-  border: 2px solid red;
+  border: 2px solid #ff3b3b;
 }
 
+/* HEADER */
+.user-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+/* ACTION BUTTONS */
+.actions {
+  display: flex;
+  gap: 10px;
+}
+
+button {
+  background: linear-gradient(to right, #ff4e50, #ff0000);
+  border: none;
+  padding: 6px 12px;
+  border-radius: 20px;
+  color: white;
+  cursor: pointer;
+  transition: 0.25s;
+  font-weight: 600;
+}
+
+button:hover {
+  transform: scale(1.08);
+  background: linear-gradient(to right, #ff1f1f, #cc0000);
+}
+
+/* EMAIL */
 .email-section {
   display: flex;
   gap: 10px;
   margin-top: 10px;
 }
 
-button {
-  background: #ff3b3b;
-  color: white;
+.email-section input {
+  flex: 1;
+  padding: 8px;
+  border-radius: 20px;
   border: none;
-  padding: 6px 10px;
-  cursor: pointer;
+  background: rgba(0,0,0,0.4);
+  color: white;
 }
 
-button:hover {
-  background: #ff1f1f;
+/* STATS BUTTON */
+.stats-btn {
+  margin-top: 10px;
+  background: linear-gradient(to right, #ffcc00, #ff9900);
+  color: black;
 }
 
+/* STATS BOX */
 .stats {
   margin-top: 10px;
-  background: #111;
+  background: rgba(0,0,0,0.6);
   padding: 10px;
-  border-radius: 6px;
+  border-radius: 10px;
 }
 
 .stat-row {
   display: flex;
   justify-content: space-between;
+  padding: 3px 0;
+  color: #ffd6d6;
 }
 
-.leaderboard {
-  background: #1a1a1a;
-  padding: 15px;
-  margin-bottom: 20px;
-  border-radius: 10px;
-}
-
-.actions {
-  display: flex;
-  gap: 10px;
-}
-
+/* EDIT */
 .edit-section {
   display: flex;
   gap: 10px;
 }
 
 .edit-input {
-  padding: 5px;
-  background: #222;
-  color: white;
+  padding: 6px;
+  border-radius: 10px;
   border: none;
+  background: rgba(0,0,0,0.5);
+  color: white;
+}
+
+/* RESPONSIVE */
+@media (max-width: 720px) {
+  .title {
+    font-size: 2rem;
+  }
+
+  .dashboard {
+    flex-direction: column;
+  }
+
 }
 </style>
