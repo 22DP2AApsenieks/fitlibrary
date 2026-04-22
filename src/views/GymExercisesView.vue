@@ -32,75 +32,123 @@
               </div>
 
               <div class="card-body">
-                <div class="input-section">
-                  <div class="input-group">
-                    <label>Svars (kg):</label>
-                    <input 
-                      type="number" 
-                      v-model.number="exercises[index].weight" 
-                      min="0"
-                      placeholder="Ievadi svaru"
-                    />
+
+                <!-- MODE SELECTOR -->
+                <div class="mode-selector">
+                  <button
+                    class="mode-btn"
+                    :class="{ 'mode-btn--active': exercises[index].inputMode === 'calculate' }"
+                    @click="setMode(index, 'calculate')"
+                  >
+                    <span class="mode-icon">🧮</span>
+                    <span class="mode-label">Aprēķināt aptuveni no treniņa</span>
+                    <span class="mode-desc">Ievadi svaru + atkārtojumus</span>
+                  </button>
+                  <button
+                    class="mode-btn"
+                    :class="{ 'mode-btn--active': exercises[index].inputMode === 'direct' }"
+                    @click="setMode(index, 'direct')"
+                  >
+                    <span class="mode-icon">✏️</span>
+                    <span class="mode-label">Ievadīt 1RM tieši</span>
+                    <span class="mode-desc">Zinu savu 1piegājiena max svaru</span>
+                  </button>
+                </div>
+
+                <!-- MODE: CALCULATE FROM WORKING SET -->
+                <div v-if="exercises[index].inputMode === 'calculate'" class="input-section">
+                  <div class="input-row">
+                    <div class="input-group">
+                      <label>Svars (kg)</label>
+                      <input
+                        type="number"
+                        v-model.number="exercises[index].weight"
+                        min="0"
+                        placeholder="piem. 100"
+                      />
+                    </div>
+                    <div class="input-divider">×</div>
+                    <div class="input-group">
+                      <label>Atkārtojumi</label>
+                      <input
+                        type="number"
+                        v-model.number="exercises[index].reps"
+                        min="1"
+                        placeholder="piem. 5"
+                      />
+                    </div>
                   </div>
 
                   <div class="input-group">
-                    <label>Atkārtojumi:</label>
-                    <input 
-                      type="number" 
-                      v-model.number="exercises[index].reps" 
-                      min="1"
-                      placeholder="Ievadi atkārtojumus"
-                    />
-                  </div>
-
-                  <div class="input-group">
-                    <label>Vai ievadi savu 1RM (kg):</label>
-                    <input 
-                      type="number" 
-                      v-model.number="exercises[index].oneRepMax" 
-                      min="0"
-                      placeholder="Ievadi 1RM"
-                    />
-                  </div>
-
-                  <div class="input-group">
-                    <label>Komentārs:</label>
+                    <label>Komentārs</label>
                     <input
                       type="text"
                       v-model="exercises[index].comment"
                       placeholder="Piezīme (nav obligāti)"
                     />
                   </div>
-                </div>
-
-                <div class="button-group">
-                  <button 
-                    @click="calculateOneRepMax(index)"
-                    class="btn-calculate"
-                  >
-                    Aprēķināt 1RM
-                  </button>
 
                   <button
-                    v-if="exercises[index].calculatedOneRepMax"
+                    @click="calculateOneRepMax(index)"
+                    class="btn-calculate btn-full"
+                  >
+                    Aprēķināt 1RM →
+                  </button>
+                </div>
+
+                <!-- MODE: DIRECT 1RM INPUT -->
+                <div v-if="exercises[index].inputMode === 'direct'" class="input-section">
+                  <div class="input-group">
+                    <label>Tavs 1RM (kg)</label>
+                    <input
+                      type="number"
+                      v-model.number="exercises[index].oneRepMax"
+                      min="0"
+                      placeholder="piem. 120"
+                      class="input-highlight"
+                    />
+                  </div>
+
+                  <div class="input-group">
+                    <label>Komentārs</label>
+                    <input
+                      type="text"
+                      v-model="exercises[index].comment"
+                      placeholder="Piezīme (nav obligāti)"
+                    />
+                  </div>
+
+                  <button
+                    @click="confirmDirectOneRepMax(index)"
+                    class="btn-calculate btn-full"
+                  >
+                    Apstiprināt 1RM →
+                  </button>
+                </div>
+
+                <!-- RESULT SECTION -->
+                <div v-if="exercises[index].calculatedOneRepMax !== null" class="result-section">
+                  <div class="result-inner">
+                    <p class="result-label">
+                      {{ exercises[index].inputMode === 'direct' ? 'Tavs 1RM' : 'Aprēķinātais 1RM' }}
+                    </p>
+                    <p class="result-value">{{ exercises[index].calculatedOneRepMax }} <span class="result-unit">kg</span></p>
+                  </div>
+                  <button
                     @click="saveOneRepMax(index)"
                     class="btn-save"
                   >
-                    Saglabāt 1RM
+                    💾 Saglabāt 1RM
                   </button>
                 </div>
 
-                <div v-if="exercises[index].calculatedOneRepMax !== null" class="result-section">
-                  <p class="result-label">Aprēķinātais 1RM:</p>
-                  <p class="result-value">{{ exercises[index].calculatedOneRepMax }} kg</p>
-                </div>
               </div>
             </div>
           </div>
         </div>
 
         <div class="footer-action">
-          <button 
+          <button
             @click="$router.push('/programm')"
             class="btn-back"
           >
@@ -131,6 +179,7 @@ export default {
           oneRepMax: 0,
           calculatedOneRepMax: null,
           comment: "",
+          inputMode: "calculate", // 'calculate' | 'direct'
         },
         {
           name: "Vilce no zemes (Deadlift)",
@@ -140,6 +189,7 @@ export default {
           oneRepMax: 0,
           calculatedOneRepMax: null,
           comment: "",
+          inputMode: "calculate",
         },
         {
           name: "Pietupiens ar svaru",
@@ -149,6 +199,7 @@ export default {
           oneRepMax: 0,
           calculatedOneRepMax: null,
           comment: "",
+          inputMode: "calculate",
         },
         {
           name: "Spiešana virs galvas",
@@ -158,6 +209,7 @@ export default {
           oneRepMax: 0,
           calculatedOneRepMax: null,
           comment: "",
+          inputMode: "calculate",
         },
         {
           name: "Vilkme no aukšas (Lat Pulldown)",
@@ -167,25 +219,38 @@ export default {
           oneRepMax: 0,
           calculatedOneRepMax: null,
           comment: "",
+          inputMode: "calculate",
         },
       ],
     };
   },
   methods: {
+    setMode(index, mode) {
+      // Reset result when switching modes so it doesn't show stale data
+      this.exercises[index].inputMode = mode;
+      this.exercises[index].calculatedOneRepMax = null;
+    },
+
     calculateOneRepMax(index) {
       const exercise = this.exercises[index];
 
-      if (exercise.oneRepMax > 0) {
-        // ja user jau ievadīja 1RM, izmantojam to
-        exercise.calculatedOneRepMax = exercise.oneRepMax;
-      } else if (exercise.weight > 0 && exercise.reps > 0) {
+      if (exercise.weight > 0 && exercise.reps > 0) {
         // Epley formula 1RM aprēķinam
         exercise.calculatedOneRepMax = Math.round(
           exercise.weight * (1 + exercise.reps / 30)
         );
       } else {
         exercise.calculatedOneRepMax = null;
-        alert("Ievadi svaru un atkārtojumus vai 1RM.");
+        alert("Ievadi svaru un atkārtojumus.");
+      }
+    },
+
+    confirmDirectOneRepMax(index) {
+      const exercise = this.exercises[index];
+      if (exercise.oneRepMax > 0) {
+        exercise.calculatedOneRepMax = exercise.oneRepMax;
+      } else {
+        alert("Ievadi derīgu 1RM vērtību.");
       }
     },
 
@@ -217,6 +282,7 @@ export default {
         );
         alert(res.data.message || "Saglabāts!");
         exercise.comment = "";
+        exercise.calculatedOneRepMax = null;
       } catch (err) {
         console.error("Saglabāšanas kļūda:", err);
         alert(
@@ -443,20 +509,87 @@ export default {
   background: #1a1a1a;
 }
 
+/* MODE SELECTOR */
+.mode-selector {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin-bottom: 24px;
+}
+
+.mode-btn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  padding: 16px 12px;
+  background: #2a2a2a;
+  border: 2px solid #3a3a3a;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  text-align: center;
+}
+
+.mode-btn:hover {
+  border-color: #666;
+  background: #333;
+}
+
+.mode-btn--active {
+  border-color: #8a5a5a;
+  background: #3a2020;
+  box-shadow: 0 0 0 1px #8a5a5a, 0 4px 12px rgba(138, 90, 90, 0.2);
+}
+
+.mode-icon {
+  font-size: 1.6rem;
+}
+
+.mode-label {
+  color: #ffffff;
+  font-weight: 700;
+  font-size: 0.9rem;
+}
+
+.mode-desc {
+  color: #888;
+  font-size: 0.75rem;
+}
+
 /* INPUT SECTION */
 .input-section {
-  margin-bottom: 25px;
+  margin-bottom: 10px;
   background: #2a2a2a;
   padding: 20px;
   border-radius: 8px;
   border: 1px solid #3a3a3a;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+/* Side-by-side weight × reps layout */
+.input-row {
+  display: flex;
+  align-items: flex-end;
+  gap: 10px;
+}
+
+.input-row .input-group {
+  flex: 1;
+  margin-bottom: 0;
+}
+
+.input-divider {
+  color: #888;
+  font-size: 1.4rem;
+  font-weight: 700;
+  padding-bottom: 10px;
+  flex-shrink: 0;
 }
 
 .input-group {
-  margin-bottom: 18px;
-}
-
-.input-group:last-child {
   margin-bottom: 0;
 }
 
@@ -491,27 +624,35 @@ export default {
   color: #888888;
 }
 
-/* BUTTON GROUP */
-.button-group {
-  display: flex;
-  gap: 12px;
-  margin-bottom: 20px;
-  flex-wrap: wrap;
+/* Highlighted input for direct 1RM mode */
+.input-highlight {
+  font-size: 1.2rem !important;
+  font-weight: 700;
+  text-align: center;
+  border-color: #8a5a5a !important;
+  letter-spacing: 1px;
+}
+
+.input-highlight:focus {
+  border-color: #aa7a7a !important;
+}
+
+/* BUTTONS */
+.btn-full {
+  width: 100%;
 }
 
 .btn-calculate {
-  padding: 12px 20px;
+  padding: 13px 20px;
   border: none;
   border-radius: 6px;
   cursor: pointer;
-  font-weight: 600;
-  font-size: 0.95rem;
+  font-weight: 700;
+  font-size: 1rem;
   transition: all 0.2s ease;
   box-shadow: 0 3px 8px rgba(0, 0, 0, 0.4);
   background: #6a3a3a;
   color: #ffffff;
-  flex: 1;
-  min-width: 150px;
   border: 1px solid #8a5a5a;
 }
 
@@ -525,55 +666,70 @@ export default {
   transform: translateY(0);
 }
 
-.btn-save {
-  padding: 12px 20px;
-  border: none;
-  border-radius: 6px;
-  cursor: pointer;
-  font-weight: 600;
-  font-size: 0.95rem;
-  transition: all 0.2s ease;
-  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.4);
-  background: #6a3a3a;
-  color: #ffffff;
-  flex: 1;
-  min-width: 150px;
-  border: 1px solid #8a5a5a;
-}
-
-.btn-save:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 5px 12px rgba(0, 0, 0, 0.5);
-  background: #7a4a4a;
-}
-
-.btn-save:active {
-  transform: translateY(0);
-}
-
 /* RESULT SECTION */
 .result-section {
   background: linear-gradient(135deg, #3a2a2a 0%, #2a1a1a 100%);
   padding: 20px;
   border-radius: 8px;
-  text-align: center;
   border: 2px solid #8a5a5a;
   margin-top: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.result-inner {
+  text-align: left;
 }
 
 .result-label {
-  margin: 0 0 10px 0;
-  color: #ffffff;
+  margin: 0 0 4px 0;
+  color: #aaaaaa;
   font-weight: 600;
-  font-size: 0.95rem;
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
 }
 
 .result-value {
   margin: 0;
   color: #ffaaaa;
-  font-size: 2rem;
+  font-size: 2.4rem;
   font-weight: 800;
   letter-spacing: 1px;
+  line-height: 1;
+}
+
+.result-unit {
+  font-size: 1.2rem;
+  opacity: 0.7;
+}
+
+.btn-save {
+  padding: 12px 20px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 700;
+  font-size: 0.95rem;
+  transition: all 0.2s ease;
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.4);
+  background: #2d5a3d;
+  color: #ffffff;
+  border: 1px solid #4a9d6f;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.btn-save:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 5px 12px rgba(74, 157, 111, 0.3);
+  background: #3a7a52;
+}
+
+.btn-save:active {
+  transform: translateY(0);
 }
 
 /* FOOTER ACTION */
@@ -612,29 +768,49 @@ export default {
     font-size: 1.5rem;
   }
 
-  .exercise-buttons-grid {
-    grid-template-columns: repeat(2, 1fr);
+  .mode-selector {
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+  }
+
+  .mode-btn {
+    padding: 12px 8px;
+  }
+
+  .mode-icon {
+    font-size: 1.3rem;
+  }
+
+  .mode-label {
+    font-size: 0.8rem;
+  }
+
+  .mode-desc {
+    display: none;
+  }
+
+  .input-row {
+    flex-direction: column;
     gap: 12px;
   }
 
-  .exercise-button {
-    padding: 15px;
-    font-size: 0.9rem;
-  }
-
-  .button-icon {
-    font-size: 1.5rem;
+  .input-divider {
+    display: none;
   }
 
   .card-body {
     padding: 20px;
   }
 
-  .button-group {
+  .result-section {
     flex-direction: column;
+    text-align: center;
   }
 
-  .btn-calculate,
+  .result-inner {
+    text-align: center;
+  }
+
   .btn-save {
     width: 100%;
   }
