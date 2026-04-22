@@ -25,7 +25,7 @@
           src="C:\Users\adams\Desktop\fitlibrary\src\assets\images\IMG_5874 (1).jpeg"
           alt="Vidējais lietotnes lietotājs"
         />
-        <span class="tooltip">lietotnes lietotāji</span>
+        <span class="tooltip">Programmas lietotāji</span>
       </div>
 
       <div class="action">
