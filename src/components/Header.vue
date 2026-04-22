@@ -5,9 +5,9 @@
   <header>
     <h1>Fitlibrary</h1>
     <nav class="nav-links">
-      <RouterLink to="/">Home</RouterLink>
-      <RouterLink to="/plans">Plans</RouterLink>
-      <RouterLink to="/about">About</RouterLink>
+      <RouterLink to="/">Galvenā lapa</RouterLink>
+      <RouterLink to="/plans">Plāni</RouterLink>
+      <RouterLink to="/about">Par mums</RouterLink>
     </nav>
   </header>
 </template>

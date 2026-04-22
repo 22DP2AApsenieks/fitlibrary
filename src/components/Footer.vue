@@ -4,7 +4,7 @@
 <template>
     
         <footer>
-            <p>&copy; all rights reserved</p>
+            <p>&copy; Šī nav krāpnieku mājaslapa : D</p>
             <p>
                 <a href="https://www.facebook.com/?locale=lv_LV">Facebook</a> | 
                 <a href="https://x.com/">x.com</a> | 
@@ -31,7 +31,7 @@
 footer {
   margin-top: auto;
   width: 100%;
-  height: 6.5rem;
+  height: 10.5rem;
   background-color: #333;
   color: #fff;
   text-align: center;
