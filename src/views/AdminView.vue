@@ -56,7 +56,7 @@
 
       <!-- STATS -->
       <button @click="loadStats(user.username)" class="stats-btn">
-        📊 Statistika
+        📊 Cik bieži ir veikti ieraksti
       </button>
 
       <div v-if="userStats[user.username]" class="stats">
