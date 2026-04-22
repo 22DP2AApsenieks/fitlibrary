@@ -188,10 +188,10 @@ export default {
         }
       }
 
-      if (this.tableData.length < 3) {
+      if (this.tableData.length < 4) {
         tips.push("📊 Pievieno vairāk treniņu datu.");
       } else {
-        tips.push("📈 Laba konsekvence — turpini!");
+        tips.push("📈 Laba disciplīna — tā turpināt!");
       }
 
       return tips;
