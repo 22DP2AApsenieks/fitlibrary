@@ -46,6 +46,20 @@
             Izvēlēts: {{ currentTableName }}
           </div>
 
+          <!-- 🆕 PROGRESS -->
+          <div v-if="progressInfo" class="progress-summary">
+            <span v-if="currentType === 'runtime'">
+              📉 Vidēji progress/mēnesī:
+              {{ progressInfo.monthlyProgress < 0 ? '-' : '+' }}
+              {{ Math.abs(progressInfo.monthlyProgress).toFixed(2) }} sek
+            </span>
+            <span v-else>
+              📈 Vidēji progress/mēnesī:
+              {{ progressInfo.monthlyProgress > 0 ? '+' : '' }}
+              {{ progressInfo.monthlyProgress.toFixed(2) }}
+            </span>
+          </div>
+
           <div v-if="tableData.length > 0">
             <table>
               <thead>
@@ -157,10 +171,9 @@ export default {
       return t ? t.type : "";
     },
 
-    aiTips() {
-      if (!this.tableData.length) return [];
-
-      const tips = [];
+    // 🆕 PROGRESS CALC
+    progressInfo() {
+      if (!this.tableData.length) return null;
 
       const first = this.tableData[0];
       const last = this.tableData[this.tableData.length - 1];
@@ -170,28 +183,42 @@ export default {
 
       const diff = lastVal - firstVal;
 
-      if (this.currentType === "runtime") {
-        if (diff < 0) {
-          tips.push("🔥 Tavs skriešanas laiks uzlabojas — turpini!");
-        } else if (diff > 0) {
-          tips.push("⚠️ Laiks pasliktinājās — pievērs uzmanību atjaunošanai.");
+      const firstDate = new Date(first.date);
+      const lastDate = new Date(last.date);
+
+      let months =
+        (lastDate.getFullYear() - firstDate.getFullYear()) * 12 +
+        (lastDate.getMonth() - firstDate.getMonth());
+
+      if (months <= 0) months = 1;
+
+      const monthlyProgress = diff / months;
+
+      return {
+        diff,
+        monthlyProgress,
+        isPositive:
+          this.currentType === "runtime" ? diff < 0 : diff > 0,
+      };
+    },
+
+    aiTips() {
+      if (!this.tableData.length) return [];
+
+      const tips = [];
+
+      if (this.progressInfo) {
+        if (this.progressInfo.isPositive) {
+          tips.push("🔥 Progress uzlabojas — lieliski!");
         } else {
-          tips.push("➖ Nav izmaiņu — mēģini palielināt intensitāti.");
-        }
-      } else {
-        if (diff > 0) {
-          tips.push("💪 Spēks aug — lieliski!");
-        } else if (diff < 0) {
-          tips.push("⚠️ Spēks samazinājās — pārbaudi atpūtu un uzturu.");
-        } else {
-          tips.push("➖ Plateau — palielini svaru vai atkārtojumus.");
+          tips.push("⚠️ Progress pasliktinās — pārbaudi atjaunošanos.");
         }
       }
 
       if (this.tableData.length < 4) {
-        tips.push("📊 Pievieno vairāk treniņu datu.");
+        tips.push("📊 Pievieno vairāk datu.");
       } else {
-        tips.push("📈 Laba disciplīna — tā turpināt!");
+        tips.push("📈 Laba disciplīna!");
       }
 
       return tips;
@@ -241,6 +268,11 @@ export default {
       }
     },
 
+    getChartColor() {
+      if (!this.progressInfo) return "red";
+      return this.progressInfo.isPositive ? "#22c55e" : "#ef4444";
+    },
+
     renderChart() {
       if (!this.$refs.chartCanvas || !this.tableData.length) return;
 
@@ -259,8 +291,10 @@ export default {
               data: this.tableData.map(
                 (r) => r.reps || r.runtime || r.oneRepMax || 0
               ),
-              borderColor: "red",
+              borderColor: this.getChartColor(),
+              backgroundColor: this.getChartColor() + "33",
               tension: 0.3,
+              fill: true,
             },
           ],
         },
@@ -402,6 +436,12 @@ export default {
   color: #e0e0e0;
   margin: 8px 0 10px;
   font-size: 0.95rem;
+}
+
+.progress-summary {
+  margin: 0 0 12px;
+  font-weight: 600;
+  color: #ffcd76;
 }
 
 .loading-state {
