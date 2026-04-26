@@ -2,6 +2,22 @@
   <div class="admin-container">
     <h1>⚙️ Administratora panelis</h1>
 
+    <!-- REVIEWS BUTTON -->
+    <button @click="toggleReviews" class="reviews-toggle-btn">
+      {{ showReviews ? '🔙 Atpakaļ' : '📋 Skatīt atsauksmes' }}
+    </button>
+
+    <!-- REVIEWS SECTION -->
+    <div v-if="showReviews" class="reviews-section">
+      <h2>📋 Visas atsauksmes</h2>
+      <div v-if="allReviews.length === 0" class="no-reviews">Nav atsauksmju</div>
+      <div v-for="(review, index) in allReviews" :key="index" class="review-card">
+        <p class="review-text">"{{ review.review }}"</p>
+        <p class="review-meta">📧 {{ review.email || 'Anonīms' }}</p>
+        <button @click="deleteReview(review)" class="delete-review-btn">🗑️ Dzēst</button>
+      </div>
+    </div>
+
     <!-- DASHBOARD -->
     <div class="dashboard">
       <div class="card">
@@ -79,7 +95,9 @@ export default {
       emailMessage: {},
       userStats: {},
       editingUser: null,
-      editUsername: ''
+      editUsername: '',
+      showReviews: false,
+      allReviews: []
     };
   },
 
@@ -208,6 +226,38 @@ export default {
 
     formatName(k){
       return k.replace('_',' ').toUpperCase();
+    },
+
+    async toggleReviews() {
+      if (!this.showReviews) {
+        // Same approach as HomeView but with cache-busting
+        fetch('http://localhost:5000/allreviews?t=' + Date.now())
+          .then(res => res.json())
+          .then(data => {
+            console.log('Reviews:', data);
+            if (data && data.length > 0) {
+              this.allReviews = data;
+            }
+          })
+          .catch(e => console.error('Error:', e));
+      }
+      this.showReviews = !this.showReviews;
+    },
+
+    async deleteReview(review) {
+      if (!confirm('Vai tiešām dzēst šo atsauksmi?')) return;
+      
+      try {
+        await fetch('http://localhost:5000/delete-review', { 
+          method: 'DELETE',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email: review.email, review: review.review })
+        });
+        this.allReviews = this.allReviews.filter(r => r.review !== review.review || r.email !== review.email);
+      } catch (e) {
+        console.error('Error deleting review:', e);
+        alert('Neizdevās dzēst atsauksmi');
+      }
     }
   },
 
@@ -395,6 +445,80 @@ button:hover {
   border: none;
   background: rgba(0,0,0,0.5);
   color: white;
+}
+
+/* REVIEWS TOGGLE BUTTON */
+.reviews-toggle-btn {
+  display: block;
+  width: 100%;
+  padding: 14px;
+  margin-bottom: 20px;
+  background: linear-gradient(to right, #4a90d9, #357abd);
+  color: white;
+  border: none;
+  border-radius: 12px;
+  font-size: 1.1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: transform 0.25s, box-shadow 0.25s;
+}
+
+.reviews-toggle-btn:hover {
+  transform: scale(1.02);
+  box-shadow: 0 5px 20px rgba(74, 144, 217, 0.5);
+}
+
+/* REVIEWS SECTION */
+.reviews-section {
+  background: rgba(0,0,0,0.4);
+  padding: 20px;
+  border-radius: 18px;
+  margin-bottom: 25px;
+}
+
+.reviews-section h2 {
+  margin-bottom: 15px;
+  color: #ffd700;
+}
+
+.no-reviews {
+  text-align: center;
+  color: #aaa;
+  padding: 20px;
+}
+
+.review-card {
+  background: rgba(0,0,0,0.5);
+  padding: 15px;
+  margin-bottom: 12px;
+  border-radius: 12px;
+  border-left: 4px solid #4a90d9;
+}
+
+.review-text {
+  font-style: italic;
+  color: #fff;
+  margin-bottom: 8px;
+}
+
+.review-meta {
+  font-size: 0.85rem;
+  color: #aaa;
+  margin-bottom: 10px;
+}
+
+.delete-review-btn {
+  background: linear-gradient(to right, #d94a4a, #bd3535);
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 0.9rem;
+}
+
+.delete-review-btn:hover {
+  transform: scale(1.05);
 }
 
 /* RESPONSIVE */

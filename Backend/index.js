@@ -248,9 +248,24 @@ app.post('/reviews', (req, res) => {
 });
 
 app.get('/allreviews', (req, res) => {
-  db.query('SELECT review, email FROM reviews ORDER BY id DESC LIMIT 50', (err, results) => {
-    if (err) return res.status(500).json({ error: err.message });
+  db.query('SELECT review, email FROM reviews LIMIT 50', (err, results) => {
+    if (err) { 
+      console.error('Reviews table error:', err.message);
+      return res.status(500).json({ error: err.message });
+    }
+    console.log('Reviews found:', results.length);
     res.json(results);
+  });
+});
+
+app.delete('/delete-review', (req, res) => {
+  const { email, review } = req.body;
+  if (!email || !review) {
+    return res.status(400).json({ error: 'Email and review are required' });
+  }
+  db.query('DELETE FROM reviews WHERE email = ? AND review = ?', [email, review], (err, result) => {
+    if (err) return res.status(500).json({ error: err.message });
+    res.json({ message: 'Atsauksme dzēsta' });
   });
 });
 
