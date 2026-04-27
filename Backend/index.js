@@ -8,6 +8,7 @@ import mysql from 'mysql2';
 import cors from 'cors';
 import dotenv from 'dotenv';
 import OpenAI from 'openai';
+import bcrypt from 'bcryptjs';
 
 dotenv.config();
 
@@ -78,16 +79,23 @@ app.post('/login', (req, res) => {
   }
 
   db.query(
-    'SELECT * FROM users WHERE username = ? AND password = ?',
-    [username, password],
-    (err, results) => {
+    'SELECT * FROM users WHERE username = ?',
+    [username],
+    async (err, results) => {
       if (err) {
         console.error('Database error during login:', err.message);
         return res.status(500).json({ error: 'Database error' });
       }
 
       if (results.length > 0) {
-        res.json({ success: true, user: results[0] });
+        const user = results[0];
+        const isPasswordValid = await bcrypt.compare(password, user.password);
+        
+        if (isPasswordValid) {
+          res.json({ success: true, user: user });
+        } else {
+          res.status(401).json({ success: false, error: 'Invalid username or password' });
+        }
       } else {
         res.status(401).json({ success: false, error: 'Invalid username or password' });
       }
@@ -95,11 +103,11 @@ app.post('/login', (req, res) => {
   );
 });
 
-app.post('/register', (req, res) => {
+app.post('/register', async (req, res) => {
   const { username, password, email, role = 'user' } = req.body;
 
   // Check if username exists
-  db.query('SELECT * FROM users WHERE username = ?', [username], (err, results) => {
+  db.query('SELECT * FROM users WHERE username = ?', [username], async (err, results) => {
     if (err) {
       console.error('Database error:', err);
       return res.status(500).json({ error: 'Datubāzes kļūda' });
@@ -109,10 +117,13 @@ app.post('/register', (req, res) => {
       return res.status(400).json({ error: 'Lietotājvārds jau ir aizņemts' });
     }
 
-    // Insert new user (handling NULL values for email and role)
+    // Hash password before storing
+    const hashedPassword = await bcrypt.hash(password, 10);
+
+    // Insert new user with hashed password
     db.query(
       'INSERT INTO users (username, password, email, role) VALUES (?, ?, ?, ?)',
-      [username, password, email || null, role || null],
+      [username, hashedPassword, email || null, role || null],
       (err, result) => {
         if (err) {
           console.error('Insert error:', err);
