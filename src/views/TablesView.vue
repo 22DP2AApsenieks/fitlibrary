@@ -46,6 +46,13 @@
             Izvēlēts: {{ currentTableName }}
           </div>
 
+          <!-- PDF LEJUPLĀDE -->
+          <div v-if="tableData.length > 0" class="pdf-export-section">
+            <button @click="exportToPDF" class="pdf-btn">
+              📄 Lejuplādēt PDF
+            </button>
+          </div>
+
           <!-- 🆕 PROGRESS -->
           <div v-if="progressInfo" class="progress-summary">
             <span v-if="currentType === 'runtime'">
@@ -60,7 +67,7 @@
             </span>
           </div>
 
-          <div v-if="tableData.length > 0">
+          <div v-if="tableData.length > 0" ref="pdfContent" class="pdf-content">
             <table>
               <thead>
                 <tr>
@@ -115,6 +122,7 @@
 <script>
 import axios from "axios";
 import { Chart, registerables } from "chart.js";
+import html2pdf from "html2pdf.js";
 Chart.register(...registerables);
 
 export default {
@@ -271,6 +279,20 @@ export default {
     getChartColor() {
       if (!this.progressInfo) return "red";
       return this.progressInfo.isPositive ? "#22c55e" : "#ef4444";
+    },
+
+    async exportToPDF() {
+      const element = this.$refs.pdfContent;
+      
+      const opt = {
+        margin: 10,
+        filename: `${this.currentTableName}_progress.pdf`,
+        image: { type: 'jpeg', quality: 0.98 },
+        html2canvas: { scale: 2, useCORS: true },
+        jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+      };
+
+      await html2pdf().set(opt).from(element).save();
     },
 
     renderChart() {
@@ -442,6 +464,34 @@ export default {
   margin: 0 0 12px;
   font-weight: 600;
   color: #ffcd76;
+}
+
+.pdf-export-section {
+  margin-bottom: 12px;
+  text-align: right;
+}
+
+.pdf-btn {
+  background: linear-gradient(180deg, #4a3a8a 0%, #6a4a8a 100%);
+  border: 1px solid #8a6aaa;
+  border-radius: 8px;
+  padding: 10px 16px;
+  font-weight: 600;
+  color: #ffffff;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.pdf-btn:hover {
+  background: linear-gradient(180deg, #5a4a9a 0%, #7a5a9a 100%);
+  transform: translateY(-1px);
+}
+
+.pdf-content {
+  background: #1a1a1a;
+  padding: 15px;
+  border-radius: 10px;
+  border: 1px solid #444;
 }
 
 .loading-state {

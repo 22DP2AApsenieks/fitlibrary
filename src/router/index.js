@@ -8,11 +8,13 @@ import ProplanView from '@/views/ProplanView.vue'
 import ProplusView from '@/views/ProplusView.vue'
 import CheckoutView from '@/views/CheckoutView.vue'
 import ProgrammView from '@/views/ProgrammView.vue'
-import AdminView from '../views/AdminView.vue';
-import BodyweightExercisesView from '../views/BodyweightExercisesView.vue' 
-import GymExercisesView from '../views/GymExercisesView.vue'
-import RunningView from '../views/RunningView.vue'
-import TablesView from '../views/TablesView.vue'
+// Lazy loading for better performance
+import AdminView from '@/views/AdminView.vue';
+import BodyweightExercisesView from '@/views/BodyweightExercisesView.vue';
+import GymExercisesView from '@/views/GymExercisesView.vue';
+import RunningView from '@/views/RunningView.vue';
+import TablesView from '@/views/TablesView.vue';
+import AboutView from '@/views/AboutView.vue';
 
 
 import axios from 'axios'
@@ -74,27 +76,27 @@ const router = createRouter({
     {
       path: '/admin',
       name: 'Admin',
-      component: AdminView
+      component: () => import('@/views/AdminView.vue')
     },
     {
       path: '/bexercises',
       name: 'BodyweightExercises',
-      component: BodyweightExercisesView
+      component: () => import('@/views/BodyweightExercisesView.vue')
     },
     {
       path: '/g',
       name: 'GymExercises',
-      component: GymExercisesView
+      component: () => import('@/views/GymExercisesView.vue')
     },
     {
       path: '/running',
       name: 'Running',
-      component: RunningView
+      component: () => import('@/views/RunningView.vue')
     },
     {
       path: '/tables',
       name: 'Tables',
-      component: TablesView
+      component: () => import('@/views/TablesView.vue')
     }
   ],
 })
