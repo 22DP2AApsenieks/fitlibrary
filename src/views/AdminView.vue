@@ -208,10 +208,21 @@ export default {
           oldUsername,
           newUsername: this.editUsername.trim()
         })
-      }).then(() => {
-        this.fetchUsers();
-        this.cancelEdit();
-      });
+      }).then(res => res.json())
+        .then(data => {
+          console.log('Server response:', data);
+          if (data.error) {
+            alert('Kļūda: ' + data.error);
+          } else {
+            alert(data.message || 'Lietotājvārds veiksmīgi nomainīts visās tabulās!');
+            this.fetchUsers();
+            this.cancelEdit();
+          }
+        })
+        .catch(err => {
+          console.error('Error:', err);
+          alert('Kļūda mainot lietotājvārdu');
+        });
     },
 
     deleteUser(username) {

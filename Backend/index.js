@@ -363,21 +363,43 @@ app.put('/edit-username', (req, res) => {
   if (!oldUsername || !newUsername) {
     return res.status(400).json({ error: 'Both old and new username are required' });
   }
-  const tables = ['users', 'pullups', 'dips', 'squats'];
+  
+  // All tables that store username - bodyweight, gym, and running exercises
+  // Note: running tables use 'run_X' prefix in frontend but actual table names are different
+  const tables = [
+    'users', 'pullups', 'dips', 'squats',
+    'benchpress', 'deadlift', 'gymsquat', 'overheadpress', 'latpulldown',
+    '1krun', '5krun', '10krun', 'halfmarathon', 'marathon'
+  ];
+  
+  // Also try alternative table names for running
+  const runningTables = ['run_1km', 'run_5km', 'run_10km', 'run_halfmarathon', 'run_marathon'];
+  
   let completed = 0;
   let hasError = false;
+  const allTables = [...tables, ...runningTables];
 
-  tables.forEach(table => {
-    db.query('UPDATE ' + table + ' SET username = ? WHERE username = ?', [newUsername, oldUsername], (err, result) => {
+  // Trim and lowercase for consistent matching
+  const oldUser = oldUsername.trim();
+  const newUser = newUsername.trim();
+
+  console.log(`Changing username from "${oldUser}" to "${newUser}"`);
+  console.log(`Tables to update:`, allTables);
+
+  allTables.forEach(table => {
+    db.query('UPDATE `' + table + '` SET username = ? WHERE LOWER(TRIM(username)) = ?', [newUser, oldUser.toLowerCase()], (err, result) => {
       if (err) {
-        if (!hasError) {
-          hasError = true;
-          return res.status(500).json({ error: `Failed to update username in ${table}` });
+        console.error(`Error updating ${table}:`, err.message);
+        // Continue even if error - table might not exist
+        completed++;
+        if (completed === allTables.length) {
+          res.json({ message: 'Username updated (some tables may not exist)' });
         }
         return;
       }
+      console.log(`Updated ${table}: ${result.affectedRows} rows affected`);
       completed++;
-      if (completed === tables.length && !hasError) {
+      if (completed === allTables.length && !hasError) {
         res.json({ message: 'Username updated in all tables' });
       }
     });

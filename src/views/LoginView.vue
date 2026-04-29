@@ -49,13 +49,14 @@ const login = async () => {
     if (response.ok && data.success) {
       localStorage.setItem('loggedInUser', form.Username.trim());
 
-      if (form.Username.trim().toLowerCase() === 'admin') {
+      const username = form.Username.trim().toLowerCase();
+      if (username === 'admin' || username === 'admins') {
         router.push('/admin');
       } else {
         router.push('/programm');
       }
     } else {
-      errorMessage.value = data.error || 'Invalid login';
+      errorMessage.value = data.error || 'Nepariezs lietotājvārds vai parole';
     }
   } catch (err) {
     errorMessage.value = 'Server connection failed';
