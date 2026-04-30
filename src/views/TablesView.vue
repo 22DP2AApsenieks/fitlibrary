@@ -157,7 +157,7 @@ export default {
   computed: {
     groupedTables() {
       const groups = {
-        Bodyweight: { name: "Svars ar ķermeni", icon: "💪", description: "Treniņi ar savu svaru", items: [] },
+        Bodyweight: { name: "Treniņi ar ķermeņa svaru", icon: "💪", description: "Treniņi ar savu svaru", items: [] },
         Gym: { name: "Zāle", icon: "🏋️", description: "Spēka treniņi", items: [] },
         Running: { name: "Skriešana", icon: "🏃", description: "Ātrums un izturība", items: [] },
       };
