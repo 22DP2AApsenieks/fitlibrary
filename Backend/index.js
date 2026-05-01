@@ -23,11 +23,11 @@ app.use(cors({
 }));
 app.use(express.json());
 
-// Database connection
+// Datubāzes savienošana
 const db = mysql.createConnection({
   host: '127.0.0.1',
-  user: 'root',       // Replace with your MySQL username
-  password: '@Adams#17',       // Replace with your MySQL password
+  user: 'root',       // mans MySQL lietotājvārds
+  password: '@Adams#17',       // parole
   database: 'fitlib'
 });
 

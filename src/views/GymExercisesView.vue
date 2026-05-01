@@ -64,7 +64,10 @@
                         type="number"
                         v-model.number="exercises[index].weight"
                         min="0"
+                        step="1"
+                        inputmode="numeric"
                         placeholder="piem. 100"
+                        @input="sanitizeWholeNumber(exercises[index], 'weight')"
                       />
                     </div>
                     <div class="input-divider">×</div>
@@ -74,7 +77,10 @@
                         type="number"
                         v-model.number="exercises[index].reps"
                         min="1"
+                        step="1"
+                        inputmode="numeric"
                         placeholder="piem. 5"
+                        @input="sanitizeWholeNumber(exercises[index], 'reps')"
                       />
                     </div>
                   </div>
@@ -104,8 +110,11 @@
                       type="number"
                       v-model.number="exercises[index].oneRepMax"
                       min="0"
+                      step="1"
+                      inputmode="numeric"
                       placeholder="piem. 120"
                       class="input-highlight"
+                      @input="sanitizeWholeNumber(exercises[index], 'oneRepMax')"
                     />
                   </div>
 
@@ -225,6 +234,12 @@ export default {
     };
   },
   methods: {
+    sanitizeWholeNumber(obj, field) {
+      // Ensure only whole numbers
+      if (obj[field] !== null && obj[field] !== undefined && obj[field] !== "") {
+        obj[field] = Math.floor(Math.abs(obj[field]));
+      }
+    },
     setMode(index, mode) {
       // Reset result when switching modes so it doesn't show stale data
       this.exercises[index].inputMode = mode;

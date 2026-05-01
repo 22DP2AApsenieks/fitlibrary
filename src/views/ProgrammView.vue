@@ -58,7 +58,7 @@
         </div>
 
         <div class="danger-zone">
-          <h3>Bīstamā zona</h3>
+          <h3>Konta dzēšana</h3>
           <p class="danger-text">Dzēst kontu un visus saistītos datus</p>
           <button @click="confirmDelete" class="delete-button">
             Dzēst manu kontu

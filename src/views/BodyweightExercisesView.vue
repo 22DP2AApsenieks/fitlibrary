@@ -45,7 +45,10 @@
                       type="number" 
                       v-model.number="exercises[index].reps" 
                       min="0"
+                      step="1"
+                      inputmode="numeric"
                       placeholder="Ievadi atkārtojumus"
+                      @input="sanitizeWholeNumber(exercises[index], 'reps')"
                     />
                   </div>
 
@@ -120,6 +123,12 @@ export default {
     };
   },
   methods: {
+    sanitizeWholeNumber(obj, field) {
+      // Ensure only whole numbers
+      if (obj[field] !== null && obj[field] !== undefined && obj[field] !== "") {
+        obj[field] = Math.floor(Math.abs(obj[field]));
+      }
+    },
     async saveReps(index) {
       const exercise = this.exercises[index];
       const reps = exercise.reps;

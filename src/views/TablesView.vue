@@ -102,7 +102,7 @@
 
         <!-- 🤖 AI TRENERIS -->
         <div v-if="aiTips.length" class="ai-box">
-          <h3>🤖 AI treneris</h3>
+          <h3>🤖 Sistēmas analīze par taviem datiem</h3>
           <ul>
             <li v-for="(tip, i) in aiTips" :key="i">{{ tip }}</li>
           </ul>

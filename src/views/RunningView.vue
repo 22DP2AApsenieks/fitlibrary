@@ -43,7 +43,10 @@
                       type="number" 
                       v-model.number="distance.time" 
                       min="0" 
+                      step="1"
+                      inputmode="numeric"
                       placeholder="Ievadi laiku" 
+                      @input="sanitizeWholeNumber(distance, index)"
                     />
                   </div>
 
@@ -97,6 +100,12 @@ export default {
     };
   },
   methods: {
+    sanitizeWholeNumber(distance, index) {
+      // Ensure only whole numbers
+      if (distance.time !== null && distance.time !== undefined && distance.time !== "") {
+        distance.time = Math.floor(Math.abs(distance.time));
+      }
+    },
     async saveDistance(index) {
       const distance = this.distances[index];
 
