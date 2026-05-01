@@ -1,32 +1,17 @@
 <template>
-  --tatad šeit mums ir visa pieslegsanas dala. es pat enzzinu ko te isti komentet bet well šeit butiba ir visa informacija lietotajam un ari palidziba lietotajam, ja vins neaizpilda luaki. 
   <section class="signup-section">
     <div class="signup-content">
       <form @submit.prevent="login" class="signup-form">
         <h1>Pieslēgties</h1>
-        <input 
-          type="text" 
-          v-model="form.Username" 
-          placeholder="Lietotājvārds" 
-          required
-          @invalid="e => e.target.setCustomValidity('Lūdzu, aizpildi lietotājvārdu')"
-          @input="e => e.target.setCustomValidity('')"
-        />-- ka jau teic, te var redzet, ja leitotajs kko neivada vinam ir pazinojums, jaievvad atad vis labi un ejam talak
-        <input 
-          type="password" 
-          v-model="form.Password" 
-          placeholder="Parole" 
-          required
-          @invalid="e => e.target.setCustomValidity('Lūdzu, aizpildi paroli')"
-          @input="e => e.target.setCustomValidity('')"
-        />
+        <input type="text" v-model="form.Username" placeholder="Lietotājvārds" required />
+        <input type="password" v-model="form.Password" placeholder="Parole" required />
         <button type="submit" class="signup-button">Pieslēgties</button>
 
-        <p v-if="errorMessage" class="error-message">{{ errorMessage }}</p> -- sis mums ir ja notik erros, respektivi nepareiza parole vai kkas tads
+        <p v-if="errorMessage" class="error-message">{{ errorMessage }}</p>
 
         <div class="redirect-login">
           <p>Neesi reģistrējies?
-            <router-link to="/signup" class="login-link">Pieslēdzies šeit</router-link> -- sis links mus parvirzis uz registracijas logu
+            <router-link to="/signup" class="login-link">Pieslēdzies šeit</router-link>
           </p>
         </div>
       </form>
@@ -74,7 +59,7 @@ const login = async () => {
       errorMessage.value = data.error || 'Nepariezs lietotājvārds vai parole';
     }
   } catch (err) {
-    errorMessage.value = 'Servera savienojuma kļūda';
+    errorMessage.value = 'Server connection failed';
   }
 };
 

@@ -3,19 +3,19 @@
     <div class="container">
       <div class="header-banner">
         <h1>💪 TRENIŅI AR SAVU SVARU 💪</h1>
-        <p class="subtitle">Ievadi savus rezultātus, {{ username }}!</p> -- manuprāt tas ir personalizētāk lietotajam, ja pieminam vina vardu
+        <p class="subtitle">Ievadi savus rezultātus, {{ username }}!</p>
       </div>
 
       <div v-if="loading" class="loading-state">
         <div class="spinner-2000s"></div>
-        <p>Ielādējam tavus treniņus...</p> -- ja kkads erors un nesanak y=uzreiz ieladet, parasti butu jasanak uzrei
+        <p>Ielādējam tavus treniņus...</p>
       </div>
 
       <div v-else class="content">
-        <!-- Vingrinajumu pogas, kuras ieksa ietvers ievades formu -->
+        <!-- te ir visas tas kartites 3 uz kuram var klikskinar un atver, aizver t vinas. ari arrow bultina pastastits ka strada.  -->
         <div class="exercises-list">
           <div v-for="(exercise, index) in exercises" :key="index" class="exercise-item">
-            <button>
+            <button
               class="exercise-button"
               :class="{ active: expandedIndex === index }"
               @click="expandedIndex = expandedIndex === index ? null : index"
@@ -24,7 +24,7 @@
               <span class="button-arrow" :class="{ open: expandedIndex === index }">▼</span>
             </button>
 
-            <!-- paplasinasanai prieks kartes kura atvers ievadei-->
+            <!-- paplasinajums ka kartite dropwdownojas -->
             <div v-if="expandedIndex === index" class="exercise-card expanded-card">
               <div class="card-header-2000s">
                 <h2 class="exercise-title">🎯 {{ exercises[index].name }}</h2>
@@ -37,20 +37,17 @@
               </div>
 
               <div class="card-body">
-                <!-- ievades laukie leitotajja ievadei blabla -->
+                <!-- ievades lauki -->
                 <div class="input-section">
                   <div class="input-group">
                     <label>Atkārtojumu skaits:</label>
                     <input 
                       type="number" 
                       v-model.number="exercises[index].reps" 
-                      min="0"    
-                      step="1"
-                      inputmode="numeric"
+                      min="0"
                       placeholder="Ievadi atkārtojumus"
-                      @input="sanitizeWholeNumber(exercises[index], 'reps')"
                     />
-                  </div>-- ka var redzet ieprieks, minimala atlaujam vertiba ir 0
+                  </div>
 
                   <div class="input-group">
                     <label>Komentārs:</label>
@@ -62,7 +59,7 @@
                   </div>
                 </div>
 
-                <!-- podziņa ai saglabru datus -->
+                <!-- poga  sis kods reali  basic -->
                 <div class="button-group">
                   <button 
                     @click="saveReps(index)"
@@ -76,7 +73,6 @@
           </div>
         </div>
 
-      
         <div class="footer-action">
           <button 
             @click="$router.push('/programm')"
@@ -123,18 +119,12 @@ export default {
     };
   },
   methods: {
-    sanitizeWholeNumber(obj, field) {
-      // pārbuade vai ievadiit veseli skaitli
-      if (obj[field] !== null && obj[field] !== undefined && obj[field] !== "") {
-        obj[field] = Math.floor(Math.abs(obj[field]));
-      }
-    },
     async saveReps(index) {
       const exercise = this.exercises[index];
       const reps = exercise.reps;
 
       if (reps <= 0) {
-        alert("Lūdzu, ievadi derīgu atkārtojumu skaitu.");
+        alert("Ievadi derīgu atkārtojumu skaitu.");
         return;
       }
 
@@ -145,7 +135,7 @@ export default {
         comment: exercise.comment || "",
       };
 
-      // debuging parbaude, ko tieši sūtam uz beckend
+      //debug doublechecks
       console.log(
         `📤 Sūtam uz ${exercise.api}:`,
         JSON.stringify(payload, null, 2)
@@ -156,20 +146,20 @@ export default {
           `http://localhost:5000/${exercise.api}`,
           payload
         );
-        alert(res.data.message || "Treniņš veiksmīgi saglabāts!");
+        alert(res.data.message || "Saglabāts!");
         exercise.reps = 0;
         exercise.comment = "";
         this.expandedIndex = null;
       } catch (err) {
         console.error("Saglabāšanas kļūda:", err);
         alert(
-          err.response?.data?.error || "Kļūda saglabājot datus. Pārbaudiet savienojumu un pamēģiniet vēlreiz."
+          err.response?.data?.error || "❌ Kļūda saglabājot. Pārbaudi backend logus."
         );
       }
     },
   },
   mounted() {
-    // megina panemt userinfo no localstorage, parasti strada bez errora
+    // ka mes dabujamuser no localstorage
     this.username =
       (localStorage.getItem("loggedInUser") || "nezināmais").toLowerCase();
     this.loading = false;
@@ -189,7 +179,6 @@ export default {
   max-width: 900px;
   margin: 0 auto;
 }
-
 
 .header-banner {
   background: linear-gradient(180deg, #6a0000 0%, #310000 100%);
@@ -260,8 +249,6 @@ export default {
   transition: all 0.3s ease;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4);
 }
-
-/* siet vistaspats dizains tikkai savadak sagrupets, netikpardzami, bet bik turka laiks sakartot. my bad */
 
 .exercise-button:hover { transform: translateY(-2px); background: #333333; border-color: #555; box-shadow: 0 6px 14px rgba(0, 0, 0, 0.5); }
 .exercise-button.active { background: #3a3a3a; border-color: #666; color: #fff; box-shadow: 0 6px 16px rgba(0, 0, 0, 0.6); }

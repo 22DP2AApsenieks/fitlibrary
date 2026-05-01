@@ -15,7 +15,7 @@
         <!-- buti forma/saraksts ar visiem vingrinajumiem prisk gym -->
         <div class="exercises-list">
           <div v-for="(exercise, index) in exercises" :key="index" class="exercise-item">
-            //šeit sis butto ir lai atvert dropdown vai aizvert vnu.
+             <!-- šeit sis butto ir lai atvert dropdown vai aizvert vnu.-->
             <button
               class="exercise-button"
               :class="{ active: expandedIndex === index }"
@@ -23,7 +23,7 @@
             >
               <span class="button-text">{{ exercise.name }}</span>
               <span class="button-arrow" :class="{ open: expandedIndex === index }">▼</span>
-            </button>--tas span ir butina kas rote kad uz vinas uzpiez
+            </button> <!--tas span ir butina kas rote kad uz vinas uzpiez-->
 
 
             <!-- headers ar nodaukumu un aizversanas poga -->
@@ -238,15 +238,15 @@ export default {
       ],
     };
   },
+  
   methods: {
     sanitizeWholeNumber(obj, field) {
-      // atkal, parbauda tikai vai apreizs formats, vesles
       if (obj[field] !== null && obj[field] !== undefined && obj[field] !== "") {
         obj[field] = Math.floor(Math.abs(obj[field]));
       }
     },
     setMode(index, mode) {
-      //
+      
       this.exercises[index].inputMode = mode;
       this.exercises[index].calculatedOneRepMax = null;
     },

@@ -74,7 +74,52 @@
 import { Chart, registerables } from 'chart.js';
 Chart.register(...registerables);
 
+export default {
+  name: "ProgrammView",
 
+  data() {
+    return {
+      username: "",
+      loading: true,
+      reviewText: "",
+      reviewMessage: ""
+    };
+  },
+
+  methods: {
+    submitReview() {
+      if (!this.reviewText.trim()) {
+        this.reviewMessage = "Ieraksti kaut ko 😅";
+        return;
+      }
+
+      // šeit vari vēlāk pieslēgt backend
+      console.log("Atsauksme:", this.reviewText);
+
+      this.reviewMessage = "Paldies par atsauksmi! 🙌";
+      this.reviewText = "";
+
+      setTimeout(() => {
+        this.reviewMessage = "";
+      }, 3000);
+    },
+
+    confirmDelete() {
+      const confirmAction = confirm("Vai tiešām vēlies dzēst kontu?");
+      if (!confirmAction) return;
+
+      // backend call nākotnē
+      alert("Konts dzēsts (demo versija)");
+    }
+  },
+
+  mounted() {
+    this.username =
+      (localStorage.getItem("loggedInUser") || "nezināmais").toLowerCase();
+
+    this.loading = false;
+  }
+};
 </script>
 
 <style scoped>
