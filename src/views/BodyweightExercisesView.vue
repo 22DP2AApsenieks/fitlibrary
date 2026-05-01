@@ -3,19 +3,19 @@
     <div class="container">
       <div class="header-banner">
         <h1>💪 TRENIŅI AR SAVU SVARU 💪</h1>
-        <p class="subtitle">Ievadi savus rezultātus, {{ username }}!</p>
+        <p class="subtitle">Ievadi savus rezultātus, {{ username }}!</p> -- manuprāt tas ir personalizētāk lietotajam, ja pieminam vina vardu
       </div>
 
       <div v-if="loading" class="loading-state">
         <div class="spinner-2000s"></div>
-        <p>Ielādējam tavus treniņus...</p>
+        <p>Ielādējam tavus treniņus...</p> -- ja kkads erors un nesanak y=uzreiz ieladet, parasti butu jasanak uzrei
       </div>
 
       <div v-else class="content">
-        <!-- EXERCISE BUTTONS WITH INLINE EXPANDED FORMS -->
+        <!-- Vingrinajumu pogas, kuras ieksa ietvers ievades formu -->
         <div class="exercises-list">
           <div v-for="(exercise, index) in exercises" :key="index" class="exercise-item">
-            <button
+            <button>
               class="exercise-button"
               :class="{ active: expandedIndex === index }"
               @click="expandedIndex = expandedIndex === index ? null : index"
@@ -24,7 +24,7 @@
               <span class="button-arrow" :class="{ open: expandedIndex === index }">▼</span>
             </button>
 
-            <!-- EXPANDED EXERCISE CARD - INLINE -->
+            <!-- paplasinasanai prieks kartes kura atvers ievadei-->
             <div v-if="expandedIndex === index" class="exercise-card expanded-card">
               <div class="card-header-2000s">
                 <h2 class="exercise-title">🎯 {{ exercises[index].name }}</h2>
@@ -37,20 +37,20 @@
               </div>
 
               <div class="card-body">
-                <!-- INPUT FIELDS -->
+                <!-- ievades laukie leitotajja ievadei blabla -->
                 <div class="input-section">
                   <div class="input-group">
                     <label>Atkārtojumu skaits:</label>
                     <input 
                       type="number" 
                       v-model.number="exercises[index].reps" 
-                      min="0"
+                      min="0"    
                       step="1"
                       inputmode="numeric"
                       placeholder="Ievadi atkārtojumus"
                       @input="sanitizeWholeNumber(exercises[index], 'reps')"
                     />
-                  </div>
+                  </div>-- ka var redzet ieprieks, minimala atlaujam vertiba ir 0
 
                   <div class="input-group">
                     <label>Komentārs:</label>
@@ -62,7 +62,7 @@
                   </div>
                 </div>
 
-                <!-- BUTTON -->
+                <!-- podziņa ai saglabru datus -->
                 <div class="button-group">
                   <button 
                     @click="saveReps(index)"
@@ -76,7 +76,7 @@
           </div>
         </div>
 
-        <!-- BACK BUTTON -->
+      
         <div class="footer-action">
           <button 
             @click="$router.push('/programm')"
@@ -124,7 +124,7 @@ export default {
   },
   methods: {
     sanitizeWholeNumber(obj, field) {
-      // Ensure only whole numbers
+      // pārbuade vai ievadiit veseli skaitli
       if (obj[field] !== null && obj[field] !== undefined && obj[field] !== "") {
         obj[field] = Math.floor(Math.abs(obj[field]));
       }
@@ -145,7 +145,7 @@ export default {
         comment: exercise.comment || "",
       };
 
-      // debugam paskatīties, ko tieši sūtam uz backend
+      // debuging parbaude, ko tieši sūtam uz beckend
       console.log(
         `📤 Sūtam uz ${exercise.api}:`,
         JSON.stringify(payload, null, 2)
@@ -169,7 +169,7 @@ export default {
     },
   },
   mounted() {
-    // paņemam user no localStorage (fallback ja nav)
+    // megina panemt userinfo no localstorage, parasti strada bez errora
     this.username =
       (localStorage.getItem("loggedInUser") || "nezināmais").toLowerCase();
     this.loading = false;
@@ -190,7 +190,7 @@ export default {
   margin: 0 auto;
 }
 
-/* HEADER BANNER */
+
 .header-banner {
   background: linear-gradient(180deg, #6a0000 0%, #310000 100%);
   padding: 30px 25px;
@@ -218,7 +218,6 @@ export default {
   opacity: 0.9;
 }
 
-/* LOADING STATE */
 .loading-state {
   text-align: center;
   padding: 60px 20px;
@@ -261,6 +260,8 @@ export default {
   transition: all 0.3s ease;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4);
 }
+
+/* siet vistaspats dizains tikkai savadak sagrupets, netikpardzami, bet bik turka laiks sakartot. my bad */
 
 .exercise-button:hover { transform: translateY(-2px); background: #333333; border-color: #555; box-shadow: 0 6px 14px rgba(0, 0, 0, 0.5); }
 .exercise-button.active { background: #3a3a3a; border-color: #666; color: #fff; box-shadow: 0 6px 16px rgba(0, 0, 0, 0.6); }

@@ -2,23 +2,23 @@
   <div class="admin-container">
     <h1>⚙️ Administratora panelis</h1>
 
-    <!-- REVIEWS BUTTON -->
+    <!-- Šī oga ir par autsauksmem veidota -->
     <button @click="toggleReviews" class="reviews-toggle-btn">
       {{ showReviews ? '🔙 Atpakaļ' : '📋 Skatīt atsauksmes' }}
     </button>
 
-    <!-- REVIEWS SECTION -->
+    <!-- Atsauksmju sadaļa -->
     <div v-if="showReviews" class="reviews-section">
       <h2>📋 Visas atsauksmes</h2>
       <div v-if="allReviews.length === 0" class="no-reviews">Nav atsauksmju</div>
       <div v-for="(review, index) in allReviews" :key="index" class="review-card">
         <p class="review-text">"{{ review.review }}"</p>
-        <p class="review-meta">📧 {{ review.email || 'Anonīms' }}</p>
+        <p class="review-meta">📧 {{ review.email || 'Anonīms' }}</p> --nu sita man lieka isti nevar notikt, bet atstasu lai paplasinajumiem nakotne paliek si iespeja
         <button @click="deleteReview(review)" class="delete-review-btn">🗑️ Dzēst</button>
       </div>
     </div>
 
-    <!-- DASHBOARD -->
+    <!-- Visi lietotaji redzami šeit -->
     <div class="dashboard">
       <div class="card">
         <h3>Lietotāji</h3>
@@ -31,22 +31,21 @@
       </div>
     </div>
 
-    <!-- SEARCH -->
+    <!-- Izveidotā meklēšanas funkcija strada te -->
     <input v-model="search" placeholder="🔍 Meklēt..." class="search"/>
 
-    <!-- LEADERBOARD -->
+    <!-- Aktivako users darakstis -->
     <div class="leaderboard">
       <h2>🏆 Top lietotāji</h2>
       <div v-for="(user, i) in topUsers" :key="user.username" class="leader-item">
-        {{ i+1 }}. {{ user.username }} — {{ user.total }} treniņi
+        {{ i+1 }}. {{ user.username }} — {{ user.total }} treniņi --topa noteiksana
       </div>
     </div>
 
-    <!-- USERS -->
     <div v-for="user in filteredUsers" :key="user.username"
          :class="['user-card', { inactive: user.total === 0 }]">
 
-      <!-- EDIT / DISPLAY -->
+      <!-- saglabasanas atelosana -->
       <div v-if="editingUser === user.username" class="edit-section">
         <input v-model="editUsername" class="edit-input"/>
         <button @click="saveEdit(user.username)">Saglabāt</button>
@@ -64,13 +63,12 @@
       <p>📧 {{ user.email || 'Nav e-pasta' }}</p>
       <p>📊 Kopā treniņi: <b>{{ user.total }}</b></p>
 
-      <!-- EMAIL -->
-      <div class="email-section">
+    
+      <div class="email-section"> --epasta nosutisanai
         <input v-model="emailMessage[user.username]" placeholder="Ziņa..."/>
         <button @click="sendReminder(user)">📨</button>
       </div>
 
-      <!-- STATS -->
       <button @click="loadStats(user.username)" class="stats-btn">
         📊 Cik bieži ir veikti ieraksti
       </button>
@@ -126,7 +124,7 @@ export default {
 
   methods: {
 
-    async fetchUsers() {
+    async fetchUsers() { //izgustam visus lietotaju treninu datus
       const endpoints = [
         'users',
         'dips','pullups','squat',
@@ -202,7 +200,7 @@ export default {
       if (!this.editUsername.trim()) return;
 
       fetch('http://localhost:5000/edit-username', {
-        method: 'PUT',
+        method: 'PUT',  //funkcija lai nomainitu datus datubaze
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           oldUsername,
@@ -241,7 +239,7 @@ export default {
 
     async toggleReviews() {
       if (!this.showReviews) {
-        // Same approach as HomeView but with cache-busting
+        
         fetch('http://localhost:5000/allreviews?t=' + Date.now())
           .then(res => res.json())
           .then(data => {
@@ -287,7 +285,7 @@ export default {
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
-/* TITLE */
+/* idk vai te baiga jega pierkastit par dizain, tp sis pedejai komentars seit rn */
 .title {
   text-align: center;
   font-size: 2.8rem;
@@ -296,7 +294,6 @@ export default {
   text-shadow: 0 0 15px #ff3b3bcc;
 }
 
-/* DASHBOARD */
 .dashboard {
   display: flex;
   gap: 20px;
@@ -343,7 +340,6 @@ export default {
   box-shadow: 0 0 10px rgba(255,0,0,0.4);
 }
 
-/* LEADERBOARD */
 .leaderboard {
   background: rgba(0,0,0,0.35);
   padding: 20px;
@@ -358,7 +354,6 @@ export default {
   font-weight: 600;
 }
 
-/* USER CARD */
 .user-card {
   background: rgba(0,0,0,0.35);
   padding: 18px;
@@ -377,14 +372,12 @@ export default {
   border: 2px solid #ff3b3b;
 }
 
-/* HEADER */
 .user-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
 }
 
-/* ACTION BUTTONS */
 .actions {
   display: flex;
   gap: 10px;
@@ -406,7 +399,6 @@ button:hover {
   background: linear-gradient(to right, #ff1f1f, #cc0000);
 }
 
-/* EMAIL */
 .email-section {
   display: flex;
   gap: 10px;
@@ -422,14 +414,12 @@ button:hover {
   color: white;
 }
 
-/* STATS BUTTON */
 .stats-btn {
   margin-top: 10px;
   background: linear-gradient(to right, #ffcc00, #ff9900);
   color: black;
 }
 
-/* STATS BOX */
 .stats {
   margin-top: 10px;
   background: rgba(0,0,0,0.6);
@@ -444,7 +434,6 @@ button:hover {
   color: #ffd6d6;
 }
 
-/* EDIT */
 .edit-section {
   display: flex;
   gap: 10px;
@@ -458,7 +447,6 @@ button:hover {
   color: white;
 }
 
-/* REVIEWS TOGGLE BUTTON */
 .reviews-toggle-btn {
   display: block;
   width: 100%;
@@ -479,7 +467,6 @@ button:hover {
   box-shadow: 0 5px 20px rgba(74, 144, 217, 0.5);
 }
 
-/* REVIEWS SECTION */
 .reviews-section {
   background: rgba(0,0,0,0.4);
   padding: 20px;
@@ -532,7 +519,6 @@ button:hover {
   transform: scale(1.05);
 }
 
-/* RESPONSIVE */
 @media (max-width: 720px) {
   .title {
     font-size: 2rem;

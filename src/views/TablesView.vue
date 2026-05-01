@@ -4,13 +4,13 @@
       <div class="header-banner">
         <h1>📊 Progresa tabulas</h1>
         <p class="subtitle">
-          Pārskati savu progresu un attīstību, {{ username }}!
+          Pārskati savu progresu un attīstību, {{ username }}!  <!--  -->
         </p>
       </div>
 
       <div class="inner-card">
 
-        <!-- GRUPAS -->
+        <!-- siet var redzet vingrinajumu grupas (bodyweight,gym,skriesana) te vnk geeral sadlaijums redzams -->
         <div class="group-list">
           <div v-for="group in groupedTables" :key="group.name" class="group-card">
             <div class="group-title-row">
@@ -34,26 +34,26 @@
           </div>
         </div>
 
-        <!-- IELĀDE -->
+        <!-- nekad neesmu redzejis so tekstu, bet uzsveru, manuprat to vajag gadijumiem ja supper slow pc un/bvai intenrets -->
         <div v-if="loading" class="loading-state">
           <div class="spinner-2000s"></div>
           <p>Ielādē datus...</p>
         </div>
 
-        <!-- DATI -->
+  
         <div v-else>
           <div v-if="selectedTable" class="selected-label">
             Izvēlēts: {{ currentTableName }}
           </div>
 
-          <!-- PDF LEJUPLĀDE -->
+          <!-- PDF lejupielades funkcija -->
           <div v-if="tableData.length > 0" class="pdf-export-section">
             <button @click="exportToPDF" class="pdf-btn">
               📄 Lejuplādēt PDF
             </button>
           </div>
 
-          <!-- 🆕 PROGRESS -->
+          <!-- te ir videja progresa aprekins. baigais csnakars sanaca lai gan laiks tkaka progrese ir ar minusu gan svars kad progrese ir ar plusu. bet beigas viss smuki sanaca : ) -->
           <div v-if="progressInfo" class="progress-summary">
             <span v-if="currentType === 'runtime'">
               📉 Vidēji progress/mēnesī:
@@ -100,7 +100,7 @@
           </div>
         </div>
 
-        <!-- 🤖 AI TRENERIS -->
+        <!-- 🤖 pagaidam loti baisic, bet si ir sistemas ieteikumu dala ko  redzes leitotajs. priecigs, ka sanaca vismaz so ieviest. pasam savu realu ai izveidot ir nenormali gruti -->
         <div v-if="aiTips.length" class="ai-box">
           <h3>🤖 Sistēmas analīze par taviem datiem</h3>
           <ul>
@@ -124,9 +124,11 @@ import axios from "axios";
 import { Chart, registerables } from "chart.js";
 import html2pdf from "html2pdf.js";
 Chart.register(...registerables);
+//chart ir vajadzigs lai grafiks stradatu
 
 export default {
   data() {
+    //sis vi jau ir sagatavots ieprieks
     return {
       username: "",
       selectedTable: "",
@@ -134,6 +136,7 @@ export default {
       loading: false,
       chart: null,
 
+      //saraskts vsiemm vingrinajumiem
       availableTables: [
         { name: "Pievilkšanās", value: "pullups", type: "reps", group: "Bodyweight" },
         { name: "Dipsi", value: "dips", type: "reps", group: "Bodyweight" },
@@ -156,6 +159,8 @@ export default {
 
   computed: {
     groupedTables() {
+            // Izveidojam objektu ar grupām (Bodyweight, Gym, Running), lietotjas hgan vinus redze ssavad bet si bija sakuma shema pei kuras turos
+
       const groups = {
         Bodyweight: { name: "Treniņi ar ķermeņa svaru", icon: "💪", description: "Treniņi ar savu svaru", items: [] },
         Gym: { name: "Zāle", icon: "🏋️", description: "Spēka treniņi", items: [] },
@@ -179,7 +184,7 @@ export default {
       return t ? t.type : "";
     },
 
-    // 🆕 PROGRESS CALC
+    // sis ir videja progresa calcolators
     progressInfo() {
       if (!this.tableData.length) return null;
 
@@ -205,6 +210,7 @@ export default {
       return {
         diff,
         monthlyProgress,
+        // sis ir diezgan svarigi, jo runtime gadījumā mazāks skaitlis = labāks rezultāts
         isPositive:
           this.currentType === "runtime" ? diff < 0 : diff > 0,
       };

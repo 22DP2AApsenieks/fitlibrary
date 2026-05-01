@@ -1,4 +1,5 @@
 <template>
+  --tatad šeit mums ir visa pieslegsanas dala. es pat enzzinu ko te isti komentet bet well šeit butiba ir visa informacija lietotajam un ari palidziba lietotajam, ja vins neaizpilda luaki. 
   <section class="signup-section">
     <div class="signup-content">
       <form @submit.prevent="login" class="signup-form">
@@ -10,7 +11,7 @@
           required
           @invalid="e => e.target.setCustomValidity('Lūdzu, aizpildi lietotājvārdu')"
           @input="e => e.target.setCustomValidity('')"
-        />
+        />-- ka jau teic, te var redzet, ja leitotajs kko neivada vinam ir pazinojums, jaievvad atad vis labi un ejam talak
         <input 
           type="password" 
           v-model="form.Password" 
@@ -21,11 +22,11 @@
         />
         <button type="submit" class="signup-button">Pieslēgties</button>
 
-        <p v-if="errorMessage" class="error-message">{{ errorMessage }}</p>
+        <p v-if="errorMessage" class="error-message">{{ errorMessage }}</p> -- sis mums ir ja notik erros, respektivi nepareiza parole vai kkas tads
 
         <div class="redirect-login">
           <p>Neesi reģistrējies?
-            <router-link to="/signup" class="login-link">Pieslēdzies šeit</router-link>
+            <router-link to="/signup" class="login-link">Pieslēdzies šeit</router-link> -- sis links mus parvirzis uz registracijas logu
           </p>
         </div>
       </form>

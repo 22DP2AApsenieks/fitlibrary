@@ -44,11 +44,12 @@
 </template>
 
 <script setup>
+//importejam vue funkcija . react ir formai ref kludas tekstam, onMounters funkciajs palaisanai kad komponents ieladejas
 import { reactive, ref, onMounted } from 'vue';
 import { useRouter } from 'vue-router';
 
 const router = useRouter();
-const form = reactive({
+const form = reactive({ //siet tiek glabata lietotaja ievads dati, visi 3 vienkopus. smart
   Username: '',
   Email: '',
   Password: ''
@@ -58,7 +59,7 @@ const errorMessage = ref('');
 
 const fetchUsers = async () => {
   try {
-    const res = await fetch('http://localhost:5000/users');
+    const res = await fetch('http://localhost:5000/users'); //seit ir saistba ar datubazi btw
     users.value = await res.json();
   } catch (err) {
     console.error('Neizdevās ielādēt lietotājus:', err);

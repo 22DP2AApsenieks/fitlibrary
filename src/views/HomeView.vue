@@ -1,4 +1,5 @@
 <template>
+   <!-- Hero sekcija ir galenais sakuma elementts(bloks) ko leitotajs redzes-->
   <section class="hero-section">
     <div class="content">
       <h1>Laipni lūgts FITLIBRARY</h1>
@@ -18,7 +19,7 @@
         <li>Tīrs, intuitīvs un motivējošs interfeiss </li>
         <li>Mākslīgā intelekta treniņu apkopojums</li>
       </ul>
-
+      <!-- Bilde ar hover tooltip -->
       <div class="image-wrapper">
         <img
           class="plan-image"
@@ -37,7 +38,7 @@
     </div>
   </section>
 
-  <!-- atsauksmju josla -->
+  <!-- šeit ir atsauksmju linija kur paradisises visas atsauksmes u ies -->
   <div class="review-ticker-container" v-if="reviews.length">
     <div class="review-ticker">
       <span v-for="(review, idx) in reviews" :key="idx" class="review-item">
@@ -51,6 +52,8 @@
 export default {
   data() {
     return {
+            // default atsauksmes (lai var redzet to animaciju gadijumam, ja backend nestrādā  vai ir tukss)
+
       reviews: [
         { review: "Lieliska lietotne!", author: "Anonīms" },
         { review: "Labākais fitnesa trekeris!", author: "Lietotājs" },
@@ -59,25 +62,24 @@ export default {
     };
   },
   created() {
-    // mēģinam paņemt atsauksmes no localStorage, lai lieki nesistu serveri
-    const cachedReviews = localStorage.getItem('fitlibrary_reviews');
+// šini dala mēģinam paņemt no localStorage, lai nevajadzīgi nesūtītu request uz serveri    const cachedReviews = localStorage.getItem('fitlibrary_reviews');
     if (cachedReviews) {
       try {
         this.reviews = JSON.parse(cachedReviews);
-        return; // ja viss ok, izmantojam cache un viss
+        return; // ja viss ok, izmantojam cache(saglabatos datus) un viss
       } catch (e) {
         // ja kaut kas saplīsis (piem. JSON bojāts), ignorējam un ejam fetch
       }
     }
 
-    // velkam atsauksmes no backend
+    // dabūnam atsauksmes no backend
     fetch('http://localhost:5000/allreviews')
       .then(res => res.json())
       .then(data => {
         if (data && data.length > 0) {
           this.reviews = data.map(r => ({
             review: r.review,
-            // dažreiz backend neatdod email, tad fallback uz username vai anonīms
+            // dažreiz var but backend neatdod email, tad fallback uz username vai anonīms . pagaidam vel ta nav bijis tho
             author: r.email || r.username || 'Anonīms'
           }));
           // saglabājam uz 1h (reāli te varētu arī timestamp pielikt, bet pagaidām pietiek)
@@ -85,7 +87,7 @@ export default {
         }
       })
       .catch(() => {
-        // ja fetch nokrīt, atstājam default atsauksmes, lai UI nav tukšs
+        // ja fetch nestradas ststājam default atsauksmes, lai ui nav tukšs
       });
   }
 };
@@ -175,7 +177,7 @@ h1 {
   text-shadow: 0 0 3px #ffd93baa;
 }
 
-/* bilde + tooltip */
+/* bildes animacijai */
 .image-wrapper {
   position: relative;
   display: inline-block;
@@ -201,7 +203,7 @@ h1 {
   box-shadow: 0 20px 40px rgba(255, 50, 50, 0.9);
 }
 
-/* tooltip uz hover */
+/* bildes animacijai */
 .tooltip {
   position: absolute;
   bottom: 10px;
@@ -228,7 +230,6 @@ h1 {
   transform: translateX(-50%) translateY(0);
 }
 
-/* CTA */
 .action {
   margin-top: 30px;
 }
@@ -259,7 +260,7 @@ h1 {
   user-select: none;
 }
 
-/* animācija */
+/* animācija ielades laika no sakuma */
 @keyframes fadeInUp {
   from {
     opacity: 0;
@@ -271,7 +272,7 @@ h1 {
   }
 }
 
-/* atsauksmju ticker */
+/* atsauksmju joslai */
 .review-ticker-container {
   position: fixed;
   left: 0;
@@ -304,7 +305,6 @@ h1 {
   100% { transform: translateX(-100%);}
 }
 
-/* responsive */
 @media (max-width: 720px) {
   h1 {
     font-size: 2.6rem;

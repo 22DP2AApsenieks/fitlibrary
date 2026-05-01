@@ -12,9 +12,10 @@
       </div>
 
       <div v-else class="content">
-        <!-- EXERCISE BUTTONS WITH INLINE EXPANDED FORMS -->
+        <!-- buti forma/saraksts ar visiem vingrinajumiem prisk gym -->
         <div class="exercises-list">
           <div v-for="(exercise, index) in exercises" :key="index" class="exercise-item">
+            //šeit sis butto ir lai atvert dropdown vai aizvert vnu.
             <button
               class="exercise-button"
               :class="{ active: expandedIndex === index }"
@@ -22,9 +23,10 @@
             >
               <span class="button-text">{{ exercise.name }}</span>
               <span class="button-arrow" :class="{ open: expandedIndex === index }">▼</span>
-            </button>
+            </button>--tas span ir butina kas rote kad uz vinas uzpiez
 
-            <!-- EXPANDED EXERCISE CARD -->
+
+            <!-- headers ar nodaukumu un aizversanas poga -->
             <div v-if="expandedIndex === index" class="exercise-card expanded-card">
               <div class="card-header-2000s">
                 <h2 class="exercise-title">🎯 {{ exercises[index].name }}</h2>
@@ -33,8 +35,9 @@
 
               <div class="card-body">
 
-                <!-- MODE SELECTOR -->
+                <!-- režīma izvēle (kā ievadīt datus) -->
                 <div class="mode-selector">
+                   <!-- variants: aprēķināt no svara + reps -->
                   <button
                     class="mode-btn"
                     :class="{ 'mode-btn--active': exercises[index].inputMode === 'calculate' }"
@@ -44,6 +47,8 @@
                     <span class="mode-label">Aprēķināt aptuveni no treniņa</span>
                     <span class="mode-desc">Ievadi svaru + atkārtojumus</span>
                   </button>
+
+                              <!-- variants: ievadīt 1RM manuāli -->
                   <button
                     class="mode-btn"
                     :class="{ 'mode-btn--active': exercises[index].inputMode === 'direct' }"
@@ -55,7 +60,7 @@
                   </button>
                 </div>
 
-                <!-- MODE: CALCULATE FROM WORKING SET -->
+          <!-- šis bloks parādās tikai ja vajag aprekinat 1rm   -->
                 <div v-if="exercises[index].inputMode === 'calculate'" class="input-section">
                   <div class="input-row">
                     <div class="input-group">
@@ -102,7 +107,7 @@
                   </button>
                 </div>
 
-                <!-- MODE: DIRECT 1RM INPUT -->
+                <!-- sit pa taisno var 1rm ievadit -->
                 <div v-if="exercises[index].inputMode === 'direct'" class="input-section">
                   <div class="input-group">
                     <label>Tavs 1RM (kg)</label>
@@ -135,7 +140,6 @@
                   </button>
                 </div>
 
-                <!-- RESULT SECTION -->
                 <div v-if="exercises[index].calculatedOneRepMax !== null" class="result-section">
                   <div class="result-inner">
                     <p class="result-label">
@@ -143,6 +147,7 @@
                     </p>
                     <p class="result-value">{{ exercises[index].calculatedOneRepMax }} <span class="result-unit">kg</span></p>
                   </div>
+                  <!-- poga lai ievaditu 1rm -->
                   <button
                     @click="saveOneRepMax(index)"
                     class="btn-save"
@@ -188,7 +193,7 @@ export default {
           oneRepMax: 0,
           calculatedOneRepMax: null,
           comment: "",
-          inputMode: "calculate", // 'calculate' | 'direct'
+          inputMode: "calculate", 
         },
         {
           name: "Vilce no zemes (Deadlift)",
@@ -235,13 +240,13 @@ export default {
   },
   methods: {
     sanitizeWholeNumber(obj, field) {
-      // Ensure only whole numbers
+      // atkal, parbauda tikai vai apreizs formats, vesles
       if (obj[field] !== null && obj[field] !== undefined && obj[field] !== "") {
         obj[field] = Math.floor(Math.abs(obj[field]));
       }
     },
     setMode(index, mode) {
-      // Reset result when switching modes so it doesn't show stale data
+      //
       this.exercises[index].inputMode = mode;
       this.exercises[index].calculatedOneRepMax = null;
     },
@@ -327,7 +332,7 @@ export default {
     },
   },
   mounted() {
-    // paņem username no localStorage
+    // dabuj username no musu localstorage
     this.username =
       (localStorage.getItem("loggedInUser") || "nezināmais").toLowerCase();
     this.loading = false;
@@ -348,7 +353,6 @@ export default {
   margin: 0 auto;
 }
 
-/* HEADER BANNER */
 .header-banner {
   background: linear-gradient(180deg, #6a0000 0%, #310000 100%);
   padding: 30px 25px;
@@ -378,7 +382,6 @@ export default {
   opacity: 0.9;
 }
 
-/* LOADING STATE */
 .loading-state {
   text-align: center;
   padding: 60px 20px;
@@ -407,7 +410,6 @@ export default {
   gap: 25px;
 }
 
-/* EXERCISE ITEMS LIST */
 .exercises-list {
   display: flex;
   flex-direction: column;
@@ -419,7 +421,6 @@ export default {
   flex-direction: column;
 }
 
-/* EXERCISE BUTTONS */
 .exercise-button {
   background: #2a2a2a;
   border: 1px solid #444;
@@ -508,7 +509,6 @@ export default {
   color: #ffaaaa;
 }
 
-/* EXERCISE CARD */
 .exercise-card {
   background: #1a1f2e;
   border-radius: 12px;
@@ -544,7 +544,6 @@ export default {
   background: #1a1a1a;
 }
 
-/* MODE SELECTOR */
 .mode-selector {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -592,7 +591,6 @@ export default {
   font-size: 0.75rem;
 }
 
-/* INPUT SECTION */
 .input-section {
   margin-bottom: 10px;
   background: #2a2a2a;
@@ -604,7 +602,6 @@ export default {
   gap: 16px;
 }
 
-/* Side-by-side weight × reps layout */
 .input-row {
   display: flex;
   align-items: flex-end;
@@ -659,7 +656,6 @@ export default {
   color: #888888;
 }
 
-/* Highlighted input for direct 1RM mode */
 .input-highlight {
   font-size: 1.2rem !important;
   font-weight: 700;
@@ -672,7 +668,6 @@ export default {
   border-color: #aa7a7a !important;
 }
 
-/* BUTTONS */
 .btn-full {
   width: 100%;
 }
@@ -701,7 +696,6 @@ export default {
   transform: translateY(0);
 }
 
-/* RESULT SECTION */
 .result-section {
   background: linear-gradient(135deg, #3a2a2a 0%, #2a1a1a 100%);
   padding: 20px;
@@ -767,7 +761,6 @@ export default {
   transform: translateY(0);
 }
 
-/* FOOTER ACTION */
 .footer-action {
   display: flex;
   justify-content: center;
@@ -797,7 +790,6 @@ export default {
   transform: translateY(-1px);
 }
 
-/* RESPONSIVE */
 @media (max-width: 768px) {
   .header-banner h1 {
     font-size: 1.5rem;
