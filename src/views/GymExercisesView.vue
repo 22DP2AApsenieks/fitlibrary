@@ -246,6 +246,25 @@ export default {
       this.exercises[index].calculatedOneRepMax = null;
     },
 
+    translateBackendMessage(message, exercise) {
+      if (!message) return '';
+
+      const translations = {
+        'benchpress saved successfully!': 'Spiešana guļus veiksmīgi saglabāts!',
+        'deadlift saved successfully!': 'Vilkšana no zemes veiksmīgi saglabāts!',
+        'gymsquat saved successfully!': 'Pietupieni ar svaru veiksmīgi saglabāts!',
+        'overheadpress saved successfully!': 'Spiešana virs galvas veiksmīgi saglabāts!',
+        'latpulldown saved successfully!': 'Lat pulldown veiksmīgi saglabāts!'
+      };
+
+      const normalized = String(message).trim().toLowerCase();
+      if (translations[normalized]) {
+        return translations[normalized];
+      }
+
+      return message;
+    },
+
     calculateOneRepMax(index) {
       const exercise = this.exercises[index];
 
@@ -256,7 +275,7 @@ export default {
         );
       } else {
         exercise.calculatedOneRepMax = null;
-        alert("Ievadi svaru un atkārtojumus.");
+        alert("Lūdzu, ievadi svaru un atkārtojumu skaitu.");
       }
     },
 
@@ -265,7 +284,7 @@ export default {
       if (exercise.oneRepMax > 0) {
         exercise.calculatedOneRepMax = exercise.oneRepMax;
       } else {
-        alert("Ievadi derīgu 1RM vērtību.");
+        alert("Lūdzu, ievadi derīgu 1RM vērtību.");
       }
     },
 
@@ -274,7 +293,7 @@ export default {
       const oneRepMax = exercise.calculatedOneRepMax;
 
       if (!oneRepMax || oneRepMax <= 0) {
-        alert("Vispirms aprēķini vai ievadi derīgu 1RM.");
+        alert("Vispirms aprēķini vai ievadi derīgu 1RM vērtību.");
         return;
       }
 
@@ -295,13 +314,14 @@ export default {
           `http://localhost:5000/${exercise.api}`,
           payload
         );
-        alert(res.data.message || "Saglabāts!");
+        const message = this.translateBackendMessage(res.data.message, exercise);
+        alert(message || "1RM veiksmīgi saglabāts!");
         exercise.comment = "";
         exercise.calculatedOneRepMax = null;
       } catch (err) {
         console.error("Saglabāšanas kļūda:", err);
         alert(
-          err.response?.data?.error || "❌ Kļūda saglabājot 1RM."
+          err.response?.data?.error || "Kļūda saglabājot 1RM datus. Pārbaudiet savienojumu un pamēģiniet vēlreiz."
         );
       }
     },

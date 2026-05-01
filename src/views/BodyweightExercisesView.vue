@@ -134,7 +134,7 @@ export default {
       const reps = exercise.reps;
 
       if (reps <= 0) {
-        alert("Ievadi derīgu atkārtojumu skaitu.");
+        alert("Lūdzu, ievadi derīgu atkārtojumu skaitu.");
         return;
       }
 
@@ -156,14 +156,14 @@ export default {
           `http://localhost:5000/${exercise.api}`,
           payload
         );
-        alert(res.data.message || "Saglabāts!");
+        alert(res.data.message || "Treniņš veiksmīgi saglabāts!");
         exercise.reps = 0;
         exercise.comment = "";
         this.expandedIndex = null;
       } catch (err) {
         console.error("Saglabāšanas kļūda:", err);
         alert(
-          err.response?.data?.error || "❌ Kļūda saglabājot. Pārbaudi backend logus."
+          err.response?.data?.error || "Kļūda saglabājot datus. Pārbaudiet savienojumu un pamēģiniet vēlreiz."
         );
       }
     },

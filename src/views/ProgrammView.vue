@@ -234,23 +234,23 @@ export default {
       }
     },
     confirmDelete() {
-      const answer = prompt("Vai tiešām vēlies dzēst kontu? Ieraksti 'yes', lai apstiprinātu:");
-      if (answer?.toLowerCase() === 'yes') {
+      const answer = prompt("Vai tiešām vēlies dzēst savu kontu un VISUS datus? Ieraksti 'jā', lai apstiprinātu:");
+      if (answer?.toLowerCase() === 'jā' || answer?.toLowerCase() === 'yes') {
         fetch(`http://localhost:5000/delete-account/${this.username}`, {
           method: 'DELETE'
         })
         .then(res => {
           if (!res.ok) throw new Error('Servera kļūda');
-          alert('Tavs konts un dati tika dzēsti.');
+          alert('Tavs konts un VISI dati tika veiksmīgi dzēsti.');
           localStorage.removeItem('loggedInUser');
           this.$router.push('/');
         })
         .catch(err => {
           console.error('Kļūda dzēšot kontu:', err);
-          alert('Neizdevās dzēst kontu.');
+          alert('Neizdevās dzēst kontu. Pamēģini vēlreiz.');
         });
       } else {
-        alert('Konts netika dzēsts.');
+        alert('Konta dzēšana tika atcelta.');
       }
     }
   },

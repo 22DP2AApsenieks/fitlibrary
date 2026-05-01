@@ -75,7 +75,7 @@ app.post('/login', (req, res) => {
   const { username, password } = req.body;
 
   if (!username || !password) {
-    return res.status(400).json({ error: 'Username and password are required' });
+    return res.status(400).json({ error: 'Lietotājvārds un parole ir obligāti' });
   }
 
   db.query(
@@ -84,7 +84,7 @@ app.post('/login', (req, res) => {
     async (err, results) => {
       if (err) {
         console.error('Database error during login:', err.message);
-        return res.status(500).json({ error: 'Database error' });
+        return res.status(500).json({ error: 'Datubāzes kļūda' });
       }
 
       if (results.length > 0) {
@@ -94,10 +94,10 @@ app.post('/login', (req, res) => {
         if (isPasswordValid) {
           res.json({ success: true, user: user });
         } else {
-          res.status(401).json({ success: false, error: 'Invalid username or password' });
+          res.status(401).json({ success: false, error: 'Nepareizs lietotājvārds vai parole' });
         }
       } else {
-        res.status(401).json({ success: false, error: 'Invalid username or password' });
+        res.status(401).json({ success: false, error: 'Nepareizs lietotājvārds vai parole' });
       }
     }
   );
@@ -139,7 +139,7 @@ app.post('/addpullups', (req, res) => {
   const { username, date, reps, comment } = req.body;
 
   if (!username || !date || !reps) {
-    return res.status(400).json({ error: 'Missing required fields' });
+    return res.status(400).json({ error: 'Trūkst obligāto lauku' });
   }
 
   // Insert comment as-is (blank or filled)
@@ -163,7 +163,7 @@ app.post('/adddips', (req, res) => {
   const { username, date, reps, comment } = req.body;
 
   if (!username || !date || !reps) {
-    return res.status(400).json({ error: 'Missing required fields' });
+    return res.status(400).json({ error: 'Trūkst obligāto lauku' });
   }
 
   // Insert comment as-is (empty or filled)
@@ -191,14 +191,14 @@ app.post('/addsquats', (req, res) => {
 
   if (!username || !date || reps === undefined || reps === null) {
     console.log('Missing or invalid fields');
-    return res.status(400).json({ error: 'Missing required fields' });
+    return res.status(400).json({ error: 'Trūkst obligāto lauku' });
   }
 
   // Ensure reps is a number
   const repsNumber = parseInt(reps, 10);
   if (isNaN(repsNumber)) {
     console.log('Reps is not a valid number:', reps);
-    return res.status(400).json({ error: 'Reps must be a number' });
+    return res.status(400).json({ error: 'Atkārtojumi jābūt skaitlim' });
   }
 
   db.query(
@@ -209,7 +209,7 @@ app.post('/addsquats', (req, res) => {
         console.error('Database Error:', err);
         console.error('Error Code:', err.code);
         console.error('Error SQL:', err.sql);
-        return res.status(500).json({ error: 'Failed to save', details: err.message });
+        return res.status(500).json({ error: 'Neizdevās saglabāt', details: err.message });
       }
       console.log('Successfully inserted squat record');
       res.json({ message: 'Treniņš pievienots' });
@@ -222,7 +222,7 @@ app.post('/reviews', (req, res) => {
   const { username, review } = req.body;
 
   if (!username || !review) {
-    return res.status(400).json({ error: 'Missing username or review text' });
+    return res.status(400).json({ error: 'Trūkst lietotājvārda vai atsauksmes teksta' });
   }
 
   // First, get the user's email from the users table
@@ -232,10 +232,10 @@ app.post('/reviews', (req, res) => {
     (err, results) => {
       if (err) {
         console.error('Error fetching user email:', err.message);
-        return res.status(500).json({ error: 'Database error' });
+        return res.status(500).json({ error: 'Datubāzes kļūda' });
       }
       if (results.length === 0) {
-        return res.status(404).json({ error: 'User not found' });
+        return res.status(404).json({ error: 'Lietotājs nav atrasts' });
       }
 
       const email = results[0].email;
@@ -272,7 +272,7 @@ app.get('/allreviews', (req, res) => {
 app.delete('/delete-review', (req, res) => {
   const { email, review } = req.body;
   if (!email || !review) {
-    return res.status(400).json({ error: 'Email and review are required' });
+    return res.status(400).json({ error: 'E-pasts un atsauksme ir obligāti' });
   }
   db.query('DELETE FROM reviews WHERE email = ? AND review = ?', [email, review], (err, result) => {
     if (err) return res.status(500).json({ error: err.message });
@@ -284,11 +284,11 @@ app.post('/ai/workout-tips', async (req, res) => {
   const { username, selectedTable, currentType, tableData, monthlyProgress } = req.body;
 
   if (!username || !selectedTable || !Array.isArray(tableData)) {
-    return res.status(400).json({ error: 'Missing required fields' });
+    return res.status(400).json({ error: 'Trūkst obligāto lauku' });
   }
 
   if (!process.env.OPENAI_API_KEY) {
-    return res.status(500).json({ error: 'OPENAI_API_KEY is not configured in backend' });
+    return res.status(500).json({ error: 'OPENAI_API_KEY nav konfigurēta backend' });
   }
 
   const tableName = selectedTable.replace(/_/g, ' ');
@@ -317,11 +317,11 @@ app.post('/ai/workout-tips', async (req, res) => {
       temperature: 0.75,
     });
 
-    const aiText = response.choices?.[0]?.message?.content?.trim() || 'No response from AI.';
+    const aiText = response.choices?.[0]?.message?.content?.trim() || 'Nav atbildes no AI.';
     return res.json({ message: aiText });
   } catch (error) {
     console.error('AI route error:', error);
-    return res.status(500).json({ error: 'AI service failed', details: error.message });
+    return res.status(500).json({ error: 'AI serviss neizdarbojās', details: error.message });
   }
 });
 
@@ -330,7 +330,7 @@ app.delete('/delete-account/:username', (req, res) => {
   const username = req.params.username;
 
   if (!username) {
-    return res.status(400).json({ error: 'Username is required' });
+    return res.status(400).json({ error: 'Lietotājvārds ir obligāts' });
   }
 
   // Delete from all workout tables and then the users table
@@ -361,7 +361,7 @@ app.delete('/delete-account/:username', (req, res) => {
 app.put('/edit-username', (req, res) => {
   const { oldUsername, newUsername } = req.body;
   if (!oldUsername || !newUsername) {
-    return res.status(400).json({ error: 'Both old and new username are required' });
+    return res.status(400).json({ error: 'Veci un jauni lietotājvārdi ir obligāti' });
   }
   
   // All tables that store username - bodyweight, gym, and running exercises
@@ -407,23 +407,33 @@ app.put('/edit-username', (req, res) => {
 });
 // === GYM EXERCISES ===
 
+const gymExerciseNames = {
+  benchpress: 'Spiešana guļus',
+  deadlift: 'Vilkšana no zemes',
+  gymsquat: 'Pietupieni ar svaru',
+  overheadpress: 'Spiešana virs galvas',
+  latpulldown: 'Lat pulldown'
+};
+
 function addGymExerciseRoute(route, table) {
   app.post(route, (req, res) => {
     const { username, date, oneRepMax, comment } = req.body;
 
     if (!username || !date || oneRepMax === undefined || oneRepMax === null) {
-      return res.status(400).json({ error: 'Missing required fields' });
+      return res.status(400).json({ error: 'Trūkst obligāto lauku' });
     }
+
+    const exerciseName = gymExerciseNames[table] || 'Treniņš';
 
     db.query(
       `INSERT INTO ${table} (username, date, oneRepMax, comments) VALUES (?, ?, ?, ?)`,
       [username, date, oneRepMax, comment || ''], // Note: comments (plural)
       (err) => {
         if (err) {
-          console.error(`Error saving ${table}:`, err.message);
-          return res.status(500).json({ error: `Error saving ${table}`, details: err.message });
+          console.error(`Kļūda saglabājot ${table}:`, err.message);
+          return res.status(500).json({ error: `Kļūda saglabājot ${exerciseName}`, details: err.message });
         }
-        res.json({ message: `${table} saved successfully!` });
+        res.json({ message: `${exerciseName} veiksmīgi saglabāts!` });
       }
     );
   });
@@ -547,23 +557,33 @@ app.get('/marathon', (req, res) => {
 });
 
 // === POST routes for adding results ===
+const runExerciseNames = {
+  '1krun': '1 km skrējiens',
+  '5krun': '5 km skrējiens',
+  '10krun': '10 km skrējiens',
+  halfmarathon: 'Pusmaratons',
+  marathon: 'Maratons'
+};
+
 function addRunRoute(route, table) {
   app.post(route, (req, res) => {
     const { username, date, time, comment } = req.body;
 
     if (!username || !date || time === undefined || time === null) {
-      return res.status(400).json({ error: 'Missing required fields' });
+      return res.status(400).json({ error: 'Trūkst obligāto lauku' });
     }
+
+    const exerciseName = runExerciseNames[table] || 'Skrējiens';
 
     db.query(
       `INSERT INTO ${table} (username, date, time, comment) VALUES (?, ?, ?, ?)`,
       [username, date, time, comment || ''],
       (err) => {
         if (err) {
-          console.error(`❌ Error saving ${table}:`, err.message);
-          return res.status(500).json({ error: `Error saving ${table}`, details: err.message });
+          console.error(`Kļūda saglabājot ${table}:`, err.message);
+          return res.status(500).json({ error: `Kļūda saglabājot ${exerciseName}`, details: err.message });
         }
-        res.json({ message: `✅ ${table} time saved!` });
+        res.json({ message: `${exerciseName} laiks veiksmīgi saglabāts!` });
       }
     );
   });

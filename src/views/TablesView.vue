@@ -217,16 +217,16 @@ export default {
 
       if (this.progressInfo) {
         if (this.progressInfo.isPositive) {
-          tips.push("🔥 Progress uzlabojas — lieliski!");
+          tips.push("Progress uzlabojas — lieliski!");
         } else {
-          tips.push("⚠️ Progress pasliktinās — pārbaudi atjaunošanos.");
+          tips.push("Progress pasliktinās — pārbaudi atjaunošanos.");
         }
       }
 
       if (this.tableData.length < 4) {
-        tips.push("📊 Pievieno vairāk datu.");
+          tips.push("Pievieno vairāk datu.");
       } else {
-        tips.push("📈 Laba disciplīna!");
+        tips.push("Laba disciplīna!");
       }
 
       return tips;

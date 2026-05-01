@@ -3,9 +3,30 @@
     <div class="signup-content">
       <form @submit.prevent="signup" class="signup-form">
         <h1>Rēģistrēšanās</h1>
-        <input type="text" v-model="form.Username" placeholder="Lietotājvārds" required />
-        <input type="email" v-model="form.Email" placeholder="E pasts" required />
-        <input type="password" v-model="form.Password" placeholder="Parole" required />
+        <input 
+          type="text" 
+          v-model="form.Username" 
+          placeholder="Lietotājvārds" 
+          required
+          @invalid="e => e.target.setCustomValidity('Lūdzu, aizpildi lietotājvārdu')"
+          @input="e => e.target.setCustomValidity('')"
+        />
+        <input 
+          type="email" 
+          v-model="form.Email" 
+          placeholder="E pasts" 
+          required
+          @invalid="e => e.target.setCustomValidity('Lūdzu, ievadi derīgu e-pasta adresi')"
+          @input="e => e.target.setCustomValidity('')"
+        />
+        <input 
+          type="password" 
+          v-model="form.Password" 
+          placeholder="Parole" 
+          required
+          @invalid="e => e.target.setCustomValidity('Lūdzu, aizpildi paroli')"
+          @input="e => e.target.setCustomValidity('')"
+        />
         <button type="submit" class="signup-button">Rēģistrēties</button>
 
         <p v-if="errorMessage" class="error-message">{{ errorMessage }}</p>

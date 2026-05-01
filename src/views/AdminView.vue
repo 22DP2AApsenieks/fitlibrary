@@ -49,15 +49,15 @@
       <!-- EDIT / DISPLAY -->
       <div v-if="editingUser === user.username" class="edit-section">
         <input v-model="editUsername" class="edit-input"/>
-        <button @click="saveEdit(user.username)">💾</button>
-        <button @click="cancelEdit">❌</button>
+        <button @click="saveEdit(user.username)">Saglabāt</button>
+        <button @click="cancelEdit">Atcelt</button>
       </div>
 
       <div v-else>
         <h3>{{ user.username }}</h3>
         <div class="actions">
-          <button @click="startEdit(user.username)">✏️</button>
-          <button @click="deleteUser(user.username)">🗑️</button>
+          <button @click="startEdit(user.username)">Rediģēt</button>
+          <button @click="deleteUser(user.username)">Dzēst</button>
         </div>
       </div>
 
@@ -221,12 +221,12 @@ export default {
         })
         .catch(err => {
           console.error('Error:', err);
-          alert('Kļūda mainot lietotājvārdu');
+          alert('Kļūda mainot lietotājvārdu. Pamēģini vēlreiz.');
         });
     },
 
     deleteUser(username) {
-      if (!confirm(`Dzēst ${username}?`)) return;
+      if (!confirm(`Dzēst lietotāju "${username}" un viņa visus datus?`)) return;
 
       fetch(`http://localhost:5000/delete-account/${username}`, {
         method: 'DELETE'
@@ -267,7 +267,7 @@ export default {
         this.allReviews = this.allReviews.filter(r => r.review !== review.review || r.email !== review.email);
       } catch (e) {
         console.error('Error deleting review:', e);
-        alert('Neizdevās dzēst atsauksmi');
+        alert('Neizdevās dzēst atsauksmi. Pamēģini vēlreiz.');
       }
     }
   },
