@@ -25,7 +25,7 @@
 header {
   position: sticky;
   top: 0;
-  background-color: #1f1f1f; /* darker charcoal */
+  background-color: #1f1f1f; 
   animation: subtlePulse 10s ease-in-out infinite;
   display: flex;
   flex-direction: column;
@@ -34,7 +34,7 @@ header {
   box-shadow: 0 3px 10px rgba(0, 0, 0, 0.85);
   z-index: 20;
   user-select: none;
-  border-bottom: 3px solid #7a0000; /* deeper crimson */
+  border-bottom: 3px solid #7a0000; 
   transition: background-color 0.6s ease;
   font-smooth: always;
   -webkit-font-smoothing: antialiased;

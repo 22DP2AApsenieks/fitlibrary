@@ -41,9 +41,9 @@
   background: linear-gradient(to bottom right, #2b0101, #490202, #1b0303);
   color: #f7f7f7;
   display: flex;
-  align-items: flex-start; /* Pacel saturu uz augšu */
+  align-items: flex-start; 
   justify-content: center;
-  padding: 30px 20px 60px; /* Mazāks top padding, vairāk apakšā */
+  padding: 30px 20px 60px;
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 

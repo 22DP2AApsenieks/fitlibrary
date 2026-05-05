@@ -250,6 +250,10 @@ export default {
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4);
 }
 
+/*
+  Paliku slinks pectam. kamer strada tikmer labiu. slinkums parveidot pec iepriekseja dizaina ka aprakstiju katru sava linija. 
+*/
+
 .exercise-button:hover { transform: translateY(-2px); background: #333333; border-color: #555; box-shadow: 0 6px 14px rgba(0, 0, 0, 0.5); }
 .exercise-button.active { background: #3a3a3a; border-color: #666; color: #fff; box-shadow: 0 6px 16px rgba(0, 0, 0, 0.6); }
 .button-text { display: block; text-align: center; flex: 1; }

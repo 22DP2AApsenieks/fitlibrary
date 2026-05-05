@@ -44,12 +44,12 @@
 </template>
 
 <script setup>
-//importejam vue funkcija . react ir formai ref kludas tekstam, onMounters funkciajs palaisanai kad komponents ieladejas
+//importejam funkcija . react ir formai ref kludas tekstam, onMounters funkciajs palaisanai kad komponents ieladejas
 import { reactive, ref, onMounted } from 'vue';
 import { useRouter } from 'vue-router';
 
 const router = useRouter();
-const form = reactive({ //siet tiek glabata lietotaja ievads dati, visi 3 vienkopus. smart
+const form = reactive({ //siet tiek glabata lietotaja ievads dati, visi 3 kopa. smart
   Username: '',
   Email: '',
   Password: ''
@@ -199,7 +199,6 @@ onMounted(fetchUsers);
   color: #ffdb3b;
 }
 
-/* Animation */
 @keyframes fadeInUp {
   from {
     opacity: 0;
@@ -211,7 +210,7 @@ onMounted(fetchUsers);
   }
 }
 
-/* Responsive */
+
 @media (max-width: 600px) {
   .signup-content {
     padding: 25px 20px;

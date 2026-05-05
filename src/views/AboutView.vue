@@ -58,7 +58,7 @@
   padding: 0 20px;
 }
 
-/* GRID */
+
 .about-hero-inner {
   display: grid;
   grid-template-columns: 1.4fr 1fr;
@@ -67,7 +67,6 @@
   align-items: center;
 }
 
-/* LEFT SIDE TEXT */
 .about-copy {
   max-width: 620px;
   margin: 0 auto;
@@ -205,7 +204,7 @@
   line-height: 1.75;
 }
 
-/* RESPONSIVE */
+
 @media (max-width: 1024px) {
   .about-hero-inner {
     grid-template-columns: 1fr;

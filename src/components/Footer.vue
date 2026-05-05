@@ -14,19 +14,9 @@
 </template>
 
 <style scoped>
-/* footer {
-    background-color: #333;
-    color: #fff;
-    text-align: center;
-    padding: 10px; Adjust as needed 
-    width: 100%;
-    position: relative; Change this from absolute to relative 
-} */
+/* tur auksa mums ir kipa linki uz musu soc medijiem, bet nav pievienoti tp vnk atver sis lietotne bet nenovirzis uz nekadu accontu*/
 
 
-/* #content-wrap {
-  padding-bottom: 2.5rem;    /* Footer height */
- 
 
 footer {
   margin-top: auto;

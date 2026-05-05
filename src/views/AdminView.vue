@@ -2,12 +2,12 @@
   <div class="admin-container">
     <h1>⚙️ Administratora panelis</h1>
 
-    <!-- Šī oga ir par autsauksmem veidota -->
+    <!-- Si oga ir par autsauksmem veidota -->
     <button @click="toggleReviews" class="reviews-toggle-btn">
       {{ showReviews ? '🔙 Atpakaļ' : '📋 Skatīt atsauksmes' }}
     </button>
 
-    <!-- Atsauksmju sadaļa -->
+    <!-- Atsauksmju dala -->
     <div v-if="showReviews" class="reviews-section">
       <h2>📋 Visas atsauksmes</h2>
       <div v-if="allReviews.length === 0" class="no-reviews">Nav atsauksmju</div>
@@ -18,7 +18,7 @@
       </div>
     </div>
 
-    <!-- Visi lietotaji redzami šeit -->
+    <!-- Visi datubazes lietotaji redzami šeit -->
     <div class="dashboard">
       <div class="card">
         <h3>Lietotāji</h3>
@@ -200,7 +200,7 @@ export default {
       if (!this.editUsername.trim()) return;
 
       fetch('http://localhost:5000/edit-username', {
-        method: 'PUT',  //funkcija lai nomainitu datus datubaze
+        method: 'PUT',  //funkcija lai nomainitu datus datubaze 
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           oldUsername,
@@ -285,7 +285,7 @@ export default {
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
-/* idk vai te baiga jega pierkastit par dizain, tp sis pedejai komentars seit rn */
+/* idk vai te baiga jega pierakstit par dizain, tp sis pedejai komentars seit rn */
 .title {
   text-align: center;
   font-size: 2.8rem;

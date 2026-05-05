@@ -18,7 +18,7 @@
         </div>
 
         <div class="navigation-grid">
-          <router-link to="/bexercises" class="nav-card"> <!--novirza uz bw vingrinajumiem-->
+          <router-link to="/bexercises" class="nav-card"> <!--novirza uz bw vingrinajumiem ja uzspiests virsu-->
             <div class="card-icon">💪</div>
             <h3>Ar savu svaru</h3>
             <p>Pievilkšanās, līdztekas u.c.</p>
@@ -58,7 +58,7 @@
           </button>
         </div>
 
-        <div class="danger-zone"> <!--pectam velreiz parjatas vai tiesam grib dzest kontu, no vories-->
+        <div class="danger-zone"> <!--pectam velreiz parjatas vai tiesam grib dzest kontu, jaapstiprina, no vories-->
           <h3>Konta dzēšana</h3>
           <p class="danger-text">Dzēst kontu un visus saistītos datus</p>
           <button @click="confirmDelete" class="delete-button">
@@ -93,7 +93,6 @@ export default {
         return;
       }
 
-      // šeit vari vēlāk pieslēgt backend
       console.log("Atsauksme:", this.reviewText);
 
       this.reviewMessage = "Paldies par atsauksmi! 🙌";
@@ -108,7 +107,6 @@ export default {
       const confirmAction = confirm("Vai tiešām vēlies dzēst kontu?");
       if (!confirmAction) return;
 
-      // backend call nākotnē
       alert("Konts dzēsts (demo versija)");
     }
   },

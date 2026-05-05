@@ -175,6 +175,7 @@
 </template>
 
 <script>
+
 import axios from "axios";
 
 export default {
@@ -241,6 +242,8 @@ export default {
   
   methods: {
     sanitizeWholeNumber(obj, field) {
+        // Epley formula lai aprekinu 1rep maxu
+        // Šis nav 100% precizs bet plus minus ir labi. 
       if (obj[field] !== null && obj[field] !== undefined && obj[field] !== "") {
         obj[field] = Math.floor(Math.abs(obj[field]));
       }
@@ -274,7 +277,7 @@ export default {
       const exercise = this.exercises[index];
 
       if (exercise.weight > 0 && exercise.reps > 0) {
-        // Epley formula 1RM aprēķinam
+        // sikak formula 1rm aprkeinam
         exercise.calculatedOneRepMax = Math.round(
           exercise.weight * (1 + exercise.reps / 30)
         );

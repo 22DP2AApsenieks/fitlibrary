@@ -1,5 +1,5 @@
 <template>
-   <!--lapas vesttijums. tass ir viss kas tiek paradits useram, diezgan bezjedzi es zinu, bet vajga kkadu atgriezenisko saiti. vel vareja uzreiz ieks ieprieksejas alpas veidot, bet so lapu atstaju lai ri potencials updates-->
+   <!--lapas vesttijums. tass ir viss kas tiek paradits lietotajam, diezgan bezjedzi es zinu, bet vajga kkadu atgriezenisko saiti. vel vareja uzreiz ieks ieprieksejas alpas veidot, bet so lapu atstaju lai ri potencials updates-->
   <section class="hero-section checkout-hero">
     <div class="content">
       <p class="single-line">We curently don’t sell plans. Myb sooon. we'll see</p>

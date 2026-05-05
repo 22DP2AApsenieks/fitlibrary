@@ -37,7 +37,7 @@
     </div>
   </section>
 
-  <!-- atsauksmju josla -->
+  <!-- atsauksmju svitra pa kuru iet atsuaksmes -->
   <div class="review-ticker-container" v-if="reviews.length">
     <div class="review-ticker">
       <span v-for="(review, idx) in reviews" :key="idx" class="review-item">
@@ -59,14 +59,14 @@ export default {
     };
   },
   created() {
-    // mēģinam paņemt atsauksmes no localStorage, lai lieki nesistu serveri
+    // mēģinam paņemt atsauksmi locali lai lieki netraucetu servweri
     const cachedReviews = localStorage.getItem('fitlibrary_reviews');
     if (cachedReviews) {
       try {
         this.reviews = JSON.parse(cachedReviews);
-        return; // ja viss ok, izmantojam cache un viss
+        return; // ja viss ok, izmantojam cashatminu
       } catch (e) {
-        // ja kaut kas saplīsis (piem. JSON bojāts), ignorējam un ejam fetch
+     
       }
     }
 
@@ -77,15 +77,14 @@ export default {
         if (data && data.length > 0) {
           this.reviews = data.map(r => ({
             review: r.review,
-            // dažreiz backend neatdod email, tad fallback uz username vai anonīms
+            // dažreiz backend neatdod email, tad fallback uz username vai anonīms. bet no manas pieredzes nekad nav bijis ka nofilo, bet so vairak atstaju ar domu lai ir naktone
             author: r.email || r.username || 'Anonīms'
           }));
-          // saglabājam uz 1h (reāli te varētu arī timestamp pielikt, bet pagaidām pietiek)
           localStorage.setItem('fitlibrary_reviews', JSON.stringify(this.reviews));
         }
       })
       .catch(() => {
-        // ja fetch nokrīt, atstājam default atsauksmes, lai UI nav tukšs
+      
       });
   }
 };
@@ -175,7 +174,6 @@ h1 {
   text-shadow: 0 0 3px #ffd93baa;
 }
 
-/* bilde + tooltip */
 .image-wrapper {
   position: relative;
   display: inline-block;
@@ -201,7 +199,6 @@ h1 {
   box-shadow: 0 20px 40px rgba(255, 50, 50, 0.9);
 }
 
-/* tooltip uz hover */
 .tooltip {
   position: absolute;
   bottom: 10px;
@@ -228,7 +225,6 @@ h1 {
   transform: translateX(-50%) translateY(0);
 }
 
-/* CTA */
 .action {
   margin-top: 30px;
 }
@@ -259,7 +255,6 @@ h1 {
   user-select: none;
 }
 
-/* animācija */
 @keyframes fadeInUp {
   from {
     opacity: 0;
@@ -271,7 +266,7 @@ h1 {
   }
 }
 
-/* atsauksmju ticker */
+/* atsauksmju svitra kur paradas atsauksmes */
 .review-ticker-container {
   position: fixed;
   left: 0;
@@ -304,7 +299,7 @@ h1 {
   100% { transform: translateX(-100%);}
 }
 
-/* responsive */
+
 @media (max-width: 720px) {
   h1 {
     font-size: 2.6rem;
