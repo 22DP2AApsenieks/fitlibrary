@@ -65,7 +65,7 @@ const fetchUsers = async () => {
     console.error('Neizdevās ielādēt lietotājus:', err);
   }
 };
-
+//signup funkcija, vis šis tiek veikts pēctam kad nospiež reģistrēšanās pogu
 const signup = async () => {
   errorMessage.value = '';
   try {

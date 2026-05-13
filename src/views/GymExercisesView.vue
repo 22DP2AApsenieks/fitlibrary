@@ -298,13 +298,13 @@ export default {
 
     async saveOneRepMax(index) {
       const exercise = this.exercises[index];
-      const oneRepMax = exercise.calculatedOneRepMax;
+      const oneRepMax = exercise.calculatedOneRepMax; //būtībā šis calculatedonerepmax būs 2 veidi kāievadīt bet beigās saglabājas kā viena onrepmax veertiba
 
       if (!oneRepMax || oneRepMax <= 0) {
         alert("Vispirms aprēķini vai ievadi derīgu 1RM vērtību.");
         return;
       }
-
+//šis viss tik sūtīts uz tabulu
       const payload = {
         username: this.username,
         date: new Date().toISOString().slice(0, 10),
@@ -313,7 +313,7 @@ export default {
       };
 
       console.log(
-        `📤 Sūtam uz ${exercise.api}:`,
+        `Sūtam uz ${exercise.api}:`,
         JSON.stringify(payload, null, 2)
       );
 

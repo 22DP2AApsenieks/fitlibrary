@@ -106,7 +106,7 @@ app.post('/login', (req, res) => {
 app.post('/register', async (req, res) => {
   const { username, password, email, role = 'user' } = req.body;
 
-  // Check if username exists
+  // Pārbauda vai lietotajs eksiste
   db.query('SELECT * FROM users WHERE username = ?', [username], async (err, results) => {
     if (err) {
       console.error('Database error:', err);
@@ -117,10 +117,10 @@ app.post('/register', async (req, res) => {
       return res.status(400).json({ error: 'Lietotājvārds jau ir aizņemts' });
     }
 
-    // Hash password before storing
+    // hasho proli pirms saglabasanas
     const hashedPassword = await bcrypt.hash(password, 10);
 
-    // Insert new user with hashed password
+    // ievada jaunu lietotaju ar hashotu paroli
     db.query(
       'INSERT INTO users (username, password, email, role) VALUES (?, ?, ?, ?)',
       [username, hashedPassword, email || null, role || null],

@@ -123,11 +123,12 @@ export default {
       const exercise = this.exercises[index];
       const reps = exercise.reps;
 
+      // p\arbauda vai ievadīts pozitīvs skaitlis
       if (reps <= 0) {
         alert("Ievadi derīgu atkārtojumu skaitu.");
         return;
       }
-
+//viss kas tik nosūtīts uz taulu 
       const payload = {
         username: this.username,
         date: new Date().toISOString().slice(0, 10),
@@ -135,12 +136,13 @@ export default {
         comment: exercise.comment || "",
       };
 
-      //debug doublechecks
+      //šis palika laidubulta parbauditu vai viss aiziet uz backend
       console.log(
-        `📤 Sūtam uz ${exercise.api}:`,
+        `Sūtam uz ${exercise.api}:`,
         JSON.stringify(payload, null, 2)
       );
 
+      //viss tiek pushots uz tabulu caur backend. lietotajam ari tiek pazinots vai viss izdevas vai bija kluda
       try {
         const res = await axios.post(
           `http://localhost:5000/${exercise.api}`,
@@ -153,7 +155,7 @@ export default {
       } catch (err) {
         console.error("Saglabāšanas kļūda:", err);
         alert(
-          err.response?.data?.error || "❌ Kļūda saglabājot. Pārbaudi backend logus."
+          err.response?.data?.error || "Kļūda saglabājot. Pārbaudi backend logus."
         );
       }
     },

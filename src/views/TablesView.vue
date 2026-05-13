@@ -250,18 +250,20 @@ export default {
     },
 
     async fetchData() {
+      // Pārbauda vai ir izvēlēta tabula.
       if (!this.selectedTable) return;
 
+      //ar šo var paradit lietotajam ka dati tiek ieladeti
       this.loading = true;
-      this.tableData = [];
+      this.tableData = []; //notira veco datu masivu
 
       try {
-        const res = await axios.get(
+        const res = await axios.get( // sutaget peipras lai dabutu datus no backend
           `http://localhost:5000/${this.selectedTable}`
         );
 
         this.tableData = res.data
-          .filter(
+          .filter( // filtre tikai ierakstus kam pieder pasrezejais lietotajvards
             (row) =>
               row.username &&
               row.username.toLowerCase() === this.username
@@ -273,10 +275,10 @@ export default {
           .sort((a, b) => new Date(a.date) - new Date(b.date));
 
         this.$nextTick(() => {
-          this.renderChart();
+          this.renderChart(); // atbild par tabulas izveidi
         });
       } catch (err) {
-        console.error("Fetch error:", err);
+        console.error("Fetch error:", err);//kludas gadijumiem
       } finally {
         this.loading = false;
       }
